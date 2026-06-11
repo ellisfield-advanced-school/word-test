@@ -374,15 +374,6 @@ function checkAnswer(clickedBtn, selected, correct) {
         clickedBtn.classList.add("correct");
         resultMsg.innerText = "⭕ 正解！";
         resultMsg.style.color = "green";
-        
-        // 【音声機能】
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(correct);
-            utterance.lang = 'en-US';
-            utterance.rate = 0.9;
-            window.speechSynthesis.speak(utterance);
-        }
     } else {
         clickedBtn.classList.add("incorrect");
         resultMsg.innerText = `❌ 不正解！ 正解は: ${correct}`;
