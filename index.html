@@ -375,12 +375,12 @@ function checkAnswer(clickedBtn, selected, correct) {
         resultMsg.innerText = "⭕ 正解！";
         resultMsg.style.color = "green";
         
-        // 【新機能】正解時にネイティブ英語で発音する処理
+        // 【音声機能】
         if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel(); // 連打時の音声重なり防止
-            const utterance = new SpeechSynthesisUtterance(correct); // 正解の英単語をセット
-            utterance.lang = 'en-US'; // アメリカ英語
-            utterance.rate = 0.9;     // ほんの少しゆっくり
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(correct);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
             window.speechSynthesis.speak(utterance);
         }
     } else {
