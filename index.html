@@ -366,12 +366,23 @@ function makeChoices(correctAnswer, allCategoryWords) {
     finalChoices.sort(() => Math.random() - 0.5); return finalChoices;
 }
 function checkAnswer(clickedBtn, selected, correct) {
-    if (isAnswered) return; isAnswered = true; const choiceButtons = document.querySelectorAll(".choice-btn"); const resultMsg = document.getElementById("result-message");
+    if (isAnswered) return; isAnswered = true; const choiceButtons = document.querySelectorAll(".choice-btn");
+
     if (selected === correct) {
-        clickedBtn.classList.add("correct"); resultMsg.innerText = "⭕ 正解！"; resultMsg.style.color = "#2ecc71"; score++; 
-    } else { 
-        clickedBtn.classList.add("incorrect"); resultMsg.innerText = `❌ 不正解！ 正解は: ${correct}`; resultMsg.style.color = "#e74c3c";
-        choiceButtons.forEach(btn => { if (btn.innerText === correct) { btn.classList.add("correct"); } }); 
+        clickedBtn.classList.add("correct"); resultMsg.innerText = "⭕ 正解！"; resultMsg.style.color = "green";
+
+        // 【新機能】正解時にネイティブ英語で発音する処理
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // 連打されたときの音声重なりを防止
+            const utterance = new SpeechSynthesisUtterance(correct); // クイズの正解（英単語）をセット
+            utterance.lang = 'en-US'; // アメリカ英語に設定
+            utterance.rate = 0.9;     // 生徒が聞き取りやすいよう、ほんの少しだけゆっくり
+            window.speechSynthesis.speak(utterance);
+        }
+
+    } else {
+        clickedBtn.classList.add("incorrect"); resultMsg.innerText = `❌ 不正解！ 正解は: ${correct}`; resultMsg.style.color = "red";
+        choiceButtons.forEach(btn => { if (btn.innerText === correct) { btn.classList.add("correct"); } });
     }
     document.getElementById("next-btn").style.display = "block";
 }
