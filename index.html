@@ -62,13 +62,13 @@
     </style>
 </head>
 <body>
-
+ 
 <div class="quiz-container">
     <div id="category-screen">
         <h1>テストするカテゴリを選んでね</h1>
         <div id="category-list"></div>
     </div>
-
+ 
     <div id="quiz-screen" style="display: none;">
         <div class="progress" id="progress">第 1 問 / 全 10 問</div>
         <div class="japanese" id="japanese-word">日本語</div>
@@ -76,281 +76,266 @@
         <div class="result-message" id="result-message"></div>
         <button onclick="nextQuestion()" id="next-btn" class="action-btn" style="display: none;">次へ進む</button>
     </div>
-
+ 
     <div id="result-screen" style="display: none;">
         <h2>テスト終了！</h2>
         <p id="final-score" style="font-size: 18px; font-weight: bold;"></p>
         <button onclick="showCategoryScreen()" class="action-btn">別のテストを選ぶ</button>
     </div>
 </div>
-
+ 
 <script>
-// 【1】ご指定いただいた単語をすべて追加しました
 const wordData = {
     "数字 (1〜10)": [
-{ english: "one", japanese: "1" }, { english: "two", japanese: "2" }, 
-{ english: "three", japanese: "3" }, { english: "four", japanese: "4" }, 
-{ english: "five", japanese: "5" }, { english: "six", japanese: "6" },
-{ english: "seven", japanese: "7" }, { english: "eight", japanese: "8" }, 
-{ english: "nine", japanese: "9" }, { english: "ten", japanese: "10" }
+        { english: "one", japanese: "1" }, { english: "two", japanese: "2" }, 
+        { english: "three", japanese: "3" }, { english: "four", japanese: "4" }, 
+        { english: "five", japanese: "5" }, { english: "six", japanese: "6" },
+        { english: "seven", japanese: "7" }, { english: "eight", japanese: "8" }, 
+        { english: "nine", japanese: "9" }, { english: "ten", japanese: "10" }
     ],
     "数字 (11～20)": [
-{ english: "eleven", japanese: "11" }, { english: "twelve", japanese: "12" }, 
-{ english: "thirteen", japanese: "13" }, { english: "fourteen", japanese: "14" }, 
-{ english: "fifteen", japanese: "15" }, { english: "sixteen", japanese: "16" },
-{ english: "seventeen", japanese: "17" }, { english: "eighteen", japanese: "18" }, 
-{ english: "nineteen", japanese: "19" }, { english: "twenty", japanese: "20" }
+        { english: "eleven", japanese: "11" }, { english: "twelve", japanese: "12" }, 
+        { english: "thirteen", japanese: "13" }, { english: "fourteen", japanese: "14" }, 
+        { english: "fifteen", japanese: "15" }, { english: "sixteen", japanese: "16" },
+        { english: "seventeen", japanese: "17" }, { english: "eighteen", japanese: "18" }, 
+        { english: "nineteen", japanese: "19" }, { english: "twenty", japanese: "20" }
     ],
-    "数字 (30～100, 千,)": [
-{ english: "thirty", japanese: "30" }, { english: "forty", japanese: "40" },
-{ english: "fifty", japanese: "50" }, { english: "sixty", japanese: "60" }, 
-{ english: "seventy", japanese: "70" }, { english: "eighty", japanese: "80" }, 
-{ english: "ninety", japanese: "90" }, { english: "hundred", japanese: "100" }, 
-{ english: "thousand", japanese: "1,000" }
+    "数字 (30～100, 千, 万)": [
+        { english: "thirty", japanese: "30" }, { english: "forty", japanese: "40" },
+        { english: "fifty", japanese: "50" }, { english: "sixty", japanese: "60" }, 
+        { english: "seventy", japanese: "70" }, { english: "eighty", japanese: "80" }, 
+        { english: "ninety", japanese: "90" }, { english: "hundred", japanese: "100" }, 
+        { english: "thousand", japanese: "1,000" }, { english: "ten thousand", japanese: "10,000" }
     ],
-
     "数字 (序数)": [
-{ english: "first", japanese: "1番目の" }, { english: "second", japanese: "2番目の" }, 
-{ english: "third", japanese: "3番目の" },{ english: "fourth", japanese: "4番目の" },
-{ english: "fifth", japanese: "5番目の" }, { english: "sixth", japanese: "6番目の" }, 
-{ english: "seventh", japanese: "7番目の" }, { english: "eighth", japanese: "8番目の" }, 
-{ english: "ninth", japanese: "9番目の" }, { english: "tenth", japanese: "10番目の" }
+        { english: "first", japanese: "1番目の" }, { english: "second", japanese: "2番目の" }, 
+        { english: "third", japanese: "3番目の" },{ english: "fourth", japanese: "4番目の" },
+        { english: "fifth", japanese: "5番目の" }, { english: "sixth", japanese: "6番目の" }, 
+        { english: "seventh", japanese: "7番目の" }, { english: "eighth", japanese: "8番目の" }, 
+        { english: "ninth", japanese: "9番目の" }, { english: "tenth", japanese: "10番目の" }
     ],
     "曜日・週": [
-{ english: "Monday", japanese: "月曜日" }, { english: "Tuesday", japanese: "火曜日" },
-{ english: "Wednesday", japanese: "水曜日" }, { english: "Thursday", japanese: "木曜日" },
-{ english: "Friday", japanese: "金曜日" }, { english: "Saturday", japanese: "土曜日" },
-{ english: "Sunday", japanese: "日曜日" }, { english: "weekend", japanese: "週末" }, 
-{ english: "this week", japanese: "今週" }, { english: "last week", japanese: "先週" }, { english: "next week", japanese: "来週" }
+        { english: "Monday", japanese: "月曜日" }, { english: "Tuesday", japanese: "火曜日" },
+        { english: "Wednesday", japanese: "水曜日" }, { english: "Thursday", japanese: "木曜日" },
+        { english: "Friday", japanese: "金曜日" }, { english: "Saturday", japanese: "土曜日" },
+        { english: "Sunday", japanese: "日曜日" }, { english: "weekend", japanese: "週末" }, 
+        { english: "this week", japanese: "今週" }, { english: "last week", japanese: "先週" }, 
+        { english: "next week", japanese: "来週" }
     ],
     "1月〜12月": [
-{ english: "January", japanese: "1月" }, { english: "February", japanese: "2月" },
-{ english: "March", japanese: "3月" }, { english: "April", japanese: "4月" },
-{ english: "May", japanese: "5月" }, { english: "June", japanese: "6月" },
-{ english: "July", japanese: "7月" }, { english: "August", japanese: "8月" },
-{ english: "September", japanese: "9月" }, { english: "October", japanese: "10月" },
-{ english: "November", japanese: "11月" }, { english: "December", japanese: "12月" }, 
-{ english: "this month", japanese: "今月" }, { english: "last month", japanese: "先月" }, 
-{ english: "next month", japanese: "来月" }
+        { english: "January", japanese: "1月" }, { english: "February", japanese: "2月" },
+        { english: "March", japanese: "3月" }, { english: "April", japanese: "4月" },
+        { english: "May", japanese: "5月" }, { english: "June", japanese: "6月" },
+        { english: "July", japanese: "7月" }, { english: "August", japanese: "8月" },
+        { english: "September", japanese: "9月" }, { english: "October", japanese: "10月" },
+        { english: "November", japanese: "11月" }, { english: "December", japanese: "12月" }, 
+        { english: "this month", japanese: "今月" }, { english: "last month", japanese: "先月" }, 
+        { english: "next month", japanese: "来月" }
     ],
-
-    "季節": [
-{ english: "season", japanese: "季節" }, { english: "spring", japanese: "春" }, 
-{ english: "summer", japanese: "夏" }, { english: "autumn", japanese: "秋" }, 
-{ english: "winter", japanese: "冬" }, 
-{ english: "Christmas", japanese: "クリスマス" }, { english: "vacation", japanese: "休暇" },
-{ english: "weather", japanese: "天気" }, 
-{ english: "rain", japanese: "雨（が降る）" }, { english: "snow", japanese: "雪（が降る）" },  
-{ english: "rainy", japanese: "雨の" }, { english: "sunny", japanese: "晴れた" },  
-{ english: "umbrella", japanese: "傘" }
-    ],
-"色": [ 
-{ english: "red", japanese: "赤" }, { english: "blue", japanese: "青" }, 
-{ english: "green", japanese: "緑" }, { english: "yellow", japanese: "黄" }, 
-{ english: "black", japanese: "黒" }, { english: "white", japanese: "白" }, 
-{ english: "brown", japanese: "茶" }, { english: "purple", japanese: "紫" }, 
-{ english: "pink", japanese: "ピンク" }, { english: "color", japanese: "カラー" }
- ],
-
-    "時間帯・暦": [
-{ english: "morning", japanese: "朝" }, { english: "afternoon", japanese: "午後" }, 
-{ english: "evening", japanese: "夕方" }, { english: "night", japanese: "夜" },
-{ english: "tonight", japanese: "今夜" }, { english: "last night", japanese: "昨夜" },
-{ english: "today", japanese: "今日" }, { english: "yesterday", japanese: "昨日" }, 
-{ english: "tomorrow", japanese: "明日" }, { english: "every day", japanese: "毎日" }, 
-{ english: "every week", japanese: "毎週" }, { english: "every month", japanese: "毎月" }, 
-{ english: "every year", japanese: "毎年" }, { english: "this year", japanese: "今年" }, 
-{ english: "last year", japanese: "去年" }, { english: "next year", japanese: "来年" },
+   "季節": [
+        { english: "season", japanese: "季節" }, { english: "spring", japanese: "春" }, 
+        { english: "summer", japanese: "夏" }, { english: "autumn", japanese: "秋" }, 
+        { english: "winter", japanese: "冬" }, 
+        { english: "Christmas", japanese: "クリスマス" }, { english: "vacation", japanese: "休暇" },
+        { english: "weather", japanese: "天気" }, 
+        { english: "rain", japanese: "雨（が降る）" }, { english: "snow", japanese: "雪（が降る）" },  
+        { english: "rainy", japanese: "雨の" }, { english: "sunny", japanese: "晴れた" },  
+        { english: "umbrella", japanese: "傘" }
    ],
-    "家族": [
-{ english: "family", japanese: "家族" }, { english: "birthday", japanese: "誕生日" },
-{ english: "father", japanese: "父親" }, { english: "mother", japanese: "母親" }, 
-{ english: "parent", japanese: "親" }, 
-{ english: "child", japanese: "子供" }, { english: "children", japanese: "子供たち" }, 
-{ english: "brother", japanese: "兄弟" }, { english: "sister", japanese: "姉妹" }, 
-{ english: "uncle", japanese: "おじ・おじさん" }, 
-{ english: "aunt", japanese: "おば・おばさん" }, 
-{ english: "cousin", japanese: "いとこ" }
-    ],
-    "人物": [
-{ english: "boy", japanese: "少年" }, { english: "girl", japanese: "少女" }, 
-{ english: "man", japanese: "男性" }, { english: "woman", japanese: "女性" }, 
-{ english: "teacher", japanese: "先生" }, { english: "student", japanese: "学生・生徒" }, 
-{ english: "friend", japanese: "友達" }, { english: "classmate", japanese: "同級生" },
-{ english: "volunteer", japanese: "ボランティア" }, 
-{ english: "member", japanese: "メンバー" }, { english: "people", japanese: "人々" },
-{ english: "young people", japanese: "若者" }
-    ],
-
-    "世界・国": [
-{ english: "world", japanese: "世界" }, { english: "country", japanese: "国" },
-{ english: "Japan", japanese: "日本" }, { english: "Spain", japanese: "スペイン" },
-{ english: "America", japanese: "アメリカ" }, { english: "China", japanese: "中国" },
-{ english: "Korea", japanese: "韓国" }, { english: "India", japanese: "インド" },
-{ english: "Australia", japanese: "オーストラリア" }, 
-{ english: "Canada", japanese: "カナダ" }, { english: "Germany", japanese: "ドイツ" }, 
-{ english: "France", japanese: "フランス" }, { english: "Italy", japanese: "イタリア" }, 
-    ],
-
-    "食事・飲み物": [
-{ english: "breakfast", japanese: "朝食" }, { english: "lunch", japanese: "昼食" },
-{ english: "dinner", japanese: "夕食" }, { english: "food", japanese: "食べ物" }, 
-{ english: "dessert", japanese: "デザート" },
-{ english: "party", japanese: "パーティー" }, 
-{ english: "drink", japanese: "飲み物・飲む" }, 
-{ english: "water", japanese: "水" }, { english: "milk", japanese: "牛乳" }, 
-{ english: "tea", japanese: "茶・紅茶" }, { english: "coffee", japanese: "コーヒー" }
-    ],
-
-    "フルーツ・菓子": [
-{ english: "fruit", japanese: "果物" }, { english: "apple", japanese: "リンゴ" },
-{ english: "orange", japanese: "オレンジ" }, { english: "banana", japanese: "バナナ" }, 
-{ english: "lemon", japanese: "レモン" }, { english: "peach", japanese: "桃（ピーチ）" }, 
-{ english: "grapes", japanese: "ブドウ" },
-{ english: "cake", japanese: "ケーキ" }, { english: "sweet", japanese: "甘い菓子" }, 
-{ english: "cookie", japanese: "クッキー" }, 
-{ english: "ice cream", japanese: "アイスクリーム" }
-
-    ],
-
-    "料理・食材": [
-{ english: "cooking", japanese: "料理" }, 
-{ english: "go shopping", japanese: "買い物に行く" },
-{ english: "bread", japanese: "パン" }, { english: "salad", japanese: "サラダ" },
-{ english: "soup", japanese: "スープ" }, { english: "curry", japanese: "カレー (料理)" },
-{ english: "fish", japanese: "魚" }, { english: "egg", japanese: "卵" },
-{ english: "meat", japanese: "肉" }, { english: "chicken", japanese: "チキン" },
-{ english: "pork", japanese: "豚肉" }, { english: "beef", japanese: "牛肉" }, 
-{ english: "vegetable", japanese: "野菜"},
-{ english: "potato", japanese: "ジャガイモ" }
-    ],
-
-    "勉強": [
-{ english: "English", japanese: "英語" }, { english: "Japanese", japanese: "国語" }, 
-{ english: "math", japanese: "数学" }, { english: "science", japanese: "理科" }, 
-{ english: "subject", japanese: "教科" },
-{ english: "language", japanese: "言語" }, { english: "information", japanese: "情報" },
-{ english: "book", japanese: "本" }, { english: "notebook", japanese: "ノートブック" },
-{ english: "dictionary", japanese: "辞書" }, 
-{ english: "homework", japanese: "宿題" }, { english: "plan", japanese: "計画" },
-{ english: "idea", japanese: "アイデア" }, { english: "question", japanese: "質問" } 
-    ],
-
-    "学校の活動・行事": [
-{ english: "school", japanese: "学校" }, { english: "classroom", japanese: "教室" }, 
-{ english: "after school", japanese: "放課後" },
-{ english: "club activity", japanese: "クラブ活動" }, 
-{ english: "event", japanese: "イベント" },
-{ english: "sports day", japanese: "運動会・体育祭" }, 
-{ english: "music festival ", japanese: "音楽発表会" }, 
-{ english: "school festival", japanese: "文化祭" },
-{ english: "school trip", japanese: "修学旅行" }, 
-{ english: "speech contest", japanese: "スピーチコンテスト" },
-    ],
-
-    "スポーツ": [
-{ english: "tennis", japanese: "テニス" }, { english: "soccer", japanese: "サッカー" }, { english: "running", japanese: "ランニング" }, { english: "swimming", japanese: "水泳" }, 
-{ english: "baseball", japanese: "野球" }, 
-{ english: "basketball", japanese: "バスケットボール" },
-{ english: "volleyball", japanese: "バレーボール" },
-{ english: "badminton", japanese: "バドミントン" },
-{ english: "player", japanese: "選手" }, { english: "sports", japanese: "スポーツ" }, 
-{ english: "game", japanese: "ゲーム" }, { english: "racket", japanese: "ラケット" }
-    ],
-
-    "楽器・音楽": [
-{ english: "piano", japanese: "ピアノ" }, { english: "drum", japanese: "ドラム" }, 
-{ english: "violin", japanese: "バイオリン" }, { english: "guitar", japanese: "ギター" }, 
-{ english: "flute", japanese: "フルート" }, { english: "trumpet", japanese: "トランペット" }, 
-{ english: "music", japanese: "音楽" }, { english: "art", japanese: "芸術" },
-{ english: "chorus", japanese: "合唱・コーラス" }, { english: "song", japanese: "歌" },
-{ english: "contest", japanese: "コンテスト" }, 
-{ english: "concert", japanese: "コンサート" }, { english: "stage", japanese: "ステージ" }, 
-    ],
-
-    "乗り物": [
-{ english: "car", japanese: "車" }, { english: "bus", japanese: "バス" }, 
-{ english: "train", japanese: "電車・列車" }, { english: "bike", japanese: "自転車" },
-{ english: "taxi", japanese: "タクシー" },
-{ english: "ship", japanese: "船" }, { english: "boat", japanese: "ボート" }, 
-{ english: "airplane", japanese: "飛行機" }
-    ],
-
-    "家・家具": [
-{ english: "house", japanese: "家・住宅" },
-{ english: "home", japanese: "家庭・故郷" },  { english: "at home", japanese: "家で" },
-{ english: "room", japanese: "部屋" }, { english: "bed", japanese: "ベッド" },
-{ english: "desk", japanese: "机" }, { english: "chair", japanese: "椅子" },
-{ english: "table", japanese: "テーブル" }, { english: "kitchen", japanese: "台所" },
-{ english: "shower", japanese: "シャワー" },{ english: "bathroom", japanese: "浴室" }, 
-{ english: "door", japanese: "ドア" }, { english: "window", japanese: "窓" },
-{ english: "garden", japanese: "庭・庭園" }, { english: "flower", japanese: "花" }
-    ],
-
-    "自然": [
-{ english: "tree", japanese: "木" }, { english: "sea", japanese: "海" },
-{ english: "river", japanese: "川" }, { english: "mountain", japanese: "山" },
-{ english: "lake", japanese: "湖" }, { english: "woods", japanese: "森" }, 
-{ english: "beach", japanese: "砂浜" }, { english: "field", japanese: "野原" },
-{ english: "sun", japanese: "太陽" }, { english: "moon", japanese: "月" },
-{ english: "nature", japanese: "自然" }
-    ],
-
-"街の施設（お出かけ）": [ 
-{ english: "park", japanese: "公園" }, { english: "bench", japanese: "ベンチ" }, 
-{ english: "shop", japanese: "店" }, { english: "bookstore", japanese: "書店" }, 
-{ english: "department store", japanese: "デパート" }, 
-{ english: "restaurant", japanese: "レストラン" }, { english: "zoo", japanese: "動物園" }, 
-{ english: "museum", japanese: "博物館" }, { english: "aquarium", japanese: "水族館" }, 
-{ english: "castle", japanese: "城" }, 
-{ english: "temple", japanese: "寺" }, { english: "shrine", japanese: "神社" }, 
-{ english: "theater", japanese: "劇場" } ], 
-
-"街の施設（駅・公共など）": [ 
-{ english: "station", japanese: "駅" }, { english: "hospital", japanese: "病院" }, 
-{ english: "library", japanese: "図書館" }, { english: "bank", japanese: "銀行" }, 
-{ english: "post office", japanese: "郵便局" }, { english: "gym", japanese: "体育館" }, 
-{ english: "office", japanese: "事務所" }, { english: "police station", japanese: "警察署" }, 
-{ english: "bridge", japanese: "橋" }, { english: "street", japanese: "通り" }, 
-{ english: "town", japanese: "町" }, { english: "city hall", japanese: "市役所" }
-],
-
-    "職業（仕事）": [
-{ english: "doctor", japanese: "医者" }, { english: "nurse", japanese: "看護師" },
-{ english: "dentist", japanese: "歯医者" }, 
-{ english: "singer", japanese: "歌手" }, { english: "dancer", japanese: "ダンサー" }, 
-{ english: "musician", japanese: "音楽家" }, { english: "actor", japanese: "俳優" },
-{ english: "artist", japanese: "芸術家" }, { english: "farmer", japanese: "農場経営者" },
-{ english: "writer", japanese: "作家" }, { english: "pilot", japanese: "パイロット" },
-{ english: "designer", japanese: "デザイナー" }, 
-{ english: "work", japanese: "仕事・働く" },
-{ english: "future", japanese: "将来" }, { english: "dream", japanese: "夢" } 
-    ],
-
-    "動物": [
-{ english: "dog", japanese: "犬" }, { english: "cat", japanese: "猫" }, 
-{ english: "horse", japanese: "馬" }, { english: "bird", japanese: "鳥" }, 
-{ english: "mouse", japanese: "ネズミ" }, { english: "lion", japanese: "ライオン" }, 
-{ english: "bear", japanese: "熊（クマ）" }, { english: "tiger", japanese: "虎（トラ）" }, 
-{ english: "rabbit", japanese: "ウサギ" }, { english: "animal", japanese: "動物" }
-    ],
-
-    "体": [
-{ english: "body", japanese: "体" }, { english: "head", japanese: "頭" }, 
-{ english: "hair", japanese: "髪" }, 
-{ english: "face", japanese: "顔" }, { english: "eye", japanese: "目" }, 
-{ english: "nose", japanese: "鼻" }, { english: "mouth", japanese: "口" },
-{ english: "ear", japanese: "耳" }, { english: "tooth", japanese: "歯" },
-{ english: "hand", japanese: "手" }, { english: "finger", japanese: "手の指" },
-{ english: "foot", japanese: "足" },
-{ english: "heart", japanese: "心臓" }, { english: "stomach", japanese: "胃・おなか" },
-    ],
+   "色": [ 
+        { english: "red", japanese: "赤" }, { english: "blue", japanese: "青" }, 
+        { english: "green", japanese: "緑" }, { english: "yellow", japanese: "黄" }, 
+        { english: "black", japanese: "黒" }, { english: "white", japanese: "白" }, 
+        { english: "brown", japanese: "茶" }, { english: "purple", japanese: "紫" }, 
+        { english: "pink", japanese: "ピンク" }, { english: "color", japanese: "カラー" }
+   ],
+   "時間帯・暦": [
+        { english: "morning", japanese: "朝" }, { english: "afternoon", japanese: "午後" }, 
+        { english: "evening", japanese: "夕方" }, { english: "night", japanese: "夜" },
+        { english: "tonight", japanese: "今夜" }, { english: "last night", japanese: "昨夜" },
+        { english: "today", japanese: "今日" }, { english: "yesterday", japanese: "昨日" }, 
+        { english: "tomorrow", japanese: "明日" }, { english: "every day", japanese: "毎日" }, 
+        { english: "every week", japanese: "毎週" }, { english: "every month", japanese: "毎月" }, 
+        { english: "every year", japanese: "毎年" }, { english: "this year", japanese: "今年" }, 
+        { english: "last year", japanese: "去年" }, { english: "next year", japanese: "来年" }
+   ],
+   "家族": [
+        { english: "family", japanese: "家族" }, { english: "birthday", japanese: "誕生日" },
+        { english: "father", japanese: "父親" }, { english: "mother", japanese: "母親" }, 
+        { english: "parent", japanese: "親" }, 
+        { english: "child", japanese: "子供" }, { english: "children", japanese: "子供たち" }, 
+        { english: "brother", japanese: "兄弟" }, { english: "sister", japanese: "姉妹" }, 
+        { english: "uncle", japanese: "おじ・おじさん" }, 
+        { english: "aunt", japanese: "おば・おばさん" }, 
+        { english: "cousin", japanese: "いとこ" }
+   ],
+   "人物": [
+        { english: "boy", japanese: "少年" }, { english: "girl", japanese: "少女" }, 
+        { english: "man", japanese: "男性" }, { english: "woman", japanese: "女性" }, 
+        { english: "teacher", japanese: "先生" }, { english: "student", japanese: "学生・生徒" }, 
+        { english: "friend", japanese: "友達" }, { english: "classmate", japanese: "同級生" },
+        { english: "volunteer", japanese: "ボランティア" }, 
+        { english: "member", japanese: "メンバー" }, { english: "people", japanese: "人々" },
+        { english: "young people", japanese: "若者" }
+   ],
+   "世界・国": [
+        { english: "world", japanese: "世界" }, { english: "country", japanese: "国" },
+        { english: "Japan", japanese: "日本" }, { english: "Spain", japanese: "スペイン" },
+        { english: "America", japanese: "アメリカ" }, { english: "China", japanese: "中国" },
+        { english: "Korea", japanese: "韓国" }, { english: "India", japanese: "インド" },
+        { english: "Australia", japanese: "オーストラリア" }, 
+        { english: "Canada", japanese: "カナダ" }, { english: "Germany", japanese: "ドイツ" }, 
+        { english: "France", japanese: "フランス" }, { english: "Italy", japanese: "イタリア" } 
+   ],
+   "食事・飲み物": [
+        { english: "breakfast", japanese: "朝食" }, { english: "lunch", japanese: "昼食" },
+        { english: "dinner", japanese: "夕食" }, { english: "food", japanese: "食べ物" }, 
+        { english: "dessert", japanese: "デザート" },
+        { english: "party", japanese: "パーティー" }, 
+        { english: "drink", japanese: "飲み物・飲む" }, 
+        { english: "water", japanese: "水" }, { english: "milk", japanese: "牛乳" }, 
+        { english: "tea", japanese: "茶・紅茶" }, { english: "coffee", japanese: "コーヒー" }
+   ],
+   "フルーツ・菓子": [
+        { english: "fruit", japanese: "果物" }, { english: "apple", japanese: "リンゴ" },
+        { english: "orange", japanese: "オレンジ" }, { english: "banana", japanese: "バナナ" }, 
+        { english: "lemon", japanese: "レモン" }, { english: "peach", japanese: "桃（ピーチ）" }, 
+        { english: "grapes", japanese: "ブドウ" },
+        { english: "cake", japanese: "ケーキ" }, { english: "sweet", japanese: "甘い菓子" }, 
+        { english: "cookie", japanese: "クッキー" }, 
+        { english: "ice cream", japanese: "アイスクリーム" }
+   ],
+   "料理・食材": [
+        { english: "cooking", japanese: "料理" }, 
+        { english: "go shopping", japanese: "買い物に行く" },
+        { english: "bread", japanese: "パン" }, { english: "salad", japanese: "サラダ" },
+        { english: "soup", japanese: "スープ" }, { english: "curry", japanese: "カレー (料理)" },
+        { english: "fish", japanese: "魚" }, { english: "egg", japanese: "卵" },
+        { english: "meat", japanese: "肉" }, { english: "chicken", japanese: "チキン" },
+        { english: "pork", japanese: "豚肉" }, { english: "beef", japanese: "牛肉" }, 
+        { english: "vegetable", japanese: "野菜" },
+        { english: "potato", japanese: "ジャガイモ" }
+   ],
+   "勉強": [
+        { english: "English", japanese: "英語" }, { english: "Japanese", japanese: "国語" }, 
+        { english: "math", japanese: "数学" }, { english: "science", japanese: "理科" }, 
+        { english: "subject", japanese: "教科" },
+        { english: "language", japanese: "言語" }, { english: "information", japanese: "情報" },
+        { english: "book", japanese: "本" }, { english: "notebook", japanese: "ノートブック" },
+        { english: "dictionary", japanese: "辞書" }, 
+        { english: "homework", japanese: "宿題" }, { english: "plan", japanese: "計画" },
+        { english: "idea", japanese: "アイデア" }, { english: "question", japanese: "質問" } 
+   ],
+   "学校の活動・行事": [
+        { english: "school", japanese: "学校" }, { english: "classroom", japanese: "教室" }, 
+        { english: "after school", japanese: "放課後" },
+        { english: "club activity", japanese: "クラブ活動" }, 
+        { english: "event", japanese: "イベント" },
+        { english: "sports day", japanese: "運動会・体育祭" }, 
+        { english: "music festival", japanese: "音楽発表会" }, 
+        { english: "school festival", japanese: "文化祭" },
+        { english: "school trip", japanese: "修学旅行" }, 
+        { english: "speech contest", japanese: "スピーチコンテスト" }
+   ],
+   "スポーツ": [
+        { english: "tennis", japanese: "テニス" }, { english: "soccer", japanese: "サッカー" }, 
+        { english: "running", japanese: "ランニング" }, { english: "swimming", japanese: "水泳" }, 
+        { english: "baseball", japanese: "野球" }, 
+        { english: "basketball", japanese: "バスケットボール" },
+        { english: "volleyball", japanese: "バレーボール" },
+        { english: "badminton", japanese: "バドミントン" },
+        { english: "player", japanese: "選手" }, { english: "sports", japanese: "スポーツ" }, 
+        { english: "game", japanese: "ゲーム" }, { english: "racket", japanese: "ラケット" }
+   ],
+   "楽器・音楽": [
+        { english: "piano", japanese: "ピアノ" }, { english: "drum", japanese: "ドラム" }, 
+        { english: "violin", japanese: "バイオリン" }, { english: "guitar", japanese: "ギター" }, 
+        { english: "flute", japanese: "フルート" }, { english: "trumpet", japanese: "トランペット" }, 
+        { english: "music", japanese: "音楽" }, { english: "art", japanese: "芸術" },
+        { english: "chorus", japanese: "合唱・コーラス" }, { english: "song", japanese: "歌" },
+        { english: "contest", japanese: "コンテスト" }, 
+        { english: "concert", japanese: "コンサート" }, { english: "stage", japanese: "ステージ" } 
+   ],
+   "乗り物": [
+        { english: "car", japanese: "車" }, { english: "bus", japanese: "バス" }, 
+        { english: "train", japanese: "電車・列車" }, { english: "bike", japanese: "自転車" },
+        { english: "taxi", japanese: "タクシー" },
+        { english: "ship", japanese: "船" }, { english: "boat", japanese: "ボート" }, 
+        { english: "airplane", japanese: "飛行機" }
+   ],
+   "家・家具": [
+        { english: "house", japanese: "家・住宅" },
+        { english: "home", japanese: "家庭・故郷" }, { english: "at home", japanese: "家で" },
+        { english: "room", japanese: "部屋" }, { english: "bed", japanese: "ベッド" },
+        { english: "desk", japanese: "机" }, { english: "chair", japanese: "椅子" },
+        { english: "table", japanese: "テーブル" }, { english: "kitchen", japanese: "台所" },
+        { english: "shower", japanese: "シャワー" },{ english: "bathroom", japanese: "浴室" }, 
+        { english: "door", japanese: "ドア" }, { english: "window", japanese: "窓" },
+        { english: "garden", japanese: "庭・庭園" }, { english: "flower", japanese: "花" }
+   ],
+   "自然": [
+        { english: "tree", japanese: "木" }, { english: "sea", japanese: "海" },
+        { english: "river", japanese: "川" }, { english: "mountain", japanese: "山" },
+        { english: "lake", japanese: "湖" }, { english: "woods", japanese: "森" }, 
+        { english: "beach", japanese: "砂浜" }, { english: "field", japanese: "野原" },
+        { english: "sun", japanese: "太陽" }, { english: "moon", japanese: "月" },
+        { english: "nature", japanese: "自然" }
+   ],
+   "街の施設（お出かけ）": [ 
+        { english: "park", japanese: "公園" }, { english: "bench", japanese: "ベンチ" }, 
+        { english: "shop", japanese: "店" }, { english: "bookstore", japanese: "書店" }, 
+        { english: "department store", japanese: "デパート" }, 
+        { english: "restaurant", japanese: "レストラン" }, { english: "zoo", japanese: "動物園" }, 
+        { english: "museum", japanese: "博物館" }, { english: "aquarium", japanese: "水族館" }, 
+        { english: "castle", japanese: "城" }, 
+        { english: "temple", japanese: "寺" }, { english: "shrine", japanese: "神社" }, 
+        { english: "theater", japanese: "劇場" } 
+   ], 
+   "街の施設（駅・公共など）": [ 
+        { english: "station", japanese: "駅" }, { english: "hospital", japanese: "病院" }, 
+        { english: "library", japanese: "図書館" }, { english: "bank", japanese: "銀行" }, 
+        { english: "post office", japanese: "郵便局" }, { english: "gym", japanese: "体育館" }, 
+        { english: "office", japanese: "事務所" }, { english: "police station", japanese: "警察署" }, 
+        { english: "bridge", japanese: "橋" }, { english: "street", japanese: "通り" }, 
+        { english: "town", japanese: "町" }, { english: "city hall", japanese: "市役所" }
+   ],
+   "職業（仕事）": [
+        { english: "doctor", japanese: "医者" }, { english: "nurse", japanese: "看護師" },
+        { english: "dentist", japanese: "歯医者" }, 
+        { english: "singer", japanese: "歌手" }, { english: "dancer", japanese: "ダンサー" }, 
+        { english: "musician", japanese: "音楽家" }, { english: "actor", japanese: "俳優" },
+        { english: "artist", japanese: "芸術家" }, { english: "farmer", japanese: "農場経営者" },
+        { english: "writer", japanese: "作家" }, { english: "pilot", japanese: "パイロット" },
+        { english: "designer", japanese: "デザイナー" }, 
+        { english: "work", japanese: "仕事・働く" },
+        { english: "future", japanese: "将来" }, { english: "dream", japanese: "夢" } 
+   ],
+   "動物": [
+        { english: "dog", japanese: "犬" }, { english: "cat", japanese: "猫" }, 
+        { english: "horse", japanese: "馬" }, { english: "bird", japanese: "鳥" }, 
+        { english: "mouse", japanese: "ネズミ" }, { english: "lion", japanese: "ライオン" }, 
+        { english: "bear", japanese: "熊（クマ）" }, { english: "tiger", japanese: "虎（トラ）" }, 
+        { english: "rabbit", japanese: "ウサギ" }, { english: "animal", japanese: "動物" }
+   ],
+   "体": [
+        { english: "body", japanese: "体" }, { english: "head", japanese: "頭" }, 
+        { english: "hair", japanese: "髪" }, 
+        { english: "face", japanese: "顔" }, { english: "eye", japanese: "目" }, 
+        { english: "nose", japanese: "鼻" }, { english: "mouth", japanese: "口" },
+        { english: "ear", japanese: "耳" }, { english: "tooth", japanese: "歯" },
+        { english: "hand", japanese: "手" }, { english: "finger", japanese: "手の指" },
+        { english: "foot", japanese: "足" },
+        { english: "heart", japanese: "心臓" }, { english: "stomach", japanese: "胃・おなか" }
+   ]
 };
-
+ 
 let currentCategory = ""; let currentWords = []; let currentIndex = 0; let score = 0; let isAnswered = false;
 function showCategoryScreen() {
-    document.getElementById("category-screen").style.display = "block"; document.getElementById("quiz-screen").style.display = "none"; document.getElementById("result-screen").style.display = "none";
-    const catListDiv = document.getElementById("category-list"); catListDiv.innerHTML = "";
+    document.getElementById("category-screen").style.display = "block";
+    document.getElementById("quiz-screen").style.display = "none"; 
+    document.getElementById("result-screen").style.display = "none";
+    const catListDiv = document.getElementById("category-list");
+    catListDiv.innerHTML = "";
     Object.keys(wordData).forEach(category => {
         const btn = document.createElement("button"); btn.className = "btn"; btn.innerText = category; btn.onclick = () => startQuiz(category); catListDiv.appendChild(btn);
     });
@@ -358,11 +343,16 @@ function showCategoryScreen() {
 function startQuiz(category) {
     currentCategory = category; currentWords = [...wordData[category]].sort(() => Math.random() - 0.5);
     if (currentWords.length > 10) { currentWords = currentWords.slice(0, 10); }
-    currentIndex = 0; score = 0; document.getElementById("category-screen").style.display = "none"; document.getElementById("quiz-screen").style.display = "block"; showQuestion();
+    currentIndex = 0; score = 0;
+    document.getElementById("category-screen").style.display = "none";
+    document.getElementById("quiz-screen").style.display = "block"; showQuestion();
 }
 function showQuestion() {
-    isAnswered = false; document.getElementById("next-btn").style.display = "none"; document.getElementById("result-message").innerText = "";
-    const currentQuestion = currentWords[currentIndex]; document.getElementById("progress").innerText = `第 ${currentIndex + 1} 問 / 全 ${currentWords.length} 問`; document.getElementById("japanese-word").innerText = currentQuestion.japanese;
+    isAnswered = false;
+    document.getElementById("next-btn").style.display = "none";
+    document.getElementById("result-message").innerText = "";
+    const currentQuestion = currentWords[currentIndex];
+    document.getElementById("progress").innerText = `第 ${currentIndex + 1} 問 / 全 ${currentWords.length} 問`; document.getElementById("japanese-word").innerText = currentQuestion.japanese;
     const choices = makeChoices(currentQuestion.english, wordData[currentCategory]); const choicesListDiv = document.getElementById("choices-list"); choicesListDiv.innerHTML = "";
     choices.forEach(choice => {
         const btn = document.createElement("button"); btn.className = "btn choice-btn"; btn.innerText = choice; btn.onclick = () => checkAnswer(btn, choice, currentQuestion.english); choicesListDiv.appendChild(btn);
@@ -370,25 +360,26 @@ function showQuestion() {
 }
 function makeChoices(correctAnswer, allCategoryWords) {
     const allEnglish = allCategoryWords.map(w => w.english); let dummies = allEnglish.filter(eng => eng !== correctAnswer); dummies.sort(() => Math.random() - 0.5); let chosenDummies = dummies.slice(0, 3);
-    while (chosenDummies.length < 3) { chosenDummies.push("apple", "book", "desk", "test"); } // 選択肢が足りない場合のダミー補填
-    let finalChoices = [correctAnswer, ...chosenDummies.slice(0, 3)]; finalChoices.sort(() => Math.random() - 0.5); return finalChoices;
+    while (chosenDummies.length < 3) { chosenDummies.push("apple", "book", "desk", "test"); }
+    let finalChoices = [correctAnswer, ...chosenDummies.slice(0, 3)];
+    finalChoices.sort(() => Math.random() - 0.5); return finalChoices;
 }
 function checkAnswer(clickedBtn, selected, correct) {
     if (isAnswered) return; isAnswered = true; const choiceButtons = document.querySelectorAll(".choice-btn"); const resultMsg = document.getElementById("result-message");
-    if (selected === correct) { clickedBtn.classList.add("correct"); resultMsg.innerText = "⭕ 正解！"; resultMsg.style.color = "#2ecc71"; score++; } 
-    else { clickedBtn.classList.add("incorrect"); resultMsg.innerText = `❌ 不正解！ 正解は: ${correct}`; resultMsg.style.color = "#e74c3c"; choiceButtons.forEach(btn => { if (btn.innerText === correct) { btn.classList.add("correct"); } }); }
+    if (selected === correct) {
+        clickedBtn.classList.add("correct"); resultMsg.innerText = "⭕ 正解！"; resultMsg.style.color = "#2ecc71"; score++; 
+    } else { 
+        clickedBtn.classList.add("incorrect"); resultMsg.innerText = `❌ 不正解！ 正解は: ${correct}`; resultMsg.style.color = "#e74c3c";
+        choiceButtons.forEach(btn => { if (btn.innerText === correct) { btn.classList.add("correct"); } }); 
+    }
     document.getElementById("next-btn").style.display = "block";
 }
 function nextQuestion() { currentIndex++; if (currentIndex < currentWords.length) { showQuestion(); } else { showResult(); } }
-function showResult() { document.getElementById("quiz-screen").style.display = "none"; document.getElementById("result-screen").style.display = "block"; document.getElementById("final-score").innerText = `${currentWords.length} 問中 ${score} 問 正解！`; }
+function showResult() {
+    document.getElementById("quiz-screen").style.display = "none";
+    document.getElementById("result-screen").style.display = "block"; document.getElementById("final-score").innerText = `${currentWords.length} 問中 ${score} 問 正解！`; 
+}
 showCategoryScreen();
 </script>
 </body>
 </html>
-
-
-
-
-"追加の英単語 (ランダム10問)": [
-{ english: "anime", japanese: "アニメ" }, { english: "drama", japanese: "ドラマ" }, { english: "program", japanese: "プログラム" }, { english: "dress", japanese: "ドレス" }, { english: "internet", japanese: "インターネット" },  { english: "robot", japanese: "ロボット" }, { english: "video game", japanese: "ビデオゲーム" },  
-{ english: "life", japanese: "生活" }, { english: "picture", japanese: "写真 (絵)" }, { english: "letter", japanese: "手紙" }, { english: "phone", japanese: "電話" }, { english: "map", japanese: "地図" }, { english: "clothes", japanese: "衣服" }, { english: "present", japanese: "プレゼント" }, { english: "ticket", japanese: "切符" }, { english: "movie", japanese: "映画" },  { english: "paper", japanese: "紙" }, { english: "one hour", japanese: "1時間" }, { english: "one minute", japanese: "1分" }, 
