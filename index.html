@@ -735,6 +735,383 @@ if (typeof showCategoryScreen === "function") {
         originalShowCategoryScreen();
     };
     showCategoryScreen();
+// =================================================================
+// 【音声機能搭載・完全版】新カテゴリ＆自動発音システム統合コード
+// =================================================================
+
+// --- 1. 既存の「家・家具」カテゴリにベッドを追加 ---
+if (wordData["家・家具"]) {
+    const hasBed = wordData["家・家具"].some(w => w.english === "bed");
+    if (!hasBed) {
+        wordData["家・家具"].push({ english: "bed", japanese: "ベッド" });
+    }
+}
+
+// --- 2. 新規カテゴリのデータ登録 ---
+
+// ① 身の回りのもの
+wordData["身の回りのもの"] = [
+    { english: "computer", japanese: "コンピュータ" },
+    { english: "calendar", japanese: "カレンダー" },
+    { english: "clock", japanese: "置き・掛け時計" },
+    { english: "cup", japanese: "カップ・茶わん" },
+    { english: "telephone", japanese: "電話" },
+    { english: "newspaper", japanese: "新聞" },
+    { english: "hat", japanese: "帽子[ふちのあるもの]" },
+    { english: "cap", japanese: "帽子[ふちのないもの・キャップ]" },
+    { english: "pants", japanese: "ズボン" },
+    { english: "sweater", japanese: "セーター" },
+    { english: "T-shirt", japanese: "Tシャツ" },
+    { english: "gloves", japanese: "手袋" },
+    { english: "uniform", japanese: "制服・ユニフォーム" },
+    { english: "watch", japanese: "腕時計" },
+    { english: "socks", japanese: "靴下" },
+    { english: "glasses", japanese: "メガネ" }
+];
+
+// ② 不規則動詞 (過去形)
+wordData["不規則動詞 (過去形)"] = [
+    { english: "cut", japanese: "cut (~を切る) の過去形", ing: "cutting" },
+    { english: "put", japanese: "put (~を置く) の過去形", ing: "putting" },
+    { english: "became", japanese: "become (~になる) の過去形", ing: "becoming" },
+    { english: "came", japanese: "come (来る) の過去形", ing: "coming" },
+    { english: "ran", japanese: "run (走る) の過去形", ing: "running" },
+    { english: "slept", japanese: "sleep (眠る) の過去形", ing: "sleeping" },
+    { english: "spent", japanese: "spend (~を過ごす) の過去形", ing: "spending" },
+    { english: "stood", japanese: "stand (立っている) の過去形", ing: "standing" },
+    { english: "taught", japanese: "teach (~を教える) の過去形", ing: "teaching" },
+    { english: "told", japanese: "tell (~に話す) の過去形", ing: "telling" },
+    { english: "thought", japanese: "think (~と考える) の過去形", ing: "thinking" },
+    { english: "understood", japanese: "understand (~を理解する) の過去形", ing: "understanding" },
+    { english: "won", japanese: "win (勝つ) の過去形", ing: "winning" },
+    { english: "brought", japanese: "bring (~を持ってくる) の過去形", ing: "bringing" },
+    { english: "built", japanese: "build (~を建てる) の過去形", ing: "building" },
+    { english: "bought", japanese: "buy (~を買う) の過去形", ing: "buying" },
+    { english: "caught", japanese: "catch (~をつかまえる) の過去形", ing: "catching" },
+    { english: "felt", japanese: "feel (感じる) の過去形", ing: "feeling" },
+    { english: "found", japanese: "find (~を見つける) の過去形", ing: "finding" },
+    { english: "had", japanese: "have (~を持っている) の過去形", ing: "having" },
+    { english: "heard", japanese: "hear (~が聞こえる) の過去形", ing: "hearing" },
+    { english: "kept", japanese: "keep (~を持ち続ける) の過去形", ing: "keeping" },
+    { english: "learned", japanese: "learn (~を学ぶ) の過去形", ing: "learning" },
+    { english: "left", japanese: "leave (去る) の過去形", ing: "leaving" },
+    { english: "lost", japanese: "lose (~を失う) の過去形", ing: "losing" },
+    { english: "made", japanese: "make (~を作る) の過去形", ing: "making" },
+    { english: "met", japanese: "meet (~と会う) の過去形", ing: "meeting" },
+    { english: "paid", japanese: "pay (~を支払う) の過去形", ing: "paying" },
+    { english: "read", japanese: "read (~を読む) の過去形", ing: "reading" },
+    { english: "said", japanese: "say (~と言う) の過去形", ing: "saying" },
+    { english: "sold", japanese: "sell (~を売る) の過去形", ing: "selling" },
+    { english: "sent", japanese: "send (~を送る) の過去形", ing: "sending" },
+    { english: "sat", japanese: "sit(座る) の過去形", ing: "sitting" },
+    { english: "began", japanese: "begin ( を始める) の過去形", ing: "beginning" },
+    { english: "broke", japanese: "break (~をこわす) の過去形", ing: "breaking" },
+    { english: "did", japanese: "do、does (~をする) の過去形", ing: "doing" },
+    { english: "drank", japanese: "drink (~を飲む) の過去形", ing: "drinking" },
+    { english: "drove", japanese: "drive (~を確転する) の過去形", ing: "driving" },
+    { english: "ate", japanese: "eat (~を食べる) の過去形", ing: "eating" },
+    { english: "got", japanese: "get (~を得る) の過去形", ing: "getting" },
+    { english: "gave", japanese: "give (~を与える) の過去形", ing: "giving" },
+    { english: "went", japanese: "go (行く) の過去形", ing: "going" },
+    { english: "knew", japanese: "know (~を知っている) の過去形", ing: "knowing" },
+    { english: "rose", japanese: "rise (昇る) の過去形", ing: "rising" },
+    { english: "saw", japanese: "see(見える) の過去形", ing: "seeing" },
+    { english: "showed", japanese: "show (~を見せる) の過去形", ing: "showing" },
+    { english: "sing", japanese: "sing (歌う) の過去形", ing: "singing" },
+    { english: "spoke", japanese: "speak(話す) の過去形", ing: "speaking" },
+    { english: "swam", japanese: "swim <) の過去形", ing: "swimming" },
+    { english: "took", japanese: "take (~を取る) の過去形", ing: "taking" },
+    { english: "woke", japanese: "wake (目を覚ます) の過去形", ing: "waking" },
+    { english: "wore", japanese: "wear (~を着ている) の過去形", ing: "wearing" },
+    { english: "wrote", japanese: "write (~を書く) の過去形", ing: "writing" }
+];
+
+// ③ 不規則動詞 (過去分詞)
+wordData["不規則動詞 (過去分詞)"] = [
+    { english: "cut", japanese: "cut (~を切る) の過去分詞", ing: "cutting" },
+    { english: "put", japanese: "put (~を置く) の過去分詞", ing: "putting" },
+    { english: "become", japanese: "become (~になる) の過去分詞", ing: "becoming" },
+    { english: "come", japanese: "come (来る) の過去分詞", ing: "coming" },
+    { english: "run", japanese: "run (走る) の過去分詞", ing: "running" },
+    { english: "slept", japanese: "sleep (眠る) の過去分詞", ing: "sleeping" },
+    { english: "spent", japanese: "spend (~を過ごす) の過去分詞", ing: "spending" },
+    { english: "stood", japanese: "stand (立っている) の過去分詞", ing: "standing" },
+    { english: "taught", japanese: "teach (~を教える) の過去分詞", ing: "teaching" },
+    { english: "told", japanese: "tell (~に話す) の過去分詞", ing: "telling" },
+    { english: "thought", japanese: "think (~と考える) の過去分詞", ing: "thinking" },
+    { english: "understood", japanese: "understand (~を理解する) の過去分詞", ing: "understanding" },
+    { english: "won", japanese: "win (勝つ) の過去分詞", ing: "winning" },
+    { english: "brought", japanese: "bring (~を持ってくる) の過去分詞", ing: "bringing" },
+    { english: "built", japanese: "build (~を建てる) の過去分詞", ing: "building" },
+    { english: "bought", japanese: "buy (~を買う) の過去分詞", ing: "buying" },
+    { english: "caught", japanese: "catch (~をつかまえる) の過去分詞", ing: "catching" },
+    { english: "felt", japanese: "feel (感じる) の過去分詞", ing: "feeling" },
+    { english: "found", japanese: "find (~を見つける) の過去分詞", ing: "finding" },
+    { english: "had", japanese: "have (~を持っている) の過去分詞", ing: "having" },
+    { english: "heard", japanese: "hear (~が聞こえる) の過去分詞", ing: "hearing" },
+    { english: "kept", japanese: "keep (~を持ち続ける) の過去分詞", ing: "keeping" },
+    { english: "learned (learnt)", japanese: "learn (~を学ぶ) の過去分詞", ing: "learning" },
+    { english: "left", japanese: "leave (去る) の過去分詞", ing: "leaving" },
+    { english: "lost", japanese: "lose (~を失う) の過去分詞", ing: "losing" },
+    { english: "made", japanese: "make (~を作る) の過去分詞", ing: "making" },
+    { english: "met", japanese: "meet (~と会う) の過去分詞", ing: "meeting" },
+    { english: "paid", japanese: "pay (~を支払う) の過去分詞", ing: "paying" },
+    { english: "read", japanese: "read (~を読む) の過去分詞", ing: "reading" },
+    { english: "said", japanese: "say (~と言う) の過去分詞", ing: "saying" },
+    { english: "sold", japanese: "sell (~を売る) の過去分詞", ing: "selling" },
+    { english: "sent", japanese: "send (~を送る) の過去分詞", ing: "sending" },
+    { english: "sat", japanese: "sit(座る) の過去分詞", ing: "sitting" },
+    { english: "begun", japanese: "begin ( を始める) の過去分詞", ing: "beginning" },
+    { english: "broken", japanese: "break (~をこわす) の過去分詞", ing: "breaking" },
+    { english: "done", japanese: "do、does (~をする) の過去分詞", ing: "doing" },
+    { english: "drunk", japanese: "drink (~を飲む) の過去分詞", ing: "drinking" },
+    { english: "driven", japanese: "drive (~を確転する) の過去分詞", ing: "driving" },
+    { english: "eaten", japanese: "eat (~を食べる) の過去分詞", ing: "eating" },
+    { english: "got (gotten)", japanese: "get (~を得る) の過去分詞", ing: "getting" },
+    { english: "given", japanese: "give (~を与える) の過去分詞", ing: "giving" },
+    { english: "gone", japanese: "go (行く) の過去分詞", ing: "going" },
+    { english: "known", japanese: "know (~を知っている) の過去分詞", ing: "knowing" },
+    { english: "risen", japanese: "rise (昇る) の過去分詞", ing: "rising" },
+    { english: "seen", japanese: "see(見える) の過去分詞", ing: "seeing" },
+    { english: "shown (showed)", japanese: "show (~を見せる) の過去分詞", ing: "showing" },
+    { english: "sung", japanese: "sing (歌う) の過去分詞", ing: "singing" },
+    { english: "spoken", japanese: "speak(話す) の過去分詞", ing: "speaking" },
+    { english: "swum", japanese: "swim <) の過去分詞", ing: "swimming" },
+    { english: "taken", japanese: "take (~を取る) の過去分詞", ing: "taking" },
+    { english: "woken", japanese: "wake (目を覚ます) の過去分詞", ing: "waking" },
+    { english: "worn", japanese: "wear (~を着ている) の過去分詞", ing: "wearing" },
+    { english: "written", japanese: "write (~を書く) の過去分詞", ing: "writing" }
+];
+
+// ④ 形容詞・副詞 (比較級)
+wordData["形容詞・副詞 (比較級)"] = [
+    { english: "cheaper", japanese: "cheap (安い) の比較級" },
+    { english: "cleaner", japanese: "clean (きれいな) の比較級" },
+    { english: "colder", japanese: "cold (寒い) の比較級" },
+    { english: "cooler", japanese: "cool (涼しい) の比較級" },
+    { english: "faster", japanese: "fast (速い・速く) の比較級" },
+    { english: "greater", japanese: "great (すごい) の比較級" },
+    { english: "harder", japanese: "hard (難しい) の比較級" },
+    { english: "higher", japanese: "high (高い) の比較級" },
+    { english: "lighter", japanese: "light (明るい・軽い) の比較級" },
+    { english: "longer", japanese: "long (長い) の比較級" },
+    { english: "nearer", japanese: "near (近い) の比較級" },
+    { english: "newer", japanese: "new (新しい) の比較級" },
+    { english: "older", japanese: "old (古い) の比較級" },
+    { english: "shorter", japanese: "short (短い) の比較級" },
+    { english: "smaller", japanese: "small (小さい) の比較級" },
+    { english: "smarter", japanese: "smart (頭の良い) の比較級" },
+    { english: "stronger", japanese: "strong (強い) の比較級" },
+    { english: "taller", japanese: "tall (背が高い) の比較級" },
+    { english: "warmer", japanese: "warm (暖かい) の比較級" },
+    { english: "younger", japanese: "young (若い) の比較級" },
+    { english: "larger", japanese: "large (大きい) の比較級" },
+    { english: "later", japanese: "late (遅い) の比較級" },
+    { english: "bigger", japanese: "big (大きい) の比較級" },
+    { english: "hotter", japanese: "hot (暑い・熱い) の比較級" },
+    { english: "busier", japanese: "busy (忙しい) の比較級" },
+    { english: "earlier", japanese: "early (早く) の比較級" },
+    { english: "easier", japanese: "easy (簡単な) の比較級" },
+    { english: "happier", japanese: "happy (幸せな) の比較級" },
+    { english: "heavier", japanese: "heavy (重い) の比較級" },
+    { english: "prettier", japanese: "pretty (かわいい) の比較級" },
+    { english: "more beautiful", japanese: "beautiful (美しい) の比較級" },
+    { english: "more careful", japanese: "careful (注意深い) の比較級" },
+    { english: "more delicious", japanese: "delicious (おいしい) の比較級" },
+    { english: "more difficult", japanese: "難しい (難しい) の比較級" },
+    { english: "more easily", japanese: "easily (簡単に) の比較級" },
+    { english: "more exciting", japanese: "exciting (わくわくする) の比較級" },
+    { english: "more expensive", japanese: "expensive (高価な) の比較級" },
+    { english: "more famous", japanese: "famous (有名な) の比較級" },
+    { english: "more important", japanese: "important (重要な) の比較級" },
+    { english: "more interesting", japanese: "interesting (おもしろい) の比較級" },
+    { english: "more popular", japanese: "popular (人気のある) の比較級" },
+    { english: "more useful", japanese: "useful (便利な) の比較級" },
+    { english: "better", japanese: "good (良い) / well (元気に・上手に) の比較級" },
+    { english: "worse", japanese: "bad (悪い) / ill (病気の) の比較級" },
+    { english: "more", japanese: "many (多い[数]) / much (多い[量]) の比較級" },
+    { english: "less", japanese: "little (少しの[量]) の比較級" }
+];
+
+// ⑤ 形容詞・副詞 (最上級)
+wordData["形容詞・副詞 (最上級)"] = [
+    { english: "the cheapest", japanese: "cheap (安い) の最上級" },
+    { english: "the cleanest", japanese: "clean (きれいな) の最上級" },
+    { english: "the coldest", japanese: "cold (寒い) の最上級" },
+    { english: "the coolest", japanese: "cool (涼しい) の最上級" },
+    { english: "the fastest", japanese: "fast (速い・速く) の最上級" },
+    { english: "the greatest", japanese: "great (すごい) の最上級" },
+    { english: "the hardest", japanese: "hard (難しい) の最上級" },
+    { english: "the highest", japanese: "high (高い) の最上級" },
+    { english: "the lightest", japanese: "light (明るい・軽い) の最上級" },
+    { english: "the longest", japanese: "long (長い) の最上級" },
+    { english: "the nearest", japanese: "near (近い) の最上級" },
+    { english: "the newest", japanese: "new (新しい) の最上級" },
+    { english: "the oldest", japanese: "old (古い) の最上級" },
+    { english: "the shortest", japanese: "short (短い) の最上級" },
+    { english: "the smallest", japanese: "small (小さい) の最上級" },
+    { english: "the smartest", japanese: "smart (頭の良い) の最上級" },
+    { english: "the strongest", japanese: "strong (強い) の最上級" },
+    { english: "the tallest", japanese: "tall (背が高い) の最上級" },
+    { english: "the warmest", japanese: "warm (暖かい) の最上級" },
+    { english: "the youngest", japanese: "young (若い) の最上級" },
+    { english: "the largest", japanese: "large (大きい) の最上級" },
+    { english: "the latest", japanese: "late (遅い) の最上級" },
+    { english: "the biggest", japanese: "big (大きい) の最上級" },
+    { english: "the hottest", japanese: "hot (暑い・熱い) の最上級" },
+    { english: "the busiest", japanese: "busy (忙しい) の最上級" },
+    { english: "the earliest", japanese: "early (早く) の最上級" },
+    { english: "the easiest", japanese: "easy (簡単な) の最上級" },
+    { english: "the happiest", japanese: "happy (幸せな) の最上級" },
+    { english: "the heaviest", japanese: "heavy (重い) の最上級" },
+    { english: "the prettiest", japanese: "pretty (かわいい) の最上級" },
+    { english: "the most beautiful", japanese: "beautiful (美しい) の最上級" },
+    { english: "the most careful", japanese: "careful (注意深い) の最上級" },
+    { english: "the most delicious", japanese: "delicious (おいしい) の最上級" },
+    { english: "the most difficult", japanese: "difficult (難しい) の最上級" },
+    { english: "the most easily", japanese: "easily (簡単に) の最上級" },
+    { english: "the most exciting", japanese: "exciting (わくわくする) の最上級" },
+    { english: "the most expensive", japanese: "expensive (高価な) の最上級" },
+    { english: "the most famous", japanese: "famous (有名な) の最上級" },
+    { english: "the most important", japanese: "important (重要な) の最上級" },
+    { english: "the most interesting", japanese: "interesting (おもしろい) の最上級" },
+    { english: "the most popular", japanese: "popular (人気のある) の最上級" },
+    { english: "the most useful", japanese: "useful (便利な) の最上級" },
+    { english: "the best", japanese: "good (良い) / well (元気に・上手に) の最上級" },
+    { english: "the worst", japanese: "bad (悪い) / ill (病気の) の最上級" },
+    { english: "the most", japanese: "many (多い[数]) / much (多い[量]) の最上級" },
+    { english: "the least", japanese: "little (少しの[量]) の最上級" }
+];
+
+// --- 3. 選択肢（4択）作成ロジックの最適化 ---
+const originalMakeChoices = makeChoices;
+makeChoices = function(correctAnswer, allCategoryWords) {
+    const specialCategories = ["不規則動詞 (過去形)", "不規則動詞 (過去分詞)", "形容詞・副詞 (比較級)", "形容詞・副詞 (最上級)", "身の回りのもの"];
+    if (specialCategories.includes(currentCategory)) {
+        let finalChoices = [correctAnswer];
+        const currentWord = allCategoryWords.find(w => w.english === "bed");
+        if (currentWord && currentWord.ing) {
+            finalChoices.push(currentWord.ing);
+        }
+        let otherWords = allCategoryWords.filter(w => w.english !== correctAnswer);
+        otherWords.sort(() => Math.random() - 0.5);
+        for (let i = 0; i < otherWords.length; i++) {
+            if (finalChoices.length >= 4) break;
+            finalChoices.push(otherWords[i].english);
+        }
+        while (finalChoices.length < 4) {
+            finalChoices.push("went", "made", "computer", "cheaper");
+        }
+        return finalChoices.sort(() => Math.random() - 0.5);
+    }
+    return originalMakeChoices(correctAnswer, allCategoryWords);
+};
+
+// --- 4. 【音声エンジン】英語の音声を発音する共通関数 ---
+function speakEnglishWord(text) {
+    if ('speechSynthesis' in window) {
+        // すでに喋っている音声があれば強制停止
+        window.speechSynthesis.cancel();
+        
+        // スラッシュなどの記号を除去し、純粋な英単語だけを取り出す
+        let cleanText = text.replace(/[^a-zA-Z\s]/g, ' ').trim();
+        
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = 'en-US'; // アメリカ英語
+        utterance.rate = 0.85;    // 生徒が聞き取りやすいよう、少しだけゆっくり(標準は1.0)
+        
+        window.speechSynthesis.speak(utterance);
+    }
+}
+
+// --- 5. 【機能統合】ボタン生成の拡張とクリック時の音声連動 ---
+if (typeof updateQuizScreen === "function") {
+    const originalUpdateQuizScreen = updateQuizScreen;
+    updateQuizScreen = function() {
+        // 元の画面を描画
+        originalUpdateQuizScreen();
+        
+        // 生成された4択ボタンすべてに対して、音声発音機能＆赤色強調を注入
+        const buttons = document.querySelectorAll("#choices-container button, .choice-button");
+        buttons.forEach(btn => {
+            let txt = btn.textContent || btn.innerText;
+            if (!txt) return;
+
+            // ① クリックされたときにネイティブ音声で発音する命令を追加
+            btn.addEventListener('click', () => {
+                speakEnglishWord(txt);
+            });
+            
+            // ② 比較級・最上級のテキスト赤色染め処理
+            if (currentCategory === "形容詞・副詞 (比較級)" || currentCategory === "形容詞・副詞 (最上級)") {
+                let htmlResult = txt;
+                const irregulars = ["better", "worse", "less", "best", "worst", "least"];
+                let isIrregular = false;
+                
+                irregulars.forEach(irr => {
+                    if (txt === irr || txt === "the " + irr) {
+                        htmlResult = htmlResult.replace(irr, `<span style="color: red; font-weight: bold;">${irr}</span>`);
+                        isIrregular = true;
+                    }
+                });
+                
+                if (!isIrregular) {
+                    if (txt.includes("more ") || txt.includes("most ")) {
+                        htmlResult = htmlResult.replace("more", '<span style="color: red; font-weight: bold;">more</span>');
+                        htmlResult = htmlResult.replace("most", '<span style="color: red; font-weight: bold;">most</span>');
+                    } else {
+                        if (txt.endsWith("est")) {
+                            if (txt.endsWith("ggest")) htmlResult = txt.slice(0, -5) + '<span style="color: red; font-weight: bold;">ggest</span>';
+                            else if (txt.endsWith("ttest")) htmlResult = txt.slice(0, -5) + '<span style="color: red; font-weight: bold;">ttest</span>';
+                            else htmlResult = txt.slice(0, -3) + '<span style="color: red; font-weight: bold;">est</span>';
+                        } else if (txt.endsWith("er")) {
+                            if (txt.endsWith("gger")) htmlResult = txt.slice(0, -4) + '<span style="color: red; font-weight: bold;">gger</span>';
+                            else if (txt.endsWith("tter")) htmlResult = txt.slice(0, -4) + '<span style="color: red; font-weight: bold;">tter</span>';
+                            else htmlResult = txt.slice(0, -2) + '<span style="color: red; font-weight: bold;">er</span>';
+                        }
+                    }
+                }
+                btn.innerHTML = htmlResult;
+            }
+        });
+    };
+}
+
+// --- 6. カテゴリの並び順制御（「動物」と「体」の間に「身の回りのもの」を配置） ---
+if (typeof showCategoryScreen === "function") {
+    const originalShowCategoryScreen = showCategoryScreen;
+    showCategoryScreen = function() {
+        const categories = Object.keys(wordData);
+        const container = document.getElementById("category-container");
+        if (container) {
+            container.innerHTML = "";
+            let sortedCategories = [];
+            const normalOrderBefore = ["学校の活動・行事", "スポーツ", "楽器・音楽", "乗り物", "家・家具", "自然", "街の施設（お出かけ）", "街の施設（駅・公共など）", "職業（仕事）", "動物"];
+            normalOrderBefore.forEach(cat => {
+                if (categories.includes(cat)) sortedCategories.push(cat);
+            });
+            if (categories.includes("身の回りのもの")) {
+                sortedCategories.push("身の回りのもの");
+            }
+            const normalOrderAfter = ["体", "不規則動詞 (過去形)", "不規則動詞 (過去分詞)", "形容詞・副詞 (比較級)", "形容詞・副詞 (最上級)"];
+            normalOrderAfter.forEach(cat => {
+                if (categories.includes(cat)) sortedCategories.push(cat);
+            });
+            categories.forEach(cat => {
+                if (!sortedCategories.includes(cat)) sortedCategories.push(cat);
+            });
+            sortedCategories.forEach(category => {
+                const button = document.createElement("button");
+                button.className = "category-button";
+                button.innerText = category;
+                button.onclick = () => selectCategory(category);
+                container.appendChild(button);
+            });
+            return;
+        }
+        originalShowCategoryScreen();
+    };
+    showCategoryScreen();
 }
 // =================================================================
 </script>
