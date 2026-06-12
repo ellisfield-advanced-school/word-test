@@ -382,21 +382,20 @@ function showResult() {
 }
 showCategoryScreen();
 // =================================================================
-// 【完全データ版】新カテゴリ・データ一括追加コード（音声なし安定版）
+// 【修正・完全版】新カテゴリ・データ一括追加コード（タグ表示バグ修正版）
 // =================================================================
 
 // --- 1. 既存の「家・家具」カテゴリにベッドを追加 ---
 if (wordData["家・家具"]) {
-    // 既存のリストに bed がなければ追加
     const hasBed = wordData["家・家具"].some(w => w.english === "bed");
     if (!hasBed) {
         wordData["家・家具"].push({ english: "bed", japanese: "ベッド" });
     }
 }
 
-// --- 2. 新規カテゴリのデータ登録 ---
+// --- 2. 新規カテゴリのデータ登録（HTMLタグを排除した綺麗な英単語データに修正） ---
 
-// ① 身の回りのもの（book, notebookは除外、glassesを追加）
+// ① 身の回りのもの
 wordData["身の回りのもの"] = [
     { english: "computer", japanese: "コンピュータ" },
     { english: "calendar", japanese: "カレンダー" },
@@ -409,11 +408,11 @@ wordData["身の回りのもの"] = [
     { english: "pants", japanese: "ズボン" },
     { english: "sweater", japanese: "セーター" },
     { english: "T-shirt", japanese: "Tシャツ" },
-    { english: "gloves", "+japanese": "手袋" },
+    { english: "gloves", japanese: "手袋" },
     { english: "uniform", japanese: "制服・ユニフォーム" },
     { english: "watch", japanese: "腕時計" },
     { english: "socks", japanese: "靴下" },
-    { english: "glasses", japanese: "メガネ" } // 💡ご指定のメガネを追加
+    { english: "glasses", japanese: "メガネ" }
 ];
 
 // ② 不規則動詞 (過去形)
@@ -530,185 +529,205 @@ wordData["不規則動詞 (過去分詞)"] = [
     { english: "written", japanese: "write (~を書く) の過去分詞", ing: "writing" }
 ];
 
-// ④ 形容詞・副詞 (比較級) ※赤色強調タグ入り
+// ④ 形容詞・副詞 (比較級)
 wordData["形容詞・副詞 (比較級)"] = [
-    { english: "cheap<span style='color:red;'>er</span>", japanese: "cheap (安い) の比較級" },
-    { english: "clean<span style='color:red;'>er</span>", japanese: "clean (きれいな) の比較級" },
-    { english: "cold<span style='color:red;'>er</span>", japanese: "cold (寒い) の比較級" },
-    { english: "cool<span style='color:red;'>er</span>", japanese: "cool (涼しい) の比較級" },
-    { english: "fast<span style='color:red;'>er</span>", japanese: "fast (速い・速く) の比較級" },
-    { english: "great<span style='color:red;'>er</span>", japanese: "great (すごい) の比較級" },
-    { english: "hard<span style='color:red;'>er</span>", japanese: "hard (難しい) の比較級" },
-    { english: "high<span style='color:red;'>er</span>", japanese: "high (高い) の比較級" },
-    { english: "light<span style='color:red;'>er</span>", japanese: "light (明るい・軽い) の比較級" },
-    { english: "long<span style='color:red;'>er</span>", japanese: "long (長い) の比較級" },
-    { english: "near<span style='color:red;'>er</span>", japanese: "near (近い) の比較級" },
-    { english: "new<span style='color:red;'>er</span>", japanese: "new (新しい) の比較級" },
-    { english: "old<span style='color:red;'>er</span>", japanese: "old (古い) の比較級" },
-    { english: "short<span style='color:red;'>er</span>", japanese: "short (短い) の比較級" },
-    { english: "small<span style='color:red;'>er</span>", japanese: "small (小さい) の比較級" },
-    { english: "smart<span style='color:red;'>er</span>", japanese: "smart (頭の良い) の比較級" },
-    { english: "strong<span style='color:red;'>er</span>", japanese: "strong (強い) の比較級" },
-    { english: "tall<span style='color:red;'>er</span>", japanese: "tall (背が高い) の比較級" },
-    { english: "warm<span style='color:red;'>er</span>", japanese: "warm (暖かい) の比較級" },
-    { english: "young<span style='color:red;'>er</span>", japanese: "young (若い) の比較級" },
-    { english: "larg<span style='color:red;'>er</span>", japanese: "large (大きい) の比較級" },
-    { english: "lat<span style='color:red;'>er</span>", japanese: "late (遅い) の比較級" },
-    { english: "bi<span style='color:red;'>gger</span>", japanese: "big (大きい) の比較級" },
-    { english: "ho<span style='color:red;'>tter</span>", japanese: "hot (暑い・熱い) の比較級" },
-    { english: "busi<span style='color:red;'>er</span>", japanese: "busy (忙しい) の比較級" },
-    { english: "earli<span style='color:red;'>er</span>", japanese: "early (早く) の比較級" },
-    { english: "easi<span style='color:red;'>er</span>", japanese: "easy (簡単な) の比較級" },
-    { english: "happi<span style='color:red;'>er</span>", japanese: "happy (幸せな) の比較級" },
-    { english: "heavi<span style='color:red;'>er</span>", japanese: "heavy (重い) の比較級" },
-    { english: "pretti<span style='color:red;'>er</span>", japanese: "pretty (かわいい) の比較級" },
-    { english: "<span style='color:red;'>more</span> beautiful", japanese: "beautiful (美しい) の比較級" },
-    { english: "<span style='color:red;'>more</span> careful", japanese: "careful (注意深い) の比較級" },
-    { english: "<span style='color:red;'>more</span> delicious", japanese: "delicious (おいしい) の比較級" },
-    { english: "<span style='color:red;'>more</span> difficult", japanese: "difficult (難しい) の比較級" },
-    { english: "<span style='color:red;'>more</span> easily", japanese: "easily (簡単に) の比較級" },
-    { english: "<span style='color:red;'>more</span> exciting", japanese: "exciting (わくわくする) の比較級" },
-    { english: "<span style='color:red;'>more</span> expensive", japanese: "expensive (高価な) の比較級" },
-    { english: "<span style='color:red;'>more</span> famous", japanese: "famous (有名な) の比較級" },
-    { english: "<span style='color:red;'>more</span> important", japanese: "important (重要な) の比較級" },
-    { english: "<span style='color:red;'>more</span> interesting", japanese: "interesting (おもしろい) の比較級" },
-    { english: "<span style='color:red;'>more</span> popular", japanese: "popular (人気のある) の比較級" },
-    { english: "<span style='color:red;'>more</span> useful", japanese: "useful (便利な) の比較級" },
-    { english: "<span style='color:red;'>better</span>", japanese: "good (良い) / well (元気に・上手に) の比較級" },
-    { english: "<span style='color:red;'>worse</span>", japanese: "bad (悪い) / ill (病気の) の比較級" },
-    { english: "<span style='color:red;'>more</span>", japanese: "many (多い[数]) / much (多い[量]) の比較級" },
-    { english: "<span style='color:red;'>less</span>", japanese: "little (少しの[量]) の比較級" }
+    { english: "cheaper", japanese: "cheap (安い) の比較級" },
+    { english: "cleaner", japanese: "clean (きれいな) の比較級" },
+    { english: "colder", japanese: "cold (寒い) の比較級" },
+    { english: "cooler", japanese: "cool (涼しい) の比較級" },
+    { english: "faster", japanese: "fast (速い・速く) の比較級" },
+    { english: "greater", japanese: "great (すごい) の比較級" },
+    { english: "harder", japanese: "hard (難しい) の比較級" },
+    { english: "higher", japanese: "high (高い) の比較級" },
+    { english: "lighter", japanese: "light (明るい・軽い) の比較級" },
+    { english: "longer", japanese: "long (長い) の比較級" },
+    { english: "nearer", japanese: "near (近い) の比較級" },
+    { english: "newer", japanese: "new (新しい) の比較級" },
+    { english: "older", japanese: "old (古い) の比較級" },
+    { english: "shorter", japanese: "short (短い) の比較級" },
+    { english: "smaller", japanese: "small (小さい) の比較級" },
+    { english: "smarter", japanese: "smart (頭の良い) の比較級" },
+    { english: "stronger", japanese: "strong (強い) の比較級" },
+    { english: "taller", japanese: "tall (背が高い) の比較級" },
+    { english: "warmer", japanese: "warm (暖かい) の比較級" },
+    { english: "younger", japanese: "young (若い) の比較級" },
+    { english: "larger", japanese: "large (大きい) の比較級" },
+    { english: "later", japanese: "late (遅い) の比較級" },
+    { english: "bigger", japanese: "big (大きい) の比較級" },
+    { english: "hotter", japanese: "hot (暑い・熱い) の比較級" },
+    { english: "busier", japanese: "busy (忙しい) の比較級" },
+    { english: "earlier", japanese: "early (早く) の比較級" },
+    { english: "easier", japanese: "easy (簡単な) の比較級" },
+    { english: "happier", japanese: "happy (幸せな) の比較級" },
+    { english: "heavier", japanese: "heavy (重い) の比較級" },
+    { english: "prettier", japanese: "pretty (かわいい) の比較級" },
+    { english: "more beautiful", japanese: "beautiful (美しい) の比較級" },
+    { english: "more careful", japanese: "careful (注意深い) の比較級" },
+    { english: "more delicious", japanese: "delicious (おいしい) の比較級" },
+    { english: "more difficult", japanese: "難しい (難しい) の比較級" },
+    { english: "more easily", japanese: "easily (簡単に) の比較級" },
+    { english: "more exciting", japanese: "exciting (わくわくする) の比較級" },
+    { english: "more expensive", japanese: "expensive (高価な) の比較級" },
+    { english: "more famous", japanese: "famous (有名な) の比較級" },
+    { english: "more important", japanese: "important (重要な) の比較級" },
+    { english: "more interesting", japanese: "interesting (おもしろい) の比較級" },
+    { english: "more popular", japanese: "popular (人気のある) の比較級" },
+    { english: "more useful", japanese: "useful (便利な) の比較級" },
+    { english: "better", japanese: "good (良い) / well (元気に・上手に) の比較級" },
+    { english: "worse", japanese: "bad (悪い) / ill (病気の) の比較級" },
+    { english: "more", japanese: "many (多い[数]) / much (多い[量]) の比較級" },
+    { english: "less", japanese: "little (少しの[量]) の比較級" }
 ];
 
-// ⑤ 形容詞・副詞 (最上級) ※赤色強調タグ入り
+// ⑤ 形容詞・副詞 (最上級)
 wordData["形容詞・副詞 (最上級)"] = [
-    { english: "the cheap<span style='color:red;'>est</span>", japanese: "cheap (安い) の最上級" },
-    { english: "the clean<span style='color:red;'>est</span>", japanese: "clean (きれいな) の最上級" },
-    { english: "the cold<span style='color:red;'>est</span>", japanese: "cold (寒い) の最上級" },
-    { english: "the cool<span style='color:red;'>est</span>", japanese: "cool (涼しい) の最上級" },
-    { english: "the fast<span style='color:red;'>est</span>", japanese: "fast (速い・速く) の最上級" },
-    { english: "the great<span style='color:red;'>est</span>", japanese: "great (すごい) の最上級" },
-    { english: "the hard<span style='color:red;'>est</span>", japanese: "hard (難しい) の最上級" },
-    { english: "the high<span style='color:red;'>est</span>", japanese: "high (高い) の最上級" },
-    { english: "the light<span style='color:red;'>est</span>", japanese: "light (明るい・軽い) の最上級" },
-    { english: "the long<span style='color:red;'>est</span>", japanese: "long (長い) の最上級" },
-    { english: "the near<span style='color:red;'>est</span>", japanese: "near (近い) の最上級" },
-    { english: "the new<span style='color:red;'>est</span>", japanese: "new (新しい) の最上級" },
-    { english: "the old<span style='color:red;'>est</span>", japanese: "old (古い) の最上級" },
-    { english: "the short<span style='color:red;'>est</span>", japanese: "short (短い) の最上級" },
-    { english: "the small<span style='color:red;'>est</span>", japanese: "small (小さい) の最上級" },
-    { english: "the smart<span style='color:red;'>est</span>", japanese: "smart (頭の良い) の最上級" },
-    { english: "the strong<span style='color:red;'>est</span>", japanese: "strong (強い) の最上級" },
-    { english: "the tall<span style='color:red;'>est</span>", japanese: "tall (背が高い) の最上級" },
-    { english: "the warm<span style='color:red;'>est</span>", japanese: "warm (暖かい) の最上級" },
-    { english: "the young<span style='color:red;'>est</span>", japanese: "young (若い) の最上級" },
-    { english: "the larg<span style='color:red;'>est</span>", japanese: "large (大きい) の最上級" },
-    { english: "the lat<span style='color:red;'>est</span>", japanese: "late (遅い) の最上級" },
-    { english: "the bi<span style='color:red;'>ggest</span>", japanese: "big (大きい) の最上級" },
-    { english: "the ho<span style='color:red;'>ttest</span>", japanese: "hot (暑い・熱い) の最上級" },
-    { english: "the busi<span style='color:red;'>est</span>", japanese: "busy (忙しい) の最上級" },
-    { english: "the earli<span style='color:red;'>est</span>", japanese: "early (早く) の最上級" },
-    { english: "the easi<span style='color:red;'>est</span>", japanese: "easy (簡単な) の最上級" },
-    { english: "the happi<span style='color:red;'>est</span>", japanese: "happy (幸せな) の最上級" },
-    { english: "the heavi<span style='color:red;'>est</span>", japanese: "heavy (重い) の最上級" },
-    { english: "the pretti<span style='color:red;'>est</span>", japanese: "pretty (かわいい) の最上級" },
-    { english: "the <span style='color:red;'>most</span> beautiful", japanese: "beautiful (美しい) の最上級" },
-    { english: "the <span style='color:red;'>most</span> careful", japanese: "careful (注意深い) の最上級" },
-    { english: "the <span style='color:red;'>most</span> delicious", japanese: "delicious (おいしい) の最上級" },
-    { english: "the <span style='color:red;'>most</span> difficult", japanese: "difficult (難しい) の最上級" },
-    { english: "the <span style='color:red;'>most</span> easily", japanese: "easily (簡単に) の最上級" },
-    { english: "the <span style='color:red;'>most</span> exciting", japanese: "exciting (わくわくする) の最上級" },
-    { english: "the <span style='color:red;'>most</span> expensive", japanese: "expensive (高価な) の最上級" },
-    { english: "the <span style='color:red;'>most</span> famous", japanese: "famous (有名な) の最上級" },
-    { english: "the <span style='color:red;'>most</span> important", japanese: "important (重要な) の最上級" },
-    { english: "the <span style='color:red;'>most</span> interesting", japanese: "interesting (おもしろい) の最上級" },
-    { english: "the <span style='color:red;'>most</span> popular", japanese: "popular (人気のある) の最上級" },
-    { english: "the <span style='color:red;'>most</span> useful", japanese: "useful (便利な) の最上級" },
-    { english: "the <span style='color:red;'>best</span>", japanese: "good (良い) / well (元気に・上手に) の最上級" },
-    { english: "the <span style='color:red;'>worst</span>", japanese: "bad (悪い) / ill (病気の) の最上級" },
-    { english: "the <span style='color:red;'>most</span>", japanese: "many (多い[数]) / much (多い[量]) の最上級" },
-    { english: "the <span style='color:red;'>least</span>", japanese: "little (少しの[量]) の最上級" }
+    { english: "the cheapest", japanese: "cheap (安い) の最上級" },
+    { english: "the cleanest", japanese: "clean (きれいな) の最上級" },
+    { english: "the coldest", japanese: "cold (寒い) の最上級" },
+    { english: "the coolest", japanese: "cool (涼しい) の最上級" },
+    { english: "the fastest", japanese: "fast (速い・速く) の最上級" },
+    { english: "the greatest", japanese: "great (すごい) の最上級" },
+    { english: "the hardest", japanese: "hard (難しい) の最上級" },
+    { english: "the highest", japanese: "high (高い) の最上級" },
+    { english: "the lightest", japanese: "light (明るい・軽い) の最上級" },
+    { english: "the longest", japanese: "long (長い) の最上級" },
+    { english: "the nearest", japanese: "near (近い) の最上級" },
+    { english: "the newest", japanese: "new (新しい) の最上級" },
+    { english: "the oldest", japanese: "old (古い) の最上級" },
+    { english: "the shortest", japanese: "short (短い) の最上級" },
+    { english: "the smallest", japanese: "small (小さい) の最上級" },
+    { english: "the smartest", japanese: "smart (頭の良い) の最上級" },
+    { english: "the strongest", japanese: "strong (強い) の最上級" },
+    { english: "the tallest", japanese: "tall (背が高い) の最上級" },
+    { english: "the warmest", japanese: "warm (暖かい) の最上級" },
+    { english: "the youngest", japanese: "young (若い) の最上級" },
+    { english: "the largest", japanese: "large (大きい) の最上級" },
+    { english: "the latest", japanese: "late (遅い) の最上級" },
+    { english: "the biggest", japanese: "big (大きい) の最上級" },
+    { english: "the hottest", japanese: "hot (暑い・熱い) の最上級" },
+    { english: "the busiest", japanese: "busy (忙しい) の最上級" },
+    { english: "the earliest", japanese: "early (早く) の最上級" },
+    { english: "the easiest", japanese: "easy (簡単な) の最上級" },
+    { english: "the happiest", japanese: "happy (幸せな) の最上級" },
+    { english: "the heaviest", japanese: "heavy (重い) の最上級" },
+    { english: "the prettiest", japanese: "pretty (かわいい) の最上級" },
+    { english: "the most beautiful", japanese: "beautiful (美しい) の最上級" },
+    { english: "the most careful", japanese: "careful (注意深い) の最上級" },
+    { english: "the most delicious", japanese: "delicious (おいしい) の最上級" },
+    { english: "the most difficult", japanese: "difficult (難しい) の最上級" },
+    { english: "the most easily", japanese: "easily (簡単に) の最上級" },
+    { english: "the most exciting", japanese: "exciting (わくわくする) の最上級" },
+    { english: "the most expensive", japanese: "expensive (高価な) の最上級" },
+    { english: "the most famous", japanese: "famous (有名な) の最上級" },
+    { english: "the most important", japanese: "important (重要な) の最上級" },
+    { english: "the most interesting", japanese: "interesting (おもしろい) の最上級" },
+    { english: "the most popular", japanese: "popular (人気のある) の最上級" },
+    { english: "the most useful", japanese: "useful (便利な) の最上級" },
+    { english: "the best", japanese: "good (良い) / well (元気に・上手に) の最上級" },
+    { english: "the worst", japanese: "bad (悪い) / ill (病気の) の最上級" },
+    { english: "the most", japanese: "many (多い[数]) / much (多い[量]) の最上級" },
+    { english: "the least", japanese: "little (少しの[量]) の最上級" }
 ];
 
 // --- 3. 選択肢（4択）作成ロジックの最適化 ---
 const originalMakeChoices = makeChoices;
 makeChoices = function(correctAnswer, allCategoryWords) {
-    // 追加した4つの新カテゴリすべてで、安全な4択生成ロジックを適用
-    const specialCategories = [
-        "不規則動詞 (過去形)", 
-        "不規則動詞 (過去分詞)", 
-        "形容詞・副詞 (比較級)", 
-        "形容詞・副詞 (最上級)",
-        "身の回りのもの"
-    ];
-
+    const specialCategories = ["不規則動詞 (過去形)", "不規則動詞 (過去分詞)", "形容詞・副詞 (比較級)", "形容詞・副詞 (最上級)", "身の回りのもの"];
     if (specialCategories.includes(currentCategory)) {
         let finalChoices = [correctAnswer];
-        
-        // 不規則動詞の場合はing形も選択肢の候補に混ぜる
         const currentWord = allCategoryWords.find(w => w.english === correctAnswer);
         if (currentWord && currentWord.ing) {
             finalChoices.push(currentWord.ing);
         }
-
-        // 同一カテゴリ内の他の単語からダミーをランダムに補給
         let otherWords = allCategoryWords.filter(w => w.english !== correctAnswer);
         otherWords.sort(() => Math.random() - 0.5);
-
         for (let i = 0; i < otherWords.length; i++) {
             if (finalChoices.length >= 4) break;
             finalChoices.push(otherWords[i].english);
         }
-
-        // 万が一のための予備ダミー
         while (finalChoices.length < 4) {
             finalChoices.push("went", "made", "computer", "cheaper");
         }
-
         return finalChoices.sort(() => Math.random() - 0.5);
     }
     return originalMakeChoices(correctAnswer, allCategoryWords);
 };
 
-// --- 4. 【3行指示】カテゴリの並び順制御（「動物」と「体」の間に「身の回りのもの」を配置） ---
+// --- 4. 【新機能】ボタン描画時に「er」「est」「more」「most」等を自動検出して赤色に染めるシステム ---
+setInterval(() => {
+    // 比較級・最上級のテスト画面の時だけ実行
+    if (currentCategory === "形容詞・副詞 (比較級)" || currentCategory === "形容詞・副詞 (最上級)") {
+        const choiceButtons = document.querySelectorAll(".choice-button, #choices-container button");
+        choiceButtons.forEach(btn => {
+            // すでに赤色処理済みの場合はスキップ
+            if (btn.querySelector("span[style*='color']")) return;
+
+            let txt = btn.textContent || btn.innerText;
+            if (!txt) return;
+
+            let htmlResult = txt;
+
+            // ① 不規則変化（特例ワードの個別着色）
+            const irregulars = ["better", "worse", "less", "best", "worst", "least"];
+            let isIrregular = false;
+            irregulars.forEach(irr => {
+                if (txt === irr || txt === "the " + irr) {
+                    htmlResult = htmlResult.replace(irr, `<span style="color: red; font-weight: bold;">${irr}</span>`);
+                    isIrregular = true;
+                }
+            });
+
+            // ② 規則変化の着色（不規則変化ではない場合のみ）
+            if (!isIrregular) {
+                if (txt.includes("more ") || txt.includes("most ")) {
+                    // more / most の単語自体を赤くする
+                    htmlResult = htmlResult.replace("more", '<span style="color: red; font-weight: bold;">more</span>');
+                    htmlResult = htmlResult.replace("most", '<span style="color: red; font-weight: bold;">most</span>');
+                } else {
+                    // 語尾の変化（est / er / gger / tter）を後ろからマッチさせて赤くする
+                    if (txt.endsWith("est")) {
+                        if (txt.endsWith("ggest")) htmlResult = txt.slice(0, -5) + '<span style="color: red; font-weight: bold;">ggest</span>';
+                        else if (txt.endsWith("ttest")) htmlResult = txt.slice(0, -5) + '<span style="color: red; font-weight: bold;">ttest</span>';
+                        else htmlResult = txt.slice(0, -3) + '<span style="color: red; font-weight: bold;">est</span>';
+                    } else if (txt.endsWith("er")) {
+                        if (txt.endsWith("gger")) htmlResult = txt.slice(0, -4) + '<span style="color: red; font-weight: bold;">gger</span>';
+                        else if (txt.endsWith("tter")) htmlResult = txt.slice(0, -4) + '<span style="color: red; font-weight: bold;">tter</span>';
+                        else htmlResult = txt.slice(0, -2) + '<span style="color: red; font-weight: bold;">er</span>';
+                    }
+                }
+            }
+
+            // テキストをリッチなHTML表示に安全に置き換える
+            if (htmlResult !== txt) {
+                btn.innerHTML = htmlResult;
+            }
+        });
+    }
+}, 100);
+
+// --- 5. カテゴリの並び順制御（「動物」と「体」の間に「身の回りのもの」を配置） ---
 if (typeof showCategoryScreen === "function") {
-    // 元の関数を退避させて書き換え
     const originalShowCategoryScreen = showCategoryScreen;
     showCategoryScreen = function() {
-        // 全カテゴリの配列を取得
         const categories = Object.keys(wordData);
-        
-        // 既存の表示順を整理するため、いったんコンテナのHTMLをクリアするロジックをシミュレート
         const container = document.getElementById("category-container");
         if (container) {
             container.innerHTML = "";
-            
-            // ご提示の配置順を保証するカスタム並び替え
             let sortedCategories = [];
-            
-            // 先に「動物」までの通常カテゴリを配置
             const normalOrderBefore = ["学校の活動・行事", "スポーツ", "楽器・音楽", "乗り物", "家・家具", "自然", "街の施設（お出かけ）", "街の施設（駅・公共など）", "職業（仕事）", "動物"];
             normalOrderBefore.forEach(cat => {
                 if (categories.includes(cat)) sortedCategories.push(cat);
             });
-            
-            // 【最優先配置】動物と体の間に「身の回りのもの」を差し込む
             if (categories.includes("身の回りのもの")) {
                 sortedCategories.push("身の回りのもの");
             }
-            
-            // 「体」以降のカテゴリを配置
             const normalOrderAfter = ["体", "不規則動詞 (過去形)", "不規則動詞 (過去分詞)", "形容詞・副詞 (比較級)", "形容詞・副詞 (最上級)"];
             normalOrderAfter.forEach(cat => {
                 if (categories.includes(cat)) sortedCategories.push(cat);
             });
-            
-            // 漏れがあるカテゴリがあれば末尾に追加
             categories.forEach(cat => {
                 if (!sortedCategories.includes(cat)) sortedCategories.push(cat);
             });
-
-            // ボタン要素を生成して画面に描画
             sortedCategories.forEach(category => {
                 const button = document.createElement("button");
                 button.className = "category-button";
@@ -716,12 +735,10 @@ if (typeof showCategoryScreen === "function") {
                 button.onclick = () => selectCategory(category);
                 container.appendChild(button);
             });
-            return; // 独自の並び替えで描画したため終了
+            return;
         }
         originalShowCategoryScreen();
     };
-    
-    // 初回描画を実行
     showCategoryScreen();
 }
 // =================================================================
