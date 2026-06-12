@@ -382,7 +382,7 @@ function showResult() {
 }
 showCategoryScreen();
 // =================================================================
-// 【新機能】不規則動詞テストのデータと制御コード（ここから追加）
+// 【新機能・修正版】不規則動詞テストのデータと制御コード
 // =================================================================
 
 // 1. 不規則動詞のテストデータを既存のwordDataに追加
@@ -422,7 +422,7 @@ wordData["不規則動詞 (過去・過去分詞)"] = [
     { english: "sit / sat", japanese: "sit(座る)", ing: "sitting" },
     { english: "begin / began", japanese: "begin ( を始める)", ing: "beginning" },
     { english: "break / broke", japanese: "break (~をこわす)", ing: "breaking" },
-    { english: "did / done", japanese: "do、does (~をする)", ing: "doing" }, // 💡ご指示通り元の動詞を「do、does」表記に変更、解答側は過去形・過去分詞に設定
+    { english: "did / done", japanese: "do、does (~をする)", ing: "doing" },
     { english: "drink / drank", japanese: "drink (~を飲む)", ing: "drinking" },
     { english: "drive / drove", japanese: "drive (~を確転する)", ing: "driving" },
     { english: "eat / ate", japanese: "eat (~を食べる)", ing: "eating" },
@@ -442,43 +442,46 @@ wordData["不規則動詞 (過去・過去分詞)"] = [
     { english: "write / wrote", japanese: "write (~を書く)", ing: "writing" }
 ];
 
-// 2. 不規則動詞用の「ダミー選択肢（過去形・過去分詞・ing形）」を作成する専用ロジックで上書き
+// 2. 選択肢作成ロジックの修正
 const originalMakeChoices = makeChoices;
 makeChoices = function(correctAnswer, allCategoryWords) {
-    // 現在のカテゴリが不規則動詞ではない場合は、今までの通常処理を行う
+    // 不規則動詞以外のカテゴリは、元々の通常の4択処理を行う
     if (currentCategory !== "不規則動詞 (過去・過去分詞)") {
         return originalMakeChoices(correctAnswer, allCategoryWords);
     }
 
-    // 不規則動詞用の選択肢作成
+    // 正解ボタン（例: "did / done"）
     let finalChoices = [correctAnswer];
+    
+    // 出題中の単語データを特定
     const currentWord = allCategoryWords.find(w => w.english === correctAnswer);
-
-    if (currentWord) {
-        // 💡選択肢のバリエーションとして、同じ動詞の「~ing形」をダミー候補の1つ目として採用
+    if (currentWord && currentWord.ing) {
+        // 同じ動詞の「ing形」をダミーの1つ目として追加（例: "doing"）
         finalChoices.push(currentWord.ing);
     }
 
-    // 他の不規則動詞からランダムにダミーを収集して4択を完成させる
+    // 他の動詞から「過去形 / 過去分詞」のセットをダミーとしてランダムに集める
     let otherWords = allCategoryWords.filter(w => w.english !== correctAnswer);
     otherWords.sort(() => Math.random() - 0.5);
 
     for (let i = 0; i < otherWords.length; i++) {
         if (finalChoices.length >= 4) break;
-        // 他の動詞の「過去形 / 過去分詞」のセットをダミーとして追加
-        finalChoices.push(otherWords[i].english);
+        finalChoices.push(otherWords[i].english); // 他の動詞の "過去形 / 過去分詞" の文字列を追加
     }
 
-    // 最後に4つの選択肢をシャッフル
+    // 万が一4択に満たない場合の保険
+    while (finalChoices.length < 4) {
+        finalChoices.push("went / gone", "made / made");
+    }
+
+    // 4つの選択肢をシャッフルして返す
     return finalChoices.sort(() => Math.random() - 0.5);
 };
 
-// 3. カテゴリ選択画面を再描画して、新しいテストボタンを表示させる
+// 3. 画面の再描画
 if (typeof showCategoryScreen === "function") {
     showCategoryScreen();
 }
-// =================================================================
-// 【新機能】不規則動詞テストのデータと制御コード（ここまで追加）
 // =================================================================
 </script>
 </body>
