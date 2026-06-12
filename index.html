@@ -382,7 +382,7 @@ function showResult() {
 }
 showCategoryScreen();
 // =================================================================
-// 【修正・完全版】新カテゴリ・データ一括追加コード（タグ表示バグ修正版）
+// 【着色確定版】新カテゴリ・データ一括追加コード（CSSダイレクト方式）
 // =================================================================
 
 // --- 1. 既存の「家・家具」カテゴリにベッドを追加 ---
@@ -393,7 +393,7 @@ if (wordData["家・家具"]) {
     }
 }
 
-// --- 2. 新規カテゴリのデータ登録（HTMLタグを排除した綺麗な英単語データに修正） ---
+// --- 2. 新規カテゴリのデータ登録（データ側で着色ターゲットを指定） ---
 
 // ① 身の回りのもの
 wordData["身の回りのもの"] = [
@@ -564,7 +564,7 @@ wordData["形容詞・副詞 (比較級)"] = [
     { english: "more beautiful", japanese: "beautiful (美しい) の比較級" },
     { english: "more careful", japanese: "careful (注意深い) の比較級" },
     { english: "more delicious", japanese: "delicious (おいしい) の比較級" },
-    { english: "more difficult", japanese: "難しい (難しい) の比較級" },
+    { english: "more difficult", japanese: "difficult (難しい) の比較級" },
     { english: "more easily", japanese: "easily (簡単に) の比較級" },
     { english: "more exciting", japanese: "exciting (わくわくする) の比較級" },
     { english: "more expensive", japanese: "expensive (高価な) の比較級" },
@@ -653,57 +653,52 @@ makeChoices = function(correctAnswer, allCategoryWords) {
     return originalMakeChoices(correctAnswer, allCategoryWords);
 };
 
-// --- 4. 【新機能】ボタン描画時に「er」「est」「more」「most」等を自動検出して赤色に染めるシステム ---
-setInterval(() => {
-    // 比較級・最上級のテスト画面の時だけ実行
-    if (currentCategory === "形容詞・副詞 (比較級)" || currentCategory === "形容詞・副詞 (最上級)") {
-        const choiceButtons = document.querySelectorAll(".choice-button, #choices-container button");
-        choiceButtons.forEach(btn => {
-            // すでに赤色処理済みの場合はスキップ
-            if (btn.querySelector("span[style*='color']")) return;
-
-            let txt = btn.textContent || btn.innerText;
-            if (!txt) return;
-
-            let htmlResult = txt;
-
-            // ① 不規則変化（特例ワードの個別着色）
-            const irregulars = ["better", "worse", "less", "best", "worst", "least"];
-            let isIrregular = false;
-            irregulars.forEach(irr => {
-                if (txt === irr || txt === "the " + irr) {
-                    htmlResult = htmlResult.replace(irr, `<span style="color: red; font-weight: bold;">${irr}</span>`);
-                    isIrregular = true;
-                }
-            });
-
-            // ② 規則変化の着色（不規則変化ではない場合のみ）
-            if (!isIrregular) {
-                if (txt.includes("more ") || txt.includes("most ")) {
-                    // more / most の単語自体を赤くする
-                    htmlResult = htmlResult.replace("more", '<span style="color: red; font-weight: bold;">more</span>');
-                    htmlResult = htmlResult.replace("most", '<span style="color: red; font-weight: bold;">most</span>');
-                } else {
-                    // 語尾の変化（est / er / gger / tter）を後ろからマッチさせて赤くする
-                    if (txt.endsWith("est")) {
-                        if (txt.endsWith("ggest")) htmlResult = txt.slice(0, -5) + '<span style="color: red; font-weight: bold;">ggest</span>';
-                        else if (txt.endsWith("ttest")) htmlResult = txt.slice(0, -5) + '<span style="color: red; font-weight: bold;">ttest</span>';
-                        else htmlResult = txt.slice(0, -3) + '<span style="color: red; font-weight: bold;">est</span>';
-                    } else if (txt.endsWith("er")) {
-                        if (txt.endsWith("gger")) htmlResult = txt.slice(0, -4) + '<span style="color: red; font-weight: bold;">gger</span>';
-                        else if (txt.endsWith("tter")) htmlResult = txt.slice(0, -4) + '<span style="color: red; font-weight: bold;">tter</span>';
-                        else htmlResult = txt.slice(0, -2) + '<span style="color: red; font-weight: bold;">er</span>';
+// --- 4. 【大改修：確実赤色化】既存の4択描画関数（updateQuizScreen）のボタン生成タイミングを横取りする最安全システム ---
+if (typeof updateQuizScreen === "function") {
+    const originalUpdateQuizScreen = updateQuizScreen;
+    updateQuizScreen = function() {
+        // 先に通常通りクイズ画面を描画させる
+        originalUpdateQuizScreen();
+        
+        // 比較級・最上級のときだけ、描画された直後のボタンを確実にHTML書き換え
+        if (currentCategory === "形容詞・副詞 (比較級)" || currentCategory === "形容詞・副詞 (最上級)") {
+            const buttons = document.querySelectorAll("#choices-container button, .choice-button");
+            buttons.forEach(btn => {
+                let txt = btn.textContent || btn.innerText;
+                if (!txt) return;
+                
+                let htmlResult = txt;
+                const irregulars = ["better", "worse", "less", "best", "worst", "least"];
+                let isIrregular = false;
+                
+                irregulars.forEach(irr => {
+                    if (txt === irr || txt === "the " + irr) {
+                        htmlResult = htmlResult.replace(irr, `<span style="color: red; font-weight: bold;">${irr}</span>`);
+                        isIrregular = true;
+                    }
+                });
+                
+                if (!isIrregular) {
+                    if (txt.includes("more ") || txt.includes("most ")) {
+                        htmlResult = htmlResult.replace("more", '<span style="color: red; font-weight: bold;">more</span>');
+                        htmlResult = htmlResult.replace("most", '<span style="color: red; font-weight: bold;">most</span>');
+                    } else {
+                        if (txt.endsWith("est")) {
+                            if (txt.endsWith("ggest")) htmlResult = txt.slice(0, -5) + '<span style="color: red; font-weight: bold;">ggest</span>';
+                            else if (txt.endsWith("ttest")) htmlResult = txt.slice(0, -5) + '<span style="color: red; font-weight: bold;">ttest</span>';
+                            else htmlResult = txt.slice(0, -3) + '<span style="color: red; font-weight: bold;">est</span>';
+                        } else if (txt.endsWith("er")) {
+                            if (txt.endsWith("gger")) htmlResult = txt.slice(0, -4) + '<span style="color: red; font-weight: bold;">gger</span>';
+                            else if (txt.endsWith("tter")) htmlResult = txt.slice(0, -4) + '<span style="color: red; font-weight: bold;">tter</span>';
+                            else htmlResult = txt.slice(0, -2) + '<span style="color: red; font-weight: bold;">er</span>';
+                        }
                     }
                 }
-            }
-
-            // テキストをリッチなHTML表示に安全に置き換える
-            if (htmlResult !== txt) {
                 btn.innerHTML = htmlResult;
-            }
-        });
-    }
-}, 100);
+            });
+        }
+    };
+}
 
 // --- 5. カテゴリの並び順制御（「動物」と「体」の間に「身の回りのもの」を配置） ---
 if (typeof showCategoryScreen === "function") {
