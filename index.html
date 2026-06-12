@@ -179,8 +179,10 @@ const wordData = {
         { english: "member", japanese: "メンバー" }, { english: "people", japanese: "人々" },
         { english: "young people", japanese: "若者" }
    ],
-   "世界・国": [
+   "国・地域": [
         { english: "world", japanese: "世界" }, { english: "country", japanese: "国" },
+        { english: "Asia", japanese: "アジア" }, { english: "Europe", japanese: "ヨーロッパ" },
+        { english: "Africa", japanese: "アフリカ" },
         { english: "Japan", japanese: "日本" }, { english: "Spain", japanese: "スペイン" },
         { english: "America", japanese: "アメリカ" }, { english: "China", japanese: "中国" },
         { english: "Korea", japanese: "韓国" }, { english: "India", japanese: "インド" },
@@ -207,22 +209,22 @@ const wordData = {
         { english: "ice cream", japanese: "アイスクリーム" }
    ],
    "料理・食材": [
-        { english: "cooking", japanese: "料理" }, 
+        { english: "cooking", japanese: "料理" }, { english: "seafood", japanese: "シーフード" },
         { english: "go shopping", japanese: "買い物に行く" },
         { english: "bread", japanese: "パン" }, { english: "salad", japanese: "サラダ" },
         { english: "soup", japanese: "スープ" }, { english: "curry", japanese: "カレー (料理)" },
         { english: "fish", japanese: "魚" }, { english: "egg", japanese: "卵" },
         { english: "meat", japanese: "肉" }, { english: "chicken", japanese: "チキン" },
         { english: "pork", japanese: "豚肉" }, { english: "beef", japanese: "牛肉" }, 
-        { english: "vegetable", japanese: "野菜" },
+        { english: "vegetable", japanese: "野菜" }, { english: "bean", japanese: "豆" }, 
         { english: "potato", japanese: "ジャガイモ" }
    ],
    "勉強": [
         { english: "English", japanese: "英語" }, { english: "Japanese", japanese: "国語" }, 
         { english: "math", japanese: "数学" }, { english: "science", japanese: "理科" }, 
-        { english: "subject", japanese: "教科" },
+        { english: "subject", japanese: "教科" }, { english: "history", japanese: "歴史" },
         { english: "language", japanese: "言語" }, { english: "information", japanese: "情報" },
-        { english: "book", japanese: "本" }, { english: "notebook", japanese: "ノートブック" },
+        { english: "book", japanese: "本" }, { english: "notebook", japanese: "ノート" },
         { english: "dictionary", japanese: "辞書" }, 
         { english: "homework", japanese: "宿題" }, { english: "plan", japanese: "計画" },
         { english: "idea", japanese: "アイデア" }, { english: "question", japanese: "質問" } 
@@ -280,7 +282,7 @@ const wordData = {
         { english: "lake", japanese: "湖" }, { english: "woods", japanese: "森" }, 
         { english: "beach", japanese: "砂浜" }, { english: "field", japanese: "野原" },
         { english: "sun", japanese: "太陽" }, { english: "moon", japanese: "月" },
-        { english: "nature", japanese: "自然" }
+        { english: "sky", japanese: "空" }, { english: "nature", japanese: "自然" }
    ],
    "街の施設（お出かけ）": [ 
         { english: "park", japanese: "公園" }, { english: "bench", japanese: "ベンチ" }, 
@@ -288,7 +290,7 @@ const wordData = {
         { english: "department store", japanese: "デパート" }, 
         { english: "restaurant", japanese: "レストラン" }, { english: "zoo", japanese: "動物園" }, 
         { english: "museum", japanese: "博物館" }, { english: "aquarium", japanese: "水族館" }, 
-        { english: "castle", japanese: "城" }, 
+        { english: "castle", japanese: "城" }, { english: "market", japanese: "マーケット" }, 
         { english: "temple", japanese: "寺" }, { english: "shrine", japanese: "神社" }, 
         { english: "theater", japanese: "劇場" } 
    ], 
@@ -297,8 +299,9 @@ const wordData = {
         { english: "library", japanese: "図書館" }, { english: "bank", japanese: "銀行" }, 
         { english: "post office", japanese: "郵便局" }, { english: "gym", japanese: "体育館" }, 
         { english: "office", japanese: "事務所" }, { english: "police station", japanese: "警察署" }, 
-        { english: "bridge", japanese: "橋" }, { english: "street", japanese: "通り" }, 
-        { english: "town", japanese: "町" }, { english: "city hall", japanese: "市役所" }
+        { english: "bridge", japanese: "橋" }, { english: "street", japanese: "通り" },
+        { english: "town", japanese: "町" }, { english: "city hall", japanese: "市役所" },
+        { english: "hotel", japanese: "ホテル" 
    ],
    "職業（仕事）": [
         { english: "doctor", japanese: "医者" }, { english: "nurse", japanese: "看護師" },
@@ -325,7 +328,7 @@ const wordData = {
         { english: "nose", japanese: "鼻" }, { english: "mouth", japanese: "口" },
         { english: "ear", japanese: "耳" }, { english: "tooth", japanese: "歯" },
         { english: "hand", japanese: "手" }, { english: "finger", japanese: "手の指" },
-        { english: "foot", japanese: "足" },
+        { english: "foot", japanese: "足" }, { english: "health", japanese: "健康" },
         { english: "heart", japanese: "心臓" }, { english: "stomach", japanese: "胃・おなか" }
    ]
 };
@@ -398,6 +401,7 @@ if (wordData["家・家具"]) {
 // ① 身の回りのもの
 wordData["身の回りのもの"] = [
     { english: "computer", japanese: "コンピュータ" },
+    { english: "radio", japanese: "ラジオｒ" },
     { english: "calendar", japanese: "カレンダー" },
     { english: "clock", japanese: "置き・掛け時計" },
     { english: "cup", japanese: "カップ・茶わん" },
