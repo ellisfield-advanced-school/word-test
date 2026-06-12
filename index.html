@@ -382,103 +382,158 @@ function showResult() {
 }
 showCategoryScreen();
 // =================================================================
-// 【新機能・修正版】不規則動詞テストのデータと制御コード
+// 【新コンセプト】不規則動詞（過去形・過去分詞）独立テスト追加コード
 // =================================================================
 
-// 1. 不規則動詞のテストデータを既存のwordDataに追加
-wordData["不規則動詞 (過去・過去分詞)"] = [
-    { english: "cut / cut", japanese: "cut (~を切る)", ing: "cutting" },
-    { english: "put / put", japanese: "put (~を置く)", ing: "putting" },
-    { english: "become / became", japanese: "become (~になる)", ing: "becoming" },
-    { english: "come / came", japanese: "come (来る)", ing: "coming" },
-    { english: "run / ran", japanese: "run (走る)", ing: "running" },
-    { english: "sleep / slept", japanese: "sleep (眠る)", ing: "sleeping" },
-    { english: "spend / spent", japanese: "spend (~を過ごす)", ing: "spending" },
-    { english: "stand / stood", japanese: "stand (立っている)", ing: "standing" },
-    { english: "teach / taught", japanese: "teach (~を教える)", ing: "teaching" },
-    { english: "tell / told", japanese: "tell (~に話す)", ing: "telling" },
-    { english: "think / thought", japanese: "think (~と考える)", ing: "thinking" },
-    { english: "understand / understood", japanese: "understand (~を理解する)", ing: "understanding" },
-    { english: "win / won", japanese: "win (勝つ)", ing: "winning" },
-    { english: "bring / brought", japanese: "bring (~を持ってくる)", ing: "bringing" },
-    { english: "build / built", japanese: "build (~を建てる)", ing: "building" },
-    { english: "buy / bought", japanese: "buy (~を買う)", ing: "buying" },
-    { english: "catch / caught", japanese: "catch (~をつかまえる)", ing: "catching" },
-    { english: "feel / felt", japanese: "feel (感じる)", ing: "feeling" },
-    { english: "find / found", japanese: "find (~を見つける)", ing: "finding" },
-    { english: "have / had", japanese: "have (~を持っている)", ing: "having" },
-    { english: "hear / heard", japanese: "hear (~が聞こえる)", ing: "hearing" },
-    { english: "keep / kept", japanese: "keep (~を持ち続ける)", ing: "keeping" },
-    { english: "learn / learned (learnt)", japanese: "learn (~を学ぶ)", ing: "learning" },
-    { english: "leave / left", japanese: "leave (去る)", ing: "leaving" },
-    { english: "lose / lost", japanese: "lose (~を失う)", ing: "losing" },
-    { english: "make / made", japanese: "make (~を作る)", ing: "making" },
-    { english: "meet / met", japanese: "meet (~と会う)", ing: "meeting" },
-    { english: "pay / paid", japanese: "pay (~を支払う)", ing: "paying" },
-    { english: "read / read", japanese: "read (~を読む)", ing: "reading" },
-    { english: "say / said", japanese: "say (~と言う)", ing: "saying" },
-    { english: "sell / sold", japanese: "sell (~を売る)", ing: "selling" },
-    { english: "send / sent", japanese: "send (~を送る)", ing: "sending" },
-    { english: "sit / sat", japanese: "sit(座る)", ing: "sitting" },
-    { english: "begin / began", japanese: "begin ( を始める)", ing: "beginning" },
-    { english: "break / broke", japanese: "break (~をこわす)", ing: "breaking" },
-    { english: "did / done", japanese: "do、does (~をする)", ing: "doing" },
-    { english: "drink / drank", japanese: "drink (~を飲む)", ing: "drinking" },
-    { english: "drive / drove", japanese: "drive (~を確転する)", ing: "driving" },
-    { english: "eat / ate", japanese: "eat (~を食べる)", ing: "eating" },
-    { english: "get / got", japanese: "get (~を得る)", ing: "getting" },
-    { english: "give / gave", japanese: "give (~を与える)", ing: "giving" },
-    { english: "go / went", japanese: "go (行く)", ing: "going" },
-    { english: "know / knew", japanese: "know (~を知っている)", ing: "knowing" },
-    { english: "rise / rose", japanese: "rise (昇る)", ing: "rising" },
-    { english: "see / saw", japanese: "see(見える)", ing: "seeing" },
-    { english: "show / showed", japanese: "show (~を見せる)", ing: "showing" },
-    { english: "sing / sang", japanese: "sing (歌う)", ing: "singing" },
-    { english: "speak / spoke", japanese: "speak(話す)", ing: "speaking" },
-    { english: "swim / swam", japanese: "swim <)", ing: "swimming" },
-    { english: "take / took", japanese: "take (~を取る)", ing: "taking" },
-    { english: "wake / woke", japanese: "wake (目を覚ます)", ing: "waking" },
-    { english: "wear / wore", japanese: "wear (~を着ている)", ing: "wearing" },
-    { english: "write / wrote", japanese: "write (~を書く)", ing: "writing" }
+// 1. 過去形テスト用のデータをwordDataに追加
+wordData["不規則動詞 (過去形)"] = [
+    { english: "cut", japanese: "cut (~を切る) の過去形", ing: "cutting" },
+    { english: "put", japanese: "put (~を置く) の過去形", ing: "putting" },
+    { english: "became", japanese: "become (~になる) の過去形", ing: "becoming" },
+    { english: "came", japanese: "come (来る) の過去形", ing: "coming" },
+    { english: "ran", japanese: "run (走る) の過去形", ing: "running" },
+    { english: "slept", japanese: "sleep (眠る) の過去形", ing: "sleeping" },
+    { english: "spent", japanese: "spend (~を過ごす) の過去形", ing: "spending" },
+    { english: "stood", japanese: "stand (立っている) の過去形", ing: "standing" },
+    { english: "taught", japanese: "teach (~を教える) の過去形", ing: "teaching" },
+    { english: "told", japanese: "tell (~に話す) の過去形", ing: "telling" },
+    { english: "thought", japanese: "think (~と考える) の過去形", ing: "thinking" },
+    { english: "understood", japanese: "understand (~を理解する) の過去形", ing: "understanding" },
+    { english: "won", japanese: "win (勝つ) の過去形", ing: "winning" },
+    { english: "brought", japanese: "bring (~を持ってくる) の過去形", ing: "bringing" },
+    { english: "built", japanese: "build (~を建てる) の過去形", ing: "building" },
+    { english: "bought", japanese: "buy (~を買う) の過去形", ing: "buying" },
+    { english: "caught", japanese: "catch (~をつかまえる) の過去形", ing: "catching" },
+    { english: "felt", japanese: "feel (感じる) の過去形", ing: "feeling" },
+    { english: "found", japanese: "find (~を見つける) の過去形", ing: "finding" },
+    { english: "had", japanese: "have (~を持っている) の過去形", ing: "having" },
+    { english: "heard", japanese: "hear (~が聞こえる) の過去形", ing: "hearing" },
+    { english: "kept", japanese: "keep (~を持ち続ける) の過去形", ing: "keeping" },
+    { english: "learned", japanese: "learn (~を学ぶ) の過去形", ing: "learning" },
+    { english: "left", japanese: "leave (去る) の過去形", ing: "leaving" },
+    { english: "lost", japanese: "lose (~を失う) の過去形", ing: "losing" },
+    { english: "made", japanese: "make (~を作る) の過去形", ing: "making" },
+    { english: "met", japanese: "meet (~と会う) の過去形", ing: "meeting" },
+    { english: "paid", japanese: "pay (~を支払う) の過去形", ing: "paying" },
+    { english: "read", japanese: "read (~を読む) の過去形", ing: "reading" },
+    { english: "said", japanese: "say (~と言う) の過去形", ing: "saying" },
+    { english: "sold", japanese: "sell (~を売る) の過去形", ing: "selling" },
+    { english: "sent", japanese: "send (~を送る) の過去形", ing: "sending" },
+    { english: "sat", japanese: "sit(座る) の過去形", ing: "sitting" },
+    { english: "began", japanese: "begin ( を始める) の過去形", ing: "beginning" },
+    { english: "broke", japanese: "break (~をこわす) の過去形", ing: "breaking" },
+    { english: "did", japanese: "do、does (~をする) の過去形", ing: "doing" },
+    { english: "drank", japanese: "drink (~を飲む) の過去形", ing: "drinking" },
+    { english: "drove", japanese: "drive (~を確転する) の過去形", ing: "driving" },
+    { english: "ate", japanese: "eat (~を食べる) の過去形", ing: "eating" },
+    { english: "got", japanese: "get (~を得る) の過去形", ing: "getting" },
+    { english: "gave", japanese: "give (~を与える) の過去形", ing: "giving" },
+    { english: "went", japanese: "go (行く) の過去形", ing: "going" },
+    { english: "knew", japanese: "know (~を知っている) の過去形", ing: "knowing" },
+    { english: "rose", japanese: "rise (昇る) の過去形", ing: "rising" },
+    { english: "saw", japanese: "see(見える) の過去形", ing: "seeing" },
+    { english: "showed", japanese: "show (~を見せる) の過去形", ing: "showing" },
+    { english: "sang", japanese: "sing (歌う) の過去形", ing: "singing" },
+    { english: "spoke", japanese: "speak(話す) の過去形", ing: "speaking" },
+    { english: "swam", japanese: "swim <) の過去形", ing: "swimming" },
+    { english: "took", japanese: "take (~を取る) の過去形", ing: "taking" },
+    { english: "woke", japanese: "wake (目を覚ます) の過去形", ing: "waking" },
+    { english: "wore", japanese: "wear (~を着ている) の過去形", ing: "wearing" },
+    { english: "wrote", japanese: "write (~を書く) の過去形", ing: "writing" }
 ];
 
-// 2. 選択肢作成ロジックの修正
+// 2. 過去分詞テスト用のデータをwordDataに追加
+wordData["不規則動詞 (過去分詞)"] = [
+    { english: "cut", japanese: "cut (~を切る) の過去分詞", ing: "cutting" },
+    { english: "put", japanese: "put (~を置く) の過去分詞", ing: "putting" },
+    { english: "become", japanese: "become (~になる) の過去分詞", ing: "becoming" },
+    { english: "come", japanese: "come (来る) の過去分詞", ing: "coming" },
+    { english: "run", japanese: "run (走る) の過去分詞", ing: "running" },
+    { english: "slept", japanese: "sleep (眠る) の過去分詞", ing: "sleeping" },
+    { english: "spent", japanese: "spend (~を過ごす) の過去分詞", ing: "spending" },
+    { english: "stood", japanese: "stand (立っている) の過去分詞", ing: "standing" },
+    { english: "taught", japanese: "teach (~を教える) の過去分詞", ing: "teaching" },
+    { english: "told", japanese: "tell (~に話す) の過去分詞", ing: "telling" },
+    { english: "thought", japanese: "think (~と考える) の過去分詞", ing: "thinking" },
+    { english: "understood", japanese: "understand (~を理解する) の過去分詞", ing: "understanding" },
+    { english: "won", japanese: "win (勝つ) の過去分詞", ing: "winning" },
+    { english: "brought", japanese: "bring (~を持ってくる) の過去分詞", ing: "bringing" },
+    { english: "built", japanese: "build (~を建てる) の過去分詞", ing: "building" },
+    { english: "bought", japanese: "buy (~を買う) の過去分詞", ing: "buying" },
+    { english: "caught", japanese: "catch (~をつかまえる) の過去分詞", ing: "catching" },
+    { english: "felt", japanese: "feel (感じる) の過去分詞", ing: "feeling" },
+    { english: "found", japanese: "find (~を見つける) の過去分詞", ing: "finding" },
+    { english: "had", japanese: "have (~を持っている) の過去分詞", ing: "having" },
+    { english: "heard", japanese: "hear (~が聞こえる) の過去分詞", ing: "hearing" },
+    { english: "kept", japanese: "keep (~を持ち続ける) の過去分詞", ing: "keeping" },
+    { english: "learned (learnt)", japanese: "learn (~を学ぶ) の過去分詞", ing: "learning" },
+    { english: "left", japanese: "leave (去る) の過去分詞", ing: "leaving" },
+    { english: "lost", japanese: "lose (~を失う) の過去分詞", ing: "losing" },
+    { english: "made", japanese: "make (~を作る) の過去分詞", ing: "making" },
+    { english: "met", japanese: "meet (~と会う) の過去分詞", ing: "meeting" },
+    { english: "paid", japanese: "pay (~を支払う) の過去分詞", ing: "paying" },
+    { english: "read [red]", japanese: "read (~を読む) の過去分詞", ing: "reading" },
+    { english: "said", japanese: "say (~と言う) の過去分詞", ing: "saying" },
+    { english: "sold", japanese: "sell (~を売る) の過去分詞", ing: "selling" },
+    { english: "sent", japanese: "send (~を送る) の過去分詞", ing: "sending" },
+    { english: "sat", japanese: "sit(座る) の過去分詞", ing: "sitting" },
+    { english: "begun", japanese: "begin ( を始める) の過去分詞", ing: "beginning" },
+    { english: "broken", japanese: "break (~をこわす) の過去分詞", ing: "breaking" },
+    { english: "done", japanese: "do、does (~をする) の過去分詞", ing: "doing" },
+    { english: "drank", japanese: "drink (~を飲む) の過去分詞", ing: "drinking" },
+    { english: "driven", japanese: "drive (~を確転する) の過去分詞", ing: "driving" },
+    { english: "eaten", japanese: "eat (~を食べる) の過去分詞", ing: "eating" },
+    { english: "got (gotten)", japanese: "get (~を得る) の過去分詞", ing: "getting" },
+    { english: "given", japanese: "give (~を与える) の過去分詞", ing: "giving" },
+    { english: "gone", japanese: "go (行く) の過去分詞", ing: "going" },
+    { english: "known", japanese: "know (~を知っている) の過去分詞", ing: "knowing" },
+    { english: "risen", japanese: "rise (昇る) の過去分詞", ing: "rising" },
+    { english: "seen", japanese: "see(見える) の過去分詞", ing: "seeing" },
+    { english: "shown (showed)", japanese: "show (~を見せる) の過去分詞", ing: "showing" },
+    { english: "sung", japanese: "sing (歌う) の過去分詞", ing: "singing" },
+    { english: "spoken", japanese: "speak(話す) の過去分詞", ing: "speaking" },
+    { english: "swum", japanese: "swim <) の過去分詞", ing: "swimming" },
+    { english: "taken", japanese: "take (~を取る) の過去分詞", ing: "taking" },
+    { english: "woken", japanese: "wake (目を覚ます) の過去分詞", ing: "waking" },
+    { english: "worn", japanese: "wear (~を着ている) の過去分詞", ing: "wearing" },
+    { english: "written", japanese: "write (~を書く) の過去分詞", ing: "writing" }
+];
+
+// 3. 不規則動詞用の選択肢作成ロジック
 const originalMakeChoices = makeChoices;
 makeChoices = function(correctAnswer, allCategoryWords) {
-    // 不規則動詞以外のカテゴリは、元々の通常の4択処理を行う
-    if (currentCategory !== "不規則動詞 (過去・過去分詞)") {
-        return originalMakeChoices(correctAnswer, allCategoryWords);
-    }
+    // 過去形、または過去分詞テストの場合の処理
+    if (currentCategory === "不規則動詞 (過去形)" || currentCategory === "不規則動詞 (過去分詞)") {
+        let finalChoices = [correctAnswer];
+        
+        // 出題中の単語データを特定し、その「ing形」をダミーの1つ目として採用
+        const currentWord = allCategoryWords.find(w => w.english === correctAnswer);
+        if (currentWord && currentWord.ing) {
+            finalChoices.push(currentWord.ing);
+        }
 
-    // 正解ボタン（例: "did / done"）
-    let finalChoices = [correctAnswer];
+        // 他の不規則動詞の答えからランダムにダミーを補給
+        let otherWords = allCategoryWords.filter(w => w.english !== correctAnswer);
+        otherWords.sort(() => Math.random() - 0.5);
+
+        for (let i = 0; i < otherWords.length; i++) {
+            if (finalChoices.length >= 4) break;
+            finalChoices.push(otherWords[i].english);
+        }
+
+        // 万が一のための保険ダミー
+        while (finalChoices.length < 4) {
+            finalChoices.push("went", "done", "made");
+        }
+
+        return finalChoices.sort(() => Math.random() - 0.5);
+    }
     
-    // 出題中の単語データを特定
-    const currentWord = allCategoryWords.find(w => w.english === correctAnswer);
-    if (currentWord && currentWord.ing) {
-        // 同じ動詞の「ing形」をダミーの1つ目として追加（例: "doing"）
-        finalChoices.push(currentWord.ing);
-    }
-
-    // 他の動詞から「過去形 / 過去分詞」のセットをダミーとしてランダムに集める
-    let otherWords = allCategoryWords.filter(w => w.english !== correctAnswer);
-    otherWords.sort(() => Math.random() - 0.5);
-
-    for (let i = 0; i < otherWords.length; i++) {
-        if (finalChoices.length >= 4) break;
-        finalChoices.push(otherWords[i].english); // 他の動詞の "過去形 / 過去分詞" の文字列を追加
-    }
-
-    // 万が一4択に満たない場合の保険
-    while (finalChoices.length < 4) {
-        finalChoices.push("went / gone", "made / made");
-    }
-
-    // 4つの選択肢をシャッフルして返す
-    return finalChoices.sort(() => Math.random() - 0.5);
+    // それ以外の通常のカテゴリは元のロジックで動かす
+    return originalMakeChoices(correctAnswer, allCategoryWords);
 };
 
-// 3. 画面の再描画
+// 4. カテゴリ選択画面を最新の状態に更新
 if (typeof showCategoryScreen === "function") {
     showCategoryScreen();
 }
