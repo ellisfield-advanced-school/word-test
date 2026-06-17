@@ -649,6 +649,11 @@ wordData["形容詞・副詞 (最上級)"] = [
     { english: "the least", japanese: "little (少しの[量]) の最上級" }
 ];
 
+// NEW HORIZON 中3 ユニット0～1
+wordData["NEW HORIZON 中3 ユニット0～1"] = [
+    // ここに今後、英単語データを追加していきます
+];
+    
 // --- 3. 選択肢（4択）作成ロジックの最適化 ---
 const originalMakeChoices = makeChoices;
 makeChoices = function(correctAnswer, allCategoryWords) {
@@ -757,18 +762,7 @@ if (typeof showCategoryScreen === "function") {
     showCategoryScreen();
 }
 // =================================================================
-// 追加：NEW HORIZON 中3 ユニット0～1 のデータ登録とロジック追加
-// =================================================================
-wordData["NEW HORIZON 中3 ユニット0～1"] = [
-    // ここに今後、英単語データを追加していきます
-];
 
-// 4択ロジックの対象に「NEW HORIZON 中3 ユニット0～1」を含める自動処理
-if (typeof specialCategories !== 'undefined' && Array.isArray(specialCategories)) {
-    if (!specialCategories.includes("NEW HORIZON 中3 ユニット0～1")) {
-        specialCategories.push("NEW HORIZON 中3 ユニット0～1");
-    }
-}
 </script>
 </body>
 </html>
