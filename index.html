@@ -374,7 +374,7 @@ function showQuestion() {
     document.getElementById("next-btn").style.display = "none";
     document.getElementById("result-message").innerText = "";
     const currentQuestion = currentWords[currentIndex];
-    document.getElementById("progress").innerText = `第 ${currentIndex + 1} 問 / 全 ${currentWords.length} 問`; document.getElementById("japanese-word").innerText = currentQuestion.japanese;
+    document.getElementById("progress").innerText = `第 ${currentIndex + 1} 問 / 全 ${currentWords.length} 問`; document.getElementById("japanese-word").innerHTML = currentQuestion.japanese;
     const choices = makeChoices(currentQuestion.english, wordData[currentCategory]); const choicesListDiv = document.getElementById("choices-list"); choicesListDiv.innerHTML = "";
     choices.forEach(choice => {
         const btn = document.createElement("button"); btn.className = "btn choice-btn"; btn.innerText = choice; btn.onclick = () => checkAnswer(btn, choice, currentQuestion.english); choicesListDiv.appendChild(btn);
