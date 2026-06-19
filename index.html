@@ -901,14 +901,17 @@ if (typeof showCategoryScreen === "function") {
 
         // 発音機能（現在出題中の英単語を喋らせる）
      function speakWord() {
-    console.log("ボタンが押された");
+    if (!('speechSynthesis' in window)) {
+        alert('このブラウザは音声再生に対応していません。Chromeをご利用ください。');
+        return;
+    }
 
-   const currentQuestion = currentWords[currentIndex];
+    const currentQuestion = currentWords[currentIndex];
 
-const uttr = new SpeechSynthesisUtterance(currentQuestion.english);
-uttr.lang = 'en-US';
+    const uttr = new SpeechSynthesisUtterance(currentQuestion.english);
+    uttr.lang = 'en-US';
 
-speechSynthesis.speak(uttr);
+    speechSynthesis.speak(uttr);
 }
     </script>
 </body>
