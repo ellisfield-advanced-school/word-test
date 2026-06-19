@@ -887,18 +887,23 @@ if (typeof showCategoryScreen === "function") {
         }
         originalShowCategoryScreen();
     };
-    showCategoryScreen();
-}
-// =================================================================
+  showCategoryScreen();
+};
 
-        // 発音機能（現在出題中の英単語を喋らせる）
-        function speakWord() {
-            if (typeof currentQuestion !== 'undefined' && currentQuestion.english) {
-                const uttr = new SpeechSynthesisUtterance(currentQuestion.english);
-                uttr.lang = 'en-US';
-                window.speechSynthesis.speak(uttr);
-            }
+// ==========================================
+
+// 発音機能（記号エラーを絶対に起こさない特別版）
+function speakWord() {
+    if (currentQuestion) {
+        if (currentQuestion.english) {
+            var text = currentQuestion.english;
+            var cleanText = text.split(/ 〜/)[0];
+            var uttr = new SpeechSynthesisUtterance(cleanText);
+            uttr.lang = String.fromCharCode(101, 110, 45, 85, 83);
+            window.speechSynthesis.speak(uttr);
         }
+    }
+}
 
 </script>
 </body>
