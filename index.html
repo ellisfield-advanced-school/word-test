@@ -900,7 +900,9 @@ if (typeof showCategoryScreen === "function") {
 // ==========================================
 
         // 発音機能（現在出題中の英単語を喋らせる）
-     function speakWord() {
+    function speakWord() {
+
+    // 音声機能対応チェック
     if (!('speechSynthesis' in window)) {
         alert('このブラウザは音声再生に対応していません。Chromeをご利用ください。');
         return;
@@ -908,8 +910,18 @@ if (typeof showCategoryScreen === "function") {
 
     const currentQuestion = currentWords[currentIndex];
 
-    const uttr = new SpeechSynthesisUtterance(currentQuestion.english);
+    // 「～」や「~」を除去して読み上げ
+    const word = currentQuestion.english
+        .replace(/～/g, '')
+        .replace(/~/g, '')
+        .trim();
+
+    // 前回の読み上げを停止
+    speechSynthesis.cancel();
+
+    const uttr = new SpeechSynthesisUtterance(word);
     uttr.lang = 'en-US';
+    uttr.rate = 1.0;
 
     speechSynthesis.speak(uttr);
 }
