@@ -890,6 +890,20 @@ if (typeof showCategoryScreen === "function") {
 }
 // =================================================================
 
+        // 発音機能（現在出題中の英単語を喋らせる）
+        function speakWord() {
+            // 現在の問題の英語（currentQuestion.english）を読み上げる
+            if (typeof currentQuestion !== 'undefined' && currentQuestion.english) {
+                const uttr = new SpeechSynthesisUtterance(currentQuestion.english);
+                uttr.lang = 'en-US'; // 英語（アメリカ）の発音を指定
+                window.speechSynthesis.speak(uttr);
+            }
+        }
+
+    </script>
+</body>
+</html>
+
 </script>
 </body>
 </html>
