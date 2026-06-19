@@ -903,12 +903,12 @@ if (typeof showCategoryScreen === "function") {
      function speakWord() {
     console.log("ボタンが押された");
 
-    console.log(currentQuestion);
+   const currentQuestion = currentWords[currentIndex];
 
-    const uttr = new SpeechSynthesisUtterance(currentQuestion.english);
-    uttr.lang = 'en-US';
+const uttr = new SpeechSynthesisUtterance(currentQuestion.english);
+uttr.lang = 'en-US';
 
-    speechSynthesis.speak(uttr);
+speechSynthesis.speak(uttr);
 }
     </script>
 </body>
