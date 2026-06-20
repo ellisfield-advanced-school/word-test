@@ -70,29 +70,32 @@
         <div id="category-list"></div>
     </div>
  
-    <div id="quiz-screen" style="display: none;">
-        <div class="progress" id="progress">第 1 問 / 全 10 問</div>
-        <div class="japanese" id="japanese-word">日本語</div>
+  <div id="quiz-screen" style="display: none;">
+    <div class="progress" id="progress">第 1 問 / 全 10 問</div>
+    <div class="japanese" id="japanese-word">日本語</div>
 
-<button onclick="speakWord()" class="btn"
-    style="margin-bottom:20px;max-width:200px;margin-left:auto;
-    margin-right:auto;padding:10px;font-size:16px;">
-    🔊 発音を聞く
-</button>
- <div id="choices-list"></div>
+    <button onclick="speakWord()" class="btn"
+        style="margin-bottom:20px;max-width:200px;margin-left:auto;
+        margin-right:auto;padding:10px;font-size:16px;">
+        🔊 発音を聞く
+    </button>
 
-<div class="result-message" id="result-message"></div>
+    <div id="choices-list"></div>
 
-<button onclick="nextQuestion()" id="next-btn"
-    class="action-btn" style="display:none;">
-    次へ進む
-</button>
-        
-    <div id="result-screen" style="display: none;">
-        <h2>テスト終了！</h2>
-        <p id="final-score" style="font-size: 18px; font-weight: bold;"></p>
-        <button onclick="showCategoryScreen()" class="action-btn">別のテストを選ぶ</button>
-    </div>
+    <div class="result-message" id="result-message"></div>
+
+    <button onclick="nextQuestion()" id="next-btn"
+        class="action-btn" style="display:none;">
+        次へ進む
+    </button>
+</div>
+
+<div id="result-screen" style="display: none;">
+    <h2>テスト終了！</h2>
+    <p id="final-score" style="font-size: 18px; font-weight: bold;"></p>
+    <button onclick="showCategoryScreen()" class="action-btn">
+        別のテストを選ぶ
+    </button>
 </div>
  
 <script>
