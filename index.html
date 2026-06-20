@@ -861,42 +861,6 @@ if (typeof updateQuizScreen === "function") {
 }
 
 // --- 5. カテゴリの並び順制御（「動物」と「体」の間に「身の回りのもの」を配置） ---
-if (typeof showCategoryScreen === "function") {
-    const originalShowCategoryScreen = showCategoryScreen;
-    showCategoryScreen = function() {
-        const categories = Object.keys(wordData);
-        const container = document.getElementById("category-container");
-        if (container) {
-            container.innerHTML = "";
-            let sortedCategories = [];
-            const normalOrderBefore = ["学校の活動・行事", "スポーツ", "楽器・音楽", "乗り物", "家・家具", "自然", "街の施設（お出かけ）", "街の施設（駅・公共など）", "職業（仕事）", "動物"];
-            normalOrderBefore.forEach(cat => {
-                if (categories.includes(cat)) sortedCategories.push(cat);
-            });
-            if (categories.includes("身の回りのもの")) {
-                sortedCategories.push("身の回りのもの");
-            }
-            const normalOrderAfter = ["体", "不規則動詞 (過去形)", "不規則動詞 (過去分詞)", "形容詞・副詞 (比較級)", "形容詞・副詞 (最上級)"];
-            normalOrderAfter.forEach(cat => {
-                if (categories.includes(cat)) sortedCategories.push(cat);
-            });
-            categories.forEach(cat => {
-                if (!sortedCategories.includes(cat)) sortedCategories.push(cat);
-            });
-            sortedCategories.forEach(category => {
-                const button = document.createElement("button");
-                button.className = "category-button";
-                button.innerText = category;
-                button.onclick = () => selectCategory(category);
-                container.appendChild(button);
-            });
-            return;
-        }
-        originalShowCategoryScreen();
-    };
-  showCategoryScreen();
-};
-
 // ==========================================
 
         // 発音機能（現在出題中の英単語を喋らせる）
