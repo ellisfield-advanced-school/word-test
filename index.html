@@ -410,8 +410,12 @@ function nextQuestion() { currentIndex++; if (currentIndex < currentWords.length
 function showResult() {
     alert("showResultに到達しました");
 
+    const resultScreen = document.getElementById("result-screen");
+
+    alert("result-screen = " + resultScreen);
+
     document.getElementById("quiz-screen").style.display = "none";
-    document.getElementById("result-screen").style.display = "block";
+    resultScreen.style.display = "block";
 
     document.getElementById("final-score").innerText =
         `${currentWords.length} 問中 ${score} 問 正解！`;
