@@ -408,8 +408,20 @@ function checkAnswer(clickedBtn, selected, correct) {
 }
 function nextQuestion() { currentIndex++; if (currentIndex < currentWords.length) { showQuestion(); } else { showResult(); } }
 function showResult() {
+    console.log("showResult開始");
+
     document.getElementById("quiz-screen").style.display = "none";
-    document.getElementById("result-screen").style.display = "block"; document.getElementById("final-score").innerText = `${currentWords.length} 問中 ${score} 問 正解！`; 
+
+    console.log("quiz-screen非表示完了");
+
+    document.getElementById("result-screen").style.display = "block";
+
+    console.log("result-screen表示完了");
+
+    document.getElementById("final-score").innerText =
+        `${currentWords.length} 問中 ${score} 問 正解！`;
+
+    console.log("スコア表示完了");
 }
 showCategoryScreen();
 // =================================================================
