@@ -916,11 +916,16 @@ if (typeof updateQuizScreen === "function") {
     const currentQuestion = currentWords[currentIndex];
 
     // 「～」や「~」を除去して読み上げ
-    const word = currentQuestion.english
+let word = currentQuestion.english
         .replace(/～/g, '')
         .replace(/~/g, '')
         .trim();
-
+if (
+    word === "read" &&
+    currentQuestion.japanese.includes("過去")
+) {
+    word = "red";
+}
     // 前回の読み上げを停止
     speechSynthesis.cancel();
 
