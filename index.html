@@ -25,8 +25,9 @@ body {
     width: 100%;
     max-width: 440px;
 }
-.brand { text-align: center; font-size: 16px; font-weight: bold; color: #555; margin-bottom: 6px; }
+.brand { text-align: center; font-size: 19px; font-weight: bold; margin-bottom: 8px; letter-spacing: 1px; }
 h1 { font-size: 19px; text-align: center; margin: 4px 0 18px; }
+.home-title { font-size: 16px; }
 .center { text-align: center; }
 
 /* ========== ボタン ========== */
@@ -81,6 +82,12 @@ h1 { font-size: 19px; text-align: center; margin: 4px 0 18px; }
 .lesson .btn:last-child { margin-bottom: 0; }
 .no-result { text-align: center; color: #888; padding: 20px 0; }
 
+.hit-heading { font-weight: bold; font-size: 15px; margin: 6px 0 10px; }
+.hit { border: 1px solid #ddd; border-radius: 10px; padding: 10px 12px; margin-bottom: 10px; font-size: 14px; line-height: 1.7; }
+.hit-no { color: #888; font-size: 12px; }
+.hit-answer { color: #c0392b; font-weight: bold; margin-top: 4px; }
+mark { background: #fff3a0; border-radius: 3px; padding: 0 1px; }
+
 /* ========== クイズ画面 ========== */
 .quiz-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .quiz-title { font-size: 13px; color: #888; text-align: center; margin-bottom: 4px; }
@@ -97,7 +104,7 @@ h1 { font-size: 19px; text-align: center; margin: 4px 0 18px; }
 </head>
 <body>
 <div class="app" id="app">
-    <div class="brand">エリスフィールド進学会</div>
+    <div class="brand"><span style="color:#e74c3c">エ</span><span style="color:#f39c12">リ</span><span style="color:#27ae60">ス</span><span style="color:#2980b9">フ</span><span style="color:#8e44ad">ィ</span><span style="color:#e91e63">ー</span><span style="color:#16a085">ル</span><span style="color:#d35400">ド</span><span style="color:#3f51b5">進</span><span style="color:#c0392b">学</span><span style="color:#2e9f6b">会</span></div>
     <div id="screen"></div>
 </div>
 
@@ -1020,13 +1027,13 @@ const HISTORY = [
             { q: "身分制度の廃止により、百姓・町人は何と呼ばれるようになったか。",
               a: "平民", wrong: ["華族", "士族", "皇族"] },
             { q: "1871年に出された、えた身分やひにん身分などの呼び名を廃止し、身分や職業を平民と同じとする布告を何というか。",
-              a: "解放令", wrong: ["学制", "徴兵令", "五榜の掲示"] },
+              a: "解放令（賤称廃止令）", wrong: ["学制", "徴兵令", "五榜の掲示"] },
             { q: "1872年に公布された、6歳以上の男女全てに小学校で教育を受けさせることを定めた法令を何というか。",
               a: "学制", wrong: ["教育勅語", "学校令", "徴兵令"] },
             { q: "政府などに雇い入れられ、学問や技術、軍事を教えた外国人を何というか。",
               a: "お雇い外国人", wrong: ["宣教師", "留学生", "御用商人"] },
             { q: "1873年に出され、満20歳になった男子に兵役を義務づけた法令を何というか。",
-              a: "徴兵令", wrong: ["学制", "地租改正", "解放令"] },
+              a: "徴兵令", wrong: ["学制", "地租改正", "解放令（賤称廃止令）"] },
             { q: "1873年から政府が行った税制改革を何というか。",
               a: "地租改正", wrong: ["殖産興業", "徴兵令", "秩禄処分"] },
             { q: "土地の所有者に発行された、土地の所有者や土地の広さ、地価などを記載した証書を何というか。",
@@ -1082,6 +1089,37 @@ function el(tag, attrs = {}, children = []) {
 function mount(...nodes) {
     $screen.replaceChildren(...nodes.filter(Boolean));
     window.scrollTo(0, 0);
+}
+
+/* 検索用：全角・半角や大文字・小文字の違いを無視して比べる */
+function norm(text) {
+    let s = "";
+    const map = [];   // 変換後の文字が、元の文字の何番目か
+    for (let i = 0; i < text.length; i++) {
+        for (const ch of text[i].normalize("NFKC").toLowerCase()) { s += ch; map.push(i); }
+    }
+    return { s, map };
+}
+
+/* 検索語に一致する部分に色をつけた文章を作る */
+function highlight(text, word) {
+    const { s, map } = norm(text);
+    const target = norm(word).s;
+    const frag = document.createDocumentFragment();
+    let pos = 0, from = 0;
+    while (target) {
+        const k = s.indexOf(target, from);
+        if (k < 0) break;
+        const start = map[k], end = map[k + target.length - 1] + 1;
+        if (start >= pos) {
+            frag.append(text.slice(pos, start));
+            frag.append(el("mark", { text: text.slice(start, end) }));
+            pos = end;
+        }
+        from = k + target.length;
+    }
+    frag.append(text.slice(pos));
+    return frag;
 }
 
 function setAccent(color) { $app.style.setProperty("--c", color); }
@@ -1201,7 +1239,7 @@ function showHome() {
         text: `${sec.icon}  ${sec.title}`,
         onclick: () => (sec.type === "history" ? showHistoryMenu(sec) : showEnglishMenu(sec))
     }));
-    mount(el("h1", { text: "学習するコースを選んでね" }), ...list);
+    mount(el("h1", { class: "home-title", text: "学習するコースを選んでね" }), ...list);
 }
 
 function showEnglishMenu(sec) {
@@ -1218,45 +1256,86 @@ function showEnglishMenu(sec) {
     );
 }
 
-/* 歴史メニュー：上に検索ボックス、その下に各回のボタン */
-function showHistoryMenu(sec) {
+/* 歴史メニュー：上に検索ボックス、その下に各回のボタン
+   検索すると、回の名前に合う回と、問題文・答えに合う問題が表示される */
+function showHistoryMenu(sec, word = "") {
     setAccent(sec.c1);
     const listArea = el("div");
     const search = el("input", {
-        class: "search-box", type: "search",
+        class: "search-box", type: "text", autocomplete: "off", enterkeyhint: "search",
         placeholder: "🔍 検索（例：廃藩置県、第1回）"
     });
+    search.value = word;
 
+    function lessonCard(lesson, keyword) {
+        const n = lesson.questions.length;
+        return el("div", { class: "lesson" }, [
+            el("div", { class: "lesson-title", text: `第${lesson.no}回「${lesson.title}（${n}問）」` }),
+            el("button", {
+                class: "btn cat-btn", text: `📋 全問題を順番に（${n}問）`,
+                onclick: () => startHistory(sec, lesson, "all", keyword)
+            }),
+            el("button", {
+                class: "btn cat-btn", text: `🎲 ランダム ${Math.min(10, n)}問`,
+                onclick: () => startHistory(sec, lesson, "random", keyword)
+            })
+        ]);
+    }
+
+    let lastKeyword = null;   // 直前に表示した検索語（同じなら描き直さない）
     function renderList() {
-        const word = search.value.trim();
+        const keyword = search.value.trim();
+        // 入力欄からボタンへ移るときに change イベントが起き、ボタンが消えて押せなくなるのを防ぐ
+        if (keyword === lastKeyword) return;
+        lastKeyword = keyword;
         listArea.replaceChildren();
-        const hits = HISTORY.filter(lesson => {
-            if (!word) return true;
-            const text = `第${lesson.no}回 ${lesson.title} ` +
-                lesson.questions.map(q => q.q + q.a).join(" ");
-            return text.includes(word);
-        });
-        if (hits.length === 0) {
+
+        // 検索語が空なら、すべての回を表示
+        if (!keyword) {
+            HISTORY.forEach(lesson => listArea.appendChild(lessonCard(lesson, "")));
+            return;
+        }
+
+        const target = norm(keyword).s;
+        const lessonHits = HISTORY.filter(l => norm(`第${l.no}回 ${l.title}`).s.includes(target));
+        const questionHits = [];
+        HISTORY.forEach(lesson => lesson.questions.forEach((q, i) => {
+            if (norm(q.q).s.includes(target) || norm(q.a).s.includes(target)) {
+                questionHits.push({ lesson, no: i + 1, q });
+            }
+        }));
+
+        if (lessonHits.length === 0 && questionHits.length === 0) {
             listArea.appendChild(el("div", { class: "no-result", text: "見つかりませんでした" }));
             return;
         }
-        hits.forEach(lesson => {
-            const n = lesson.questions.length;
-            listArea.appendChild(el("div", { class: "lesson" }, [
-                el("div", { class: "lesson-title", text: `第${lesson.no}回「${lesson.title}（${n}問）」` }),
-                el("button", {
-                    class: "btn cat-btn", text: `📋 全問題を順番に（${n}問）`,
-                    onclick: () => startHistory(sec, lesson, "all")
-                }),
-                el("button", {
-                    class: "btn cat-btn", text: `🎲 ランダム ${Math.min(10, n)}問`,
-                    onclick: () => startHistory(sec, lesson, "random")
-                })
-            ]));
-        });
+
+        lessonHits.forEach(lesson => listArea.appendChild(lessonCard(lesson, keyword)));
+
+        if (questionHits.length > 0) {
+            listArea.appendChild(el("div", { class: "hit-heading", text: `「${keyword}」を含む問題（${questionHits.length}問）` }));
+            listArea.appendChild(el("button", {
+                class: "btn action-btn",
+                text: `この${questionHits.length}問を出題する`,
+                onclick: () => startSearchQuiz(sec, questionHits, keyword)
+            }));
+            questionHits.forEach(hit => {
+                const question = el("div");
+                question.appendChild(highlight(hit.q.q, keyword));
+                const answer = el("div", { class: "hit-answer" });
+                answer.append("答え：");
+                answer.appendChild(highlight(hit.q.a, keyword));
+                listArea.appendChild(el("div", { class: "hit" }, [
+                    el("div", { class: "hit-no", text: `第${hit.lesson.no}回 問${hit.no}` }),
+                    question,
+                    answer
+                ]));
+            });
+        }
     }
 
-    search.oninput = renderList;
+    // 日本語入力（変換中・確定後）でも、キーボードの種類が違っても反応するように複数のイベントを監視
+    ["input", "keyup", "change", "compositionend", "search"].forEach(ev => search.addEventListener(ev, renderList));
     renderList();
     mount(
         backButton("← 最初の画面へ", showHome),
@@ -1281,17 +1360,32 @@ function startEnglish(sec, category) {
     runQuiz(opts);
 }
 
-function startHistory(sec, lesson, mode) {
+function startHistory(sec, lesson, mode, keyword = "") {
     const label = mode === "all" ? "全問題（順番どおり）" : "ランダム10問";
-    const opts = {
+    runQuiz({
         title: `第${lesson.no}回 ${label}`,
         kind: "history",
         color: sec.c1,
         items: makeHistoryItems(lesson, mode),
-        onBack: () => showHistoryMenu(sec),
-        onRetry: () => startHistory(sec, lesson, mode)
-    };
-    runQuiz(opts);
+        onBack: () => showHistoryMenu(sec, keyword),
+        onRetry: () => startHistory(sec, lesson, mode, keyword)
+    });
+}
+
+/* 検索結果の問題だけを出題する */
+function startSearchQuiz(sec, hits, keyword) {
+    runQuiz({
+        title: `検索「${keyword}」の問題`,
+        kind: "history",
+        color: sec.c1,
+        items: hits.map(h => ({
+            prompt: h.q.q,
+            answer: h.q.a,
+            choices: () => shuffle([h.q.a, ...h.q.wrong])
+        })),
+        onBack: () => showHistoryMenu(sec, keyword),
+        onRetry: () => startSearchQuiz(sec, hits, keyword)
+    });
 }
 
 /* =====================================================================
