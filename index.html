@@ -1,1094 +1,1402 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>中学初級・4択英単語テスト</title>
-    <style>
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f0f4f8;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .quiz-container {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            padding: 30px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-        h1 { font-size: 20px; color: #333; margin-top: 0; }
-        .japanese { font-size: 28px; font-weight: bold; color: #333; margin: 20px 0; }
-        .progress { color: #666; font-size: 14px; margin-bottom: 15px; }
-        .btn {
-            background-color: white;
-            color: #333;
-            border: 2px solid #e0e0e0;
-            padding: 14px;
-            font-size: 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            margin-bottom: 12px;
-            font-weight: bold;
-            text-align: center;
-            box-sizing: border-box;
-            transition: background-color 0.2s;
-        }
-        .btn:hover { background-color: #f7f9fa; }
-        .choice-btn { font-size: 18px; letter-spacing: 0.5px; }
-        .action-btn {
-            background-color: #4a90e2;
-            color: white;
-            border: none;
-            padding: 12px;
-            font-size: 16px;
-            border-radius: 6px;
-            width: 100%;
-            font-weight: bold;
-            margin-top: 10px;
-            cursor: pointer;
-        }
-        .result-message { font-size: 18px; font-weight: bold; margin: 15px 0; }
-        .correct { color: #2ecc71; border-color: #2ecc71 !important; background-color: #eafeec; }
-        .incorrect { color: #e74c3c; border-color: #e74c3c !important; background-color: #fdedec; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>エリスフィールド進学会 学習アプリ</title>
+<style>
+/* ========== 共通 ========== */
+* { box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Helvetica Neue", Arial, sans-serif;
+    background: #eef2f7;
+    margin: 0;
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    color: #333;
+}
+.app {
+    --c: #4a90e2;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    padding: 24px 20px 28px;
+    width: 100%;
+    max-width: 440px;
+}
+.brand { text-align: center; font-size: 16px; font-weight: bold; color: #555; margin-bottom: 6px; }
+h1 { font-size: 19px; text-align: center; margin: 4px 0 18px; }
+.center { text-align: center; }
+
+/* ========== ボタン ========== */
+.btn {
+    display: block;
+    width: 100%;
+    background: #fff;
+    color: #333;
+    border: 2px solid #e0e0e0;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 12px;
+    text-align: center;
+    line-height: 1.4;
+    font-family: inherit;
+}
+.btn:active { background: #f0f3f6; }
+.home-btn {
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    padding: 20px 14px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--c1), var(--c2));
+    box-shadow: 0 3px 8px rgba(0,0,0,0.18);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+}
+.home-btn:active { background: linear-gradient(135deg, var(--c1), var(--c2)); filter: brightness(0.92); }
+.cat-btn { border-color: var(--c); }
+.cat-btn:active { background: var(--c); color: #fff; }
+.action-btn { background: var(--c); border-color: var(--c); color: #fff; }
+.action-btn:active { background: var(--c); filter: brightness(0.92); }
+.review-btn { background: #ff9800; border-color: #ff9800; color: #fff; }
+.review-btn:active { background: #ff9800; filter: brightness(0.92); }
+.back-btn {
+    background: none; border: none; color: #666; font-size: 15px; font-weight: bold;
+    padding: 6px 4px; cursor: pointer; font-family: inherit;
+}
+.sound-btn { max-width: 200px; margin: 0 auto 20px; padding: 10px; font-size: 16px; }
+
+/* ========== 歴史メニュー ========== */
+.search-box {
+    width: 100%; padding: 12px 14px; font-size: 16px; border: 2px solid var(--c);
+    border-radius: 10px; margin-bottom: 16px; font-family: inherit;
+}
+.lesson { border: 2px solid var(--c); border-radius: 12px; padding: 12px; margin-bottom: 14px; }
+.lesson-title { font-weight: bold; font-size: 15px; margin-bottom: 10px; line-height: 1.5; }
+.lesson .btn { margin-bottom: 8px; font-size: 15px; padding: 12px; }
+.lesson .btn:last-child { margin-bottom: 0; }
+.no-result { text-align: center; color: #888; padding: 20px 0; }
+
+/* ========== クイズ画面 ========== */
+.quiz-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.quiz-title { font-size: 13px; color: #888; text-align: center; margin-bottom: 4px; }
+.progress { color: #666; font-size: 14px; }
+.japanese { font-size: 28px; font-weight: bold; margin: 20px 0; text-align: center; line-height: 1.4; }
+.question-text { font-size: 18px; font-weight: bold; margin: 16px 0 20px; line-height: 1.7; text-align: left; }
+.choice-btn { font-size: 18px; }
+.correct { color: #2ecc71; border-color: #2ecc71 !important; background: #eafeec; }
+.incorrect { color: #e74c3c; border-color: #e74c3c !important; background: #fdedec; }
+.result-message { font-size: 18px; font-weight: bold; margin: 15px 0; text-align: center; min-height: 1.4em; }
+.final-score { font-size: 22px; font-weight: bold; text-align: center; margin: 24px 0; }
+.perfect { text-align: center; font-size: 18px; margin-bottom: 20px; }
+</style>
 </head>
 <body>
- 
-<div class="quiz-container">
-    <div id="category-screen">
-    <div style="font-size: 16px; color: #555; font-weight: bold; margin-bottom: 5px; text-align: center;">エリスフィールド進学会</div>
-        <h1>テストするカテゴリを選んでね</h1>
-        <div id="category-list"></div>
-    </div>
- 
-  <div id="quiz-screen" style="display: none;">
-    <div class="progress" id="progress">第 1 問 / 全 10 問</div>
-    <div class="japanese" id="japanese-word">日本語</div>
-
-    <button onclick="speakWord()" class="btn"
-        style="margin-bottom:20px;max-width:200px;margin-left:auto;
-        margin-right:auto;padding:10px;font-size:16px;">
-        🔊 発音を聞く
-    </button>
-
-    <div id="choices-list"></div>
-
-    <div class="result-message" id="result-message"></div>
-
-    <button onclick="nextQuestion()" id="next-btn"
-        class="action-btn" style="display:none;">
-        次へ進む
-    </button>
+<div class="app" id="app">
+    <div class="brand">エリスフィールド進学会</div>
+    <div id="screen"></div>
 </div>
 
-<div id="result-screen" style="display: none;">
-    <h2>テスト終了！</h2>
-    <p id="final-score" style="font-size: 18px; font-weight: bold;"></p>
-    <button onclick="showCategoryScreen()" class="action-btn">
-        別のテストを選ぶ
-    </button>
-</div>
- 
 <script>
-const wordData = {
+/* =====================================================================
+   1. データ（問題）
+   ===================================================================== */
+
+/* --- 1-1. 英語の単語データ（カテゴリ名 → 単語の配列） --- */
+const WORDS = {
     "数字 (1〜10)": [
-        { english: "one", japanese: "1" }, { english: "two", japanese: "2" }, 
-        { english: "three", japanese: "3" }, { english: "four", japanese: "4" }, 
-        { english: "five", japanese: "5" }, { english: "six", japanese: "6" },
-        { english: "seven", japanese: "7" }, { english: "eight", japanese: "8" }, 
-        { english: "nine", japanese: "9" }, { english: "ten", japanese: "10" }
+        { english: "one", japanese: "1" },
+        { english: "two", japanese: "2" },
+        { english: "three", japanese: "3" },
+        { english: "four", japanese: "4" },
+        { english: "five", japanese: "5" },
+        { english: "six", japanese: "6" },
+        { english: "seven", japanese: "7" },
+        { english: "eight", japanese: "8" },
+        { english: "nine", japanese: "9" },
+        { english: "ten", japanese: "10" }
     ],
     "数字 (11～20)": [
-        { english: "eleven", japanese: "11" }, { english: "twelve", japanese: "12" }, 
-        { english: "thirteen", japanese: "13" }, { english: "fourteen", japanese: "14" }, 
-        { english: "fifteen", japanese: "15" }, { english: "sixteen", japanese: "16" },
-        { english: "seventeen", japanese: "17" }, { english: "eighteen", japanese: "18" }, 
-        { english: "nineteen", japanese: "19" }, { english: "twenty", japanese: "20" }
+        { english: "eleven", japanese: "11" },
+        { english: "twelve", japanese: "12" },
+        { english: "thirteen", japanese: "13" },
+        { english: "fourteen", japanese: "14" },
+        { english: "fifteen", japanese: "15" },
+        { english: "sixteen", japanese: "16" },
+        { english: "seventeen", japanese: "17" },
+        { english: "eighteen", japanese: "18" },
+        { english: "nineteen", japanese: "19" },
+        { english: "twenty", japanese: "20" }
     ],
     "数字 (30～100, 千, 万)": [
-        { english: "thirty", japanese: "30" }, { english: "forty", japanese: "40" },
-        { english: "fifty", japanese: "50" }, { english: "sixty", japanese: "60" }, 
-        { english: "seventy", japanese: "70" }, { english: "eighty", japanese: "80" }, 
-        { english: "ninety", japanese: "90" }, { english: "hundred", japanese: "100" }, 
-        { english: "thousand", japanese: "1,000" }, { english: "ten thousand", japanese: "10,000" }
+        { english: "thirty", japanese: "30" },
+        { english: "forty", japanese: "40" },
+        { english: "fifty", japanese: "50" },
+        { english: "sixty", japanese: "60" },
+        { english: "seventy", japanese: "70" },
+        { english: "eighty", japanese: "80" },
+        { english: "ninety", japanese: "90" },
+        { english: "hundred", japanese: "100" },
+        { english: "thousand", japanese: "1,000" },
+        { english: "ten thousand", japanese: "10,000" }
     ],
     "数字 (序数)": [
-        { english: "first", japanese: "1番目の" }, { english: "second", japanese: "2番目の" }, 
-        { english: "third", japanese: "3番目の" },{ english: "fourth", japanese: "4番目の" },
-        { english: "fifth", japanese: "5番目の" }, { english: "sixth", japanese: "6番目の" }, 
-        { english: "seventh", japanese: "7番目の" }, { english: "eighth", japanese: "8番目の" }, 
-        { english: "ninth", japanese: "9番目の" }, { english: "tenth", japanese: "10番目の" }
+        { english: "first", japanese: "1番目の" },
+        { english: "second", japanese: "2番目の" },
+        { english: "third", japanese: "3番目の" },
+        { english: "fourth", japanese: "4番目の" },
+        { english: "fifth", japanese: "5番目の" },
+        { english: "sixth", japanese: "6番目の" },
+        { english: "seventh", japanese: "7番目の" },
+        { english: "eighth", japanese: "8番目の" },
+        { english: "ninth", japanese: "9番目の" },
+        { english: "tenth", japanese: "10番目の" }
     ],
     "曜日・週": [
-        { english: "Monday", japanese: "月曜日" }, { english: "Tuesday", japanese: "火曜日" },
-        { english: "Wednesday", japanese: "水曜日" }, { english: "Thursday", japanese: "木曜日" },
-        { english: "Friday", japanese: "金曜日" }, { english: "Saturday", japanese: "土曜日" },
-        { english: "Sunday", japanese: "日曜日" }, { english: "weekend", japanese: "週末" }, 
-        { english: "this week", japanese: "今週" }, { english: "last week", japanese: "先週" }, 
+        { english: "Monday", japanese: "月曜日" },
+        { english: "Tuesday", japanese: "火曜日" },
+        { english: "Wednesday", japanese: "水曜日" },
+        { english: "Thursday", japanese: "木曜日" },
+        { english: "Friday", japanese: "金曜日" },
+        { english: "Saturday", japanese: "土曜日" },
+        { english: "Sunday", japanese: "日曜日" },
+        { english: "weekend", japanese: "週末" },
+        { english: "this week", japanese: "今週" },
+        { english: "last week", japanese: "先週" },
         { english: "next week", japanese: "来週" }
     ],
     "1月〜12月": [
-        { english: "January", japanese: "1月" }, { english: "February", japanese: "2月" },
-        { english: "March", japanese: "3月" }, { english: "April", japanese: "4月" },
-        { english: "May", japanese: "5月" }, { english: "June", japanese: "6月" },
-        { english: "July", japanese: "7月" }, { english: "August", japanese: "8月" },
-        { english: "September", japanese: "9月" }, { english: "October", japanese: "10月" },
-        { english: "November", japanese: "11月" }, { english: "December", japanese: "12月" }, 
-        { english: "this month", japanese: "今月" }, { english: "last month", japanese: "先月" }, 
+        { english: "January", japanese: "1月" },
+        { english: "February", japanese: "2月" },
+        { english: "March", japanese: "3月" },
+        { english: "April", japanese: "4月" },
+        { english: "May", japanese: "5月" },
+        { english: "June", japanese: "6月" },
+        { english: "July", japanese: "7月" },
+        { english: "August", japanese: "8月" },
+        { english: "September", japanese: "9月" },
+        { english: "October", japanese: "10月" },
+        { english: "November", japanese: "11月" },
+        { english: "December", japanese: "12月" },
+        { english: "this month", japanese: "今月" },
+        { english: "last month", japanese: "先月" },
         { english: "next month", japanese: "来月" }
     ],
-   "季節・天気": [
-        { english: "season", japanese: "季節" }, { english: "spring", japanese: "春" }, 
-        { english: "summer", japanese: "夏" }, { english: "autumn", japanese: "秋" }, 
-        { english: "winter", japanese: "冬" }, 
-        { english: "Christmas", japanese: "クリスマス" }, { english: "vacation", japanese: "休暇" },
-        { english: "weather", japanese: "天気" }, 
-        { english: "rain", japanese: "雨（が降る）" }, { english: "snow", japanese: "雪（が降る）" },  
-        { english: "rainy", japanese: "雨の" }, { english: "sunny", japanese: "晴れた" },  
+    "季節・天気": [
+        { english: "season", japanese: "季節" },
+        { english: "spring", japanese: "春" },
+        { english: "summer", japanese: "夏" },
+        { english: "autumn", japanese: "秋" },
+        { english: "winter", japanese: "冬" },
+        { english: "Christmas", japanese: "クリスマス" },
+        { english: "vacation", japanese: "休暇" },
+        { english: "weather", japanese: "天気" },
+        { english: "rain", japanese: "雨（が降る）" },
+        { english: "snow", japanese: "雪（が降る）" },
+        { english: "rainy", japanese: "雨の" },
+        { english: "sunny", japanese: "晴れた" },
         { english: "umbrella", japanese: "傘" }
-   ],
-   "色": [ 
-        { english: "red", japanese: "赤" }, { english: "blue", japanese: "青" }, 
-        { english: "green", japanese: "緑" }, { english: "yellow", japanese: "黄" }, 
-        { english: "black", japanese: "黒" }, { english: "white", japanese: "白" }, 
-        { english: "brown", japanese: "茶" }, { english: "purple", japanese: "紫" }, 
-        { english: "pink", japanese: "ピンク" }, { english: "color", japanese: "カラー" }
-   ],
-   "時間帯・暦": [
-        { english: "morning", japanese: "朝" }, { english: "afternoon", japanese: "午後" }, 
-        { english: "evening", japanese: "夕方" }, { english: "night", japanese: "夜" },
-        { english: "tonight", japanese: "今夜" }, { english: "last night", japanese: "昨夜" },
-        { english: "at night", japanese: "夜に" }, 
-        { english: "today", japanese: "今日" }, { english: "yesterday", japanese: "昨日" }, 
-        { english: "tomorrow", japanese: "明日" }, { english: "every day", japanese: "毎日" }, 
-        { english: "every week", japanese: "毎週" }, { english: "every month", japanese: "毎月" }, 
-        { english: "every year", japanese: "毎年" }, { english: "this year", japanese: "今年" }, 
-        { english: "last year", japanese: "去年" }, { english: "next year", japanese: "来年" }
-   ],
-   "家族": [
-        { english: "family", japanese: "家族" }, { english: "birthday", japanese: "誕生日" },
-        { english: "father", japanese: "父親" }, { english: "mother", japanese: "母親" }, 
-        { english: "parent", japanese: "親" }, 
-        { english: "child", japanese: "子供" }, { english: "children", japanese: "子供たち" }, 
-        { english: "brother", japanese: "兄弟" }, { english: "sister", japanese: "姉妹" }, 
-        { english: "uncle", japanese: "おじ・おじさん" }, 
-        { english: "aunt", japanese: "おば・おばさん" }, 
-        { english: "grandfather", japanese: "祖父" }, 
-        { english: "grandmother", japanese: "祖母" }, 
+    ],
+    "色": [
+        { english: "red", japanese: "赤" },
+        { english: "blue", japanese: "青" },
+        { english: "green", japanese: "緑" },
+        { english: "yellow", japanese: "黄" },
+        { english: "black", japanese: "黒" },
+        { english: "white", japanese: "白" },
+        { english: "brown", japanese: "茶" },
+        { english: "purple", japanese: "紫" },
+        { english: "pink", japanese: "ピンク" },
+        { english: "color", japanese: "カラー" }
+    ],
+    "時間帯・暦": [
+        { english: "morning", japanese: "朝" },
+        { english: "afternoon", japanese: "午後" },
+        { english: "evening", japanese: "夕方" },
+        { english: "night", japanese: "夜" },
+        { english: "tonight", japanese: "今夜" },
+        { english: "last night", japanese: "昨夜" },
+        { english: "at night", japanese: "夜に" },
+        { english: "today", japanese: "今日" },
+        { english: "yesterday", japanese: "昨日" },
+        { english: "tomorrow", japanese: "明日" },
+        { english: "every day", japanese: "毎日" },
+        { english: "every week", japanese: "毎週" },
+        { english: "every month", japanese: "毎月" },
+        { english: "every year", japanese: "毎年" },
+        { english: "this year", japanese: "今年" },
+        { english: "last year", japanese: "去年" },
+        { english: "next year", japanese: "来年" }
+    ],
+    "家族": [
+        { english: "family", japanese: "家族" },
+        { english: "birthday", japanese: "誕生日" },
+        { english: "father", japanese: "父親" },
+        { english: "mother", japanese: "母親" },
+        { english: "parent", japanese: "親" },
+        { english: "child", japanese: "子供" },
+        { english: "children", japanese: "子供たち" },
+        { english: "brother", japanese: "兄弟" },
+        { english: "sister", japanese: "姉妹" },
+        { english: "uncle", japanese: "おじ・おじさん" },
+        { english: "aunt", japanese: "おば・おばさん" },
+        { english: "grandfather", japanese: "祖父" },
+        { english: "grandmother", japanese: "祖母" },
         { english: "cousin", japanese: "いとこ" }
-   ],
-   "人物": [
-        { english: "boy", japanese: "少年" }, { english: "girl", japanese: "少女" }, 
-        { english: "man", japanese: "男性" }, { english: "woman", japanese: "女性" }, 
-        { english: "teacher", japanese: "先生" }, { english: "student", japanese: "学生・生徒" }, 
-        { english: "friend", japanese: "友達" }, { english: "classmate", japanese: "同級生" },
-        { english: "volunteer", japanese: "ボランティア" }, 
-        { english: "member", japanese: "メンバー" }, { english: "people", japanese: "人々" },
+    ],
+    "人物": [
+        { english: "boy", japanese: "少年" },
+        { english: "girl", japanese: "少女" },
+        { english: "man", japanese: "男性" },
+        { english: "woman", japanese: "女性" },
+        { english: "teacher", japanese: "先生" },
+        { english: "student", japanese: "学生・生徒" },
+        { english: "friend", japanese: "友達" },
+        { english: "classmate", japanese: "同級生" },
+        { english: "volunteer", japanese: "ボランティア" },
+        { english: "member", japanese: "メンバー" },
+        { english: "people", japanese: "人々" },
         { english: "young people", japanese: "若者" }
-   ],
-   "国・地域": [
-        { english: "world", japanese: "世界" }, { english: "around the world", japanese: "世界中で" }, 
+    ],
+    "国・地域": [
+        { english: "world", japanese: "世界" },
+        { english: "around the world", japanese: "世界中で" },
         { english: "country", japanese: "国" },
-        { english: "Asia", japanese: "アジア" }, { english: "Europe", japanese: "ヨーロッパ" },
+        { english: "Asia", japanese: "アジア" },
+        { english: "Europe", japanese: "ヨーロッパ" },
         { english: "Africa", japanese: "アフリカ" },
-        { english: "Japan", japanese: "日本" }, { english: "Spain", japanese: "スペイン" },
-        { english: "America", japanese: "アメリカ" }, { english: "China", japanese: "中国" },
-        { english: "Korea", japanese: "韓国" }, { english: "India", japanese: "インド" },
-        { english: "Australia", japanese: "オーストラリア" }, 
-        { english: "Canada", japanese: "カナダ" }, { english: "Germany", japanese: "ドイツ" }, 
-        { english: "France", japanese: "フランス" }, { english: "Italy", japanese: "イタリア" } 
-   ],
-   "食事・飲み物": [
-        { english: "breakfast", japanese: "朝食" }, { english: "lunch", japanese: "昼食" },
-        { english: "dinner", japanese: "夕食" }, { english: "food", japanese: "食べ物" }, 
+        { english: "Japan", japanese: "日本" },
+        { english: "Spain", japanese: "スペイン" },
+        { english: "America", japanese: "アメリカ" },
+        { english: "China", japanese: "中国" },
+        { english: "Korea", japanese: "韓国" },
+        { english: "India", japanese: "インド" },
+        { english: "Australia", japanese: "オーストラリア" },
+        { english: "Canada", japanese: "カナダ" },
+        { english: "Germany", japanese: "ドイツ" },
+        { english: "France", japanese: "フランス" },
+        { english: "Italy", japanese: "イタリア" }
+    ],
+    "食事・飲み物": [
+        { english: "breakfast", japanese: "朝食" },
+        { english: "lunch", japanese: "昼食" },
+        { english: "dinner", japanese: "夕食" },
+        { english: "food", japanese: "食べ物" },
         { english: "dessert", japanese: "デザート" },
-        { english: "party", japanese: "パーティー" }, 
-        { english: "drink", japanese: "飲み物・飲む" }, 
-        { english: "water", japanese: "水" }, { english: "milk", japanese: "牛乳" }, 
-        { english: "tea", japanese: "茶・紅茶" }, { english: "coffee", japanese: "コーヒー" }
-   ],
-   "フルーツ・菓子": [
-        { english: "fruit", japanese: "果物" }, { english: "apple", japanese: "リンゴ" },
-        { english: "orange", japanese: "オレンジ" }, { english: "banana", japanese: "バナナ" }, 
-        { english: "lemon", japanese: "レモン" }, { english: "peach", japanese: "桃（ピーチ）" }, 
-        { english: "grapes", japanese: "ブドウ" }, { english: "watermelon", japanese: "スイカ" }, 
-        { english: "cake", japanese: "ケーキ" }, { english: "sweet", japanese: "甘い菓子" }, 
-        { english: "cookie", japanese: "クッキー" }, 
+        { english: "party", japanese: "パーティー" },
+        { english: "drink", japanese: "飲み物・飲む" },
+        { english: "water", japanese: "水" },
+        { english: "milk", japanese: "牛乳" },
+        { english: "tea", japanese: "茶・紅茶" },
+        { english: "coffee", japanese: "コーヒー" }
+    ],
+    "フルーツ・菓子": [
+        { english: "fruit", japanese: "果物" },
+        { english: "apple", japanese: "リンゴ" },
+        { english: "orange", japanese: "オレンジ" },
+        { english: "banana", japanese: "バナナ" },
+        { english: "lemon", japanese: "レモン" },
+        { english: "peach", japanese: "桃（ピーチ）" },
+        { english: "grapes", japanese: "ブドウ" },
+        { english: "watermelon", japanese: "スイカ" },
+        { english: "cake", japanese: "ケーキ" },
+        { english: "sweet", japanese: "甘い菓子" },
+        { english: "cookie", japanese: "クッキー" },
         { english: "ice cream", japanese: "アイスクリーム" }
-   ],
-   "料理・食材": [
-        { english: "cooking", japanese: "料理" }, { english: "seafood", japanese: "シーフード" },
+    ],
+    "料理・食材": [
+        { english: "cooking", japanese: "料理" },
+        { english: "seafood", japanese: "シーフード" },
         { english: "go shopping", japanese: "買い物に行く" },
-        { english: "bread", japanese: "パン" }, { english: "salad", japanese: "サラダ" },
-        { english: "soup", japanese: "スープ" }, { english: "curry", japanese: "カレー (料理)" },
-        { english: "fish", japanese: "魚" }, { english: "egg", japanese: "卵" },
-        { english: "meat", japanese: "肉" }, { english: "chicken", japanese: "チキン" },
-        { english: "pork", japanese: "豚肉" }, { english: "beef", japanese: "牛肉" }, 
-        { english: "vegetable", japanese: "野菜" }, { english: "bean", japanese: "豆" }, 
-        { english: "cheese", japanese: "チーズ" },       
+        { english: "bread", japanese: "パン" },
+        { english: "salad", japanese: "サラダ" },
+        { english: "soup", japanese: "スープ" },
+        { english: "curry", japanese: "カレー (料理)" },
+        { english: "fish", japanese: "魚" },
+        { english: "egg", japanese: "卵" },
+        { english: "meat", japanese: "肉" },
+        { english: "chicken", japanese: "チキン" },
+        { english: "pork", japanese: "豚肉" },
+        { english: "beef", japanese: "牛肉" },
+        { english: "vegetable", japanese: "野菜" },
+        { english: "bean", japanese: "豆" },
+        { english: "cheese", japanese: "チーズ" },
         { english: "potato", japanese: "ジャガイモ" }
-   ],
-   "勉強": [
-        { english: "English", japanese: "英語" }, { english: "Japanese", japanese: "国語" }, 
-        { english: "math", japanese: "数学" }, { english: "science", japanese: "理科" }, 
-        { english: "subject", japanese: "教科" }, { english: "history", japanese: "歴史" }, 
-        { english: "language", japanese: "言語" }, { english: "information", japanese: "情報" },
-        { english: "book", japanese: "本" }, { english: "notebook", japanese: "ノート" },
-        { english: "dictionary", japanese: "辞書" }, 
-        { english: "homework", japanese: "宿題" }, { english: "plan", japanese: "計画" },
-        { english: "idea", japanese: "アイデア" }, { english: "question", japanese: "質問" } 
-   ],
-   "学校の活動・行事": [
-        { english: "school", japanese: "学校" }, { english: "classroom", japanese: "教室" }, 
-        { english: "at school", japanese: "学校で" }, 
-        { english: "go to school", japanese: "学校に行く" }, 
+    ],
+    "勉強": [
+        { english: "English", japanese: "英語" },
+        { english: "Japanese", japanese: "国語" },
+        { english: "math", japanese: "数学" },
+        { english: "science", japanese: "理科" },
+        { english: "subject", japanese: "教科" },
+        { english: "history", japanese: "歴史" },
+        { english: "language", japanese: "言語" },
+        { english: "information", japanese: "情報" },
+        { english: "book", japanese: "本" },
+        { english: "notebook", japanese: "ノート" },
+        { english: "dictionary", japanese: "辞書" },
+        { english: "homework", japanese: "宿題" },
+        { english: "plan", japanese: "計画" },
+        { english: "idea", japanese: "アイデア" },
+        { english: "question", japanese: "質問" }
+    ],
+    "学校の活動・行事": [
+        { english: "school", japanese: "学校" },
+        { english: "classroom", japanese: "教室" },
+        { english: "at school", japanese: "学校で" },
+        { english: "go to school", japanese: "学校に行く" },
         { english: "after school", japanese: "放課後" },
-        { english: "club activity", japanese: "クラブ活動" }, 
-        { english: "pool", japanese: "プール" }, 
+        { english: "club activity", japanese: "クラブ活動" },
+        { english: "pool", japanese: "プール" },
         { english: "event", japanese: "イベント" },
-        { english: "sports day", japanese: "運動会・体育祭" }, 
-        { english: "music festival", japanese: "音楽発表会" }, 
+        { english: "sports day", japanese: "運動会・体育祭" },
+        { english: "music festival", japanese: "音楽発表会" },
         { english: "school festival", japanese: "文化祭" },
-        { english: "school trip", japanese: "修学旅行" }, 
+        { english: "school trip", japanese: "修学旅行" },
         { english: "speech contest", japanese: "スピーチコンテスト" }
-   ],
-   "スポーツ": [
-        { english: "tennis", japanese: "テニス" }, { english: "table tennis", japanese: "卓球" }, 
-        { english: "soccer", japanese: "サッカー" }, 
-        { english: "running", japanese: "ランニング" }, { english: "swimming", japanese: "水泳" }, 
-        { english: "baseball", japanese: "野球" }, 
-        { english: "softball", japanese: "ソフトボール" }, 
+    ],
+    "スポーツ": [
+        { english: "tennis", japanese: "テニス" },
+        { english: "table tennis", japanese: "卓球" },
+        { english: "soccer", japanese: "サッカー" },
+        { english: "running", japanese: "ランニング" },
+        { english: "swimming", japanese: "水泳" },
+        { english: "baseball", japanese: "野球" },
+        { english: "softball", japanese: "ソフトボール" },
         { english: "basketball", japanese: "バスケットボール" },
         { english: "volleyball", japanese: "バレーボール" },
         { english: "badminton", japanese: "バドミントン" },
-        { english: "player", japanese: "選手" }, { english: "sports", japanese: "スポーツ" }, 
-        { english: "game", japanese: "ゲーム" }, { english: "racket", japanese: "ラケット" }
-   ],
-   "楽器・音楽": [
-        { english: "piano", japanese: "ピアノ" }, { english: "drum", japanese: "ドラム" }, 
-        { english: "violin", japanese: "バイオリン" }, { english: "guitar", japanese: "ギター" }, 
-        { english: "flute", japanese: "フルート" }, { english: "trumpet", japanese: "トランペット" }, 
-        { english: "music", japanese: "音楽" }, { english: "art", japanese: "芸術" },
-        { english: "chorus", japanese: "合唱・コーラス" }, { english: "song", japanese: "歌" },
-        { english: "contest", japanese: "コンテスト" }, 
-        { english: "concert", japanese: "コンサート" }, { english: "stage", japanese: "ステージ" } 
-   ],
-   "乗り物": [
-        { english: "car", japanese: "車" }, { english: "bus", japanese: "バス" }, 
-        { english: "train", japanese: "電車・列車" }, { english: "bike", japanese: "自転車" },
+        { english: "player", japanese: "選手" },
+        { english: "sports", japanese: "スポーツ" },
+        { english: "game", japanese: "ゲーム" },
+        { english: "racket", japanese: "ラケット" }
+    ],
+    "楽器・音楽": [
+        { english: "piano", japanese: "ピアノ" },
+        { english: "drum", japanese: "ドラム" },
+        { english: "violin", japanese: "バイオリン" },
+        { english: "guitar", japanese: "ギター" },
+        { english: "flute", japanese: "フルート" },
+        { english: "trumpet", japanese: "トランペット" },
+        { english: "music", japanese: "音楽" },
+        { english: "art", japanese: "芸術" },
+        { english: "chorus", japanese: "合唱・コーラス" },
+        { english: "song", japanese: "歌" },
+        { english: "contest", japanese: "コンテスト" },
+        { english: "concert", japanese: "コンサート" },
+        { english: "stage", japanese: "ステージ" }
+    ],
+    "乗り物": [
+        { english: "car", japanese: "車" },
+        { english: "bus", japanese: "バス" },
+        { english: "train", japanese: "電車・列車" },
+        { english: "bike", japanese: "自転車" },
         { english: "taxi", japanese: "タクシー" },
-        { english: "ship", japanese: "船" }, { english: "boat", japanese: "ボート" }, 
+        { english: "ship", japanese: "船" },
+        { english: "boat", japanese: "ボート" },
         { english: "airplane", japanese: "飛行機" }
-   ],
-   "家・家具": [
+    ],
+    "家・家具": [
         { english: "house", japanese: "家・住宅" },
-        { english: "home", japanese: "家庭・故郷" }, { english: "at home", japanese: "家で" },
-        { english: "room", japanese: "部屋" }, { english: "bed", japanese: "ベッド" },
-        { english: "go to bed", japanese: "寝る" }, 
-        { english: "desk", japanese: "机" }, { english: "chair", japanese: "椅子" },
-        { english: "table", japanese: "テーブル" }, { english: "kitchen", japanese: "台所" },
-        { english: "shower", japanese: "シャワー" },{ english: "bathroom", japanese: "浴室" }, 
+        { english: "home", japanese: "家庭・故郷" },
+        { english: "at home", japanese: "家で" },
+        { english: "room", japanese: "部屋" },
+        { english: "bed", japanese: "ベッド" },
+        { english: "go to bed", japanese: "寝る" },
+        { english: "desk", japanese: "机" },
+        { english: "chair", japanese: "椅子" },
+        { english: "table", japanese: "テーブル" },
+        { english: "kitchen", japanese: "台所" },
+        { english: "shower", japanese: "シャワー" },
+        { english: "bathroom", japanese: "浴室" },
         { english: "take a shower", japanese: "シャワーを浴びる" },
-        { english: "take a bath", japanese: "入浴する" }, 
-        { english: "door", japanese: "ドア" }, { english: "window", japanese: "窓" },
-        { english: "garden", japanese: "庭・庭園" }, { english: "flower", japanese: "花" }
-   ],
-   "自然": [
-        { english: "tree", japanese: "木" }, { english: "sea", japanese: "海" },
-        { english: "river", japanese: "川" }, { english: "mountain", japanese: "山" },
-        { english: "lake", japanese: "湖" }, { english: "woods", japanese: "森" }, 
-        { english: "beach", japanese: "砂浜" }, { english: "field", japanese: "野原" },
-        { english: "sun", japanese: "太陽" }, { english: "moon", japanese: "月" },
-        { english: "sky", japanese: "空" }, { english: "rainbow", japanese: "虹" }, 
+        { english: "take a bath", japanese: "入浴する" },
+        { english: "door", japanese: "ドア" },
+        { english: "window", japanese: "窓" },
+        { english: "garden", japanese: "庭・庭園" },
+        { english: "flower", japanese: "花" }
+    ],
+    "自然": [
+        { english: "tree", japanese: "木" },
+        { english: "sea", japanese: "海" },
+        { english: "river", japanese: "川" },
+        { english: "mountain", japanese: "山" },
+        { english: "lake", japanese: "湖" },
+        { english: "woods", japanese: "森" },
+        { english: "beach", japanese: "砂浜" },
+        { english: "field", japanese: "野原" },
+        { english: "sun", japanese: "太陽" },
+        { english: "moon", japanese: "月" },
+        { english: "sky", japanese: "空" },
+        { english: "rainbow", japanese: "虹" },
         { english: "nature", japanese: "自然" }
-   ],
-   "街の施設（お出かけ）": [ 
-        { english: "park", japanese: "公園" }, { english: "in the park", japanese: "公園で" }, 
-        { english: "bench", japanese: "ベンチ" }, { english: "on the bench", japanese: "ベンチで" }, 
-        { english: "shop", japanese: "店" }, { english: "bookstore", japanese: "書店" }, 
-        { english: "department store", japanese: "デパート" }, 
-        { english: "restaurant", japanese: "レストラン" }, { english: "zoo", japanese: "動物園" }, 
-        { english: "museum", japanese: "博物館、美術館" }, { english: "aquarium", japanese: "水族館" }, 
-        { english: "castle", japanese: "城" }, { english: "market", japanese: "マーケット" }, 
-        { english: "temple", japanese: "寺" }, { english: "shrine", japanese: "神社" }, 
-        { english: "drugstore", japanese: "ドラッグストア" }, 
-        { english: "theater", japanese: "劇場" } 
-   ], 
-   "街の施設（駅・公共など）": [ 
-        { english: "station", japanese: "駅" }, { english: "at the station", japanese: "駅で" }, 
-        { english: "hospital", japanese: "病院" }, 
-        { english: "library", japanese: "図書館" }, { english: "bank", japanese: "銀行" }, 
-        { english: "post office", japanese: "郵便局" }, { english: "gym", japanese: "体育館" }, 
-        { english: "office", japanese: "事務所" }, { english: "police station", japanese: "警察署" }, 
-        { english: "bridge", japanese: "橋" }, { english: "street", japanese: "通り" },
-        { english: "town", japanese: "町" }, { english: "city hall", japanese: "市役所" },
-        { english: "hotel", japanese: "ホテル" }, 
+    ],
+    "街の施設（お出かけ）": [
+        { english: "park", japanese: "公園" },
+        { english: "in the park", japanese: "公園で" },
+        { english: "bench", japanese: "ベンチ" },
+        { english: "on the bench", japanese: "ベンチで" },
+        { english: "shop", japanese: "店" },
+        { english: "bookstore", japanese: "書店" },
+        { english: "department store", japanese: "デパート" },
+        { english: "restaurant", japanese: "レストラン" },
+        { english: "zoo", japanese: "動物園" },
+        { english: "museum", japanese: "博物館、美術館" },
+        { english: "aquarium", japanese: "水族館" },
+        { english: "castle", japanese: "城" },
+        { english: "market", japanese: "マーケット" },
+        { english: "temple", japanese: "寺" },
+        { english: "shrine", japanese: "神社" },
+        { english: "drugstore", japanese: "ドラッグストア" },
+        { english: "theater", japanese: "劇場" }
+    ],
+    "街の施設（駅・公共など）": [
+        { english: "station", japanese: "駅" },
+        { english: "at the station", japanese: "駅で" },
+        { english: "hospital", japanese: "病院" },
+        { english: "library", japanese: "図書館" },
+        { english: "bank", japanese: "銀行" },
+        { english: "post office", japanese: "郵便局" },
+        { english: "gym", japanese: "体育館" },
+        { english: "office", japanese: "事務所" },
+        { english: "police station", japanese: "警察署" },
+        { english: "bridge", japanese: "橋" },
+        { english: "street", japanese: "通り" },
+        { english: "town", japanese: "町" },
+        { english: "city hall", japanese: "市役所" },
+        { english: "hotel", japanese: "ホテル" },
         { english: "stadium", japanese: "スタジアム・競技場" }
-   ],
-   "職業（仕事）": [
-        { english: "doctor", japanese: "医者" }, { english: "nurse", japanese: "看護師" },
-        { english: "dentist", japanese: "歯医者" }, 
-        { english: "singer", japanese: "歌手" }, { english: "dancer", japanese: "ダンサー" }, 
-        { english: "musician", japanese: "音楽家" }, { english: "actor", japanese: "俳優" },
-        { english: "artist", japanese: "芸術家" }, { english: "farmer", japanese: "農場経営者" },
-        { english: "writer", japanese: "作家" }, { english: "pilot", japanese: "パイロット" },
-        { english: "designer", japanese: "デザイナー" }, 
+    ],
+    "職業（仕事）": [
+        { english: "doctor", japanese: "医者" },
+        { english: "nurse", japanese: "看護師" },
+        { english: "dentist", japanese: "歯医者" },
+        { english: "singer", japanese: "歌手" },
+        { english: "dancer", japanese: "ダンサー" },
+        { english: "musician", japanese: "音楽家" },
+        { english: "actor", japanese: "俳優" },
+        { english: "artist", japanese: "芸術家" },
+        { english: "farmer", japanese: "農場経営者" },
+        { english: "writer", japanese: "作家" },
+        { english: "pilot", japanese: "パイロット" },
+        { english: "designer", japanese: "デザイナー" },
         { english: "work", japanese: "仕事・働く" },
-        { english: "future", japanese: "将来" }, { english: "dream", japanese: "夢" } 
-   ],
-   "動物": [
-        { english: "dog", japanese: "犬" }, { english: "cat", japanese: "猫" }, 
-        { english: "horse", japanese: "馬" }, { english: "bird", japanese: "鳥" }, 
-        { english: "mouse", japanese: "ネズミ" }, { english: "lion", japanese: "ライオン" }, 
-        { english: "bear", japanese: "熊（クマ）" }, { english: "tiger", japanese: "虎（トラ）" }, 
-        { english: "rabbit", japanese: "ウサギ" }, { english: "animal", japanese: "動物" }
-   ],
-   "体": [
-        { english: "body", japanese: "体" }, { english: "head", japanese: "頭" }, 
-        { english: "hair", japanese: "髪" }, 
-        { english: "face", japanese: "顔" }, { english: "eye", japanese: "目" }, 
-        { english: "nose", japanese: "鼻" }, { english: "mouth", japanese: "口" },
-        { english: "ear", japanese: "耳" }, { english: "tooth", japanese: "歯" },
-        { english: "hand", japanese: "手" }, { english: "finger", japanese: "手の指" },
-        { english: "foot", japanese: "足" }, { english: "health", japanese: "健康" },
-        { english: "heart", japanese: "心臓" }, { english: "stomach", japanese: "胃・おなか" }
-   ]
-};
- 
-let currentCategory = ""; let currentWords = []; let currentIndex = 0; let score = 0; let isAnswered = false;
-function showCategoryScreen() {
-    document.getElementById("category-screen").style.display = "block";
-    document.getElementById("quiz-screen").style.display = "none"; 
-    document.getElementById("result-screen").style.display = "none";
-    const catListDiv = document.getElementById("category-list");
-    catListDiv.innerHTML = "";
-    Object.keys(wordData).forEach(category => {
-        const btn = document.createElement("button"); btn.className = "btn"; btn.innerText = category; btn.onclick = () => startQuiz(category); catListDiv.appendChild(btn);
-    });
-}
-function startQuiz(category) {
-    currentCategory = category; currentWords = [...wordData[category]].sort(() => Math.random() - 0.5);
-    if (currentWords.length > 10) { currentWords = currentWords.slice(0, 10); }
-    currentIndex = 0; score = 0;
-    document.getElementById("category-screen").style.display = "none";
-    document.getElementById("quiz-screen").style.display = "block"; showQuestion();
-}
-function showQuestion() {
-    isAnswered = false;
-    document.getElementById("next-btn").style.display = "none";
-    document.getElementById("result-message").innerText = "";
-    const currentQuestion = currentWords[currentIndex];
-    document.getElementById("progress").innerText = `第 ${currentIndex + 1} 問 / 全 ${currentWords.length} 問`; document.getElementById("japanese-word").innerHTML = currentQuestion.japanese;
-    const choices = makeChoices(currentQuestion.english, wordData[currentCategory]); const choicesListDiv = document.getElementById("choices-list"); choicesListDiv.innerHTML = "";
-    choices.forEach(choice => {
-        const btn = document.createElement("button"); btn.className = "btn choice-btn"; btn.innerText = choice; btn.onclick = () => checkAnswer(btn, choice, currentQuestion.english); choicesListDiv.appendChild(btn);
-    });
-}
-function makeChoices(correctAnswer, allCategoryWords) {
-    const allEnglish = allCategoryWords.map(w => w.english); let dummies = allEnglish.filter(eng => eng !== correctAnswer); dummies.sort(() => Math.random() - 0.5); let chosenDummies = dummies.slice(0, 3);
-    while (chosenDummies.length < 3) { chosenDummies.push("apple", "book", "desk", "test"); }
-    let finalChoices = [correctAnswer, ...chosenDummies.slice(0, 3)];
-    finalChoices.sort(() => Math.random() - 0.5); return finalChoices;
-}
-function checkAnswer(clickedBtn, selected, correct) {
-    if (isAnswered) return; isAnswered = true; const choiceButtons = document.querySelectorAll(".choice-btn"); const resultMsg = document.getElementById("result-message");
-    if (selected === correct) {
-        clickedBtn.classList.add("correct"); resultMsg.innerText = "⭕ 正解！"; resultMsg.style.color = "#2ecc71"; score++; 
-    } else { 
-        clickedBtn.classList.add("incorrect"); resultMsg.innerText = `❌ 不正解！ 正解は: ${correct}`; resultMsg.style.color = "#e74c3c";
-        choiceButtons.forEach(btn => { if (btn.innerText === correct) { btn.classList.add("correct"); } }); 
-    }
-    document.getElementById("next-btn").style.display = "block";
-}
-function nextQuestion() { currentIndex++; if (currentIndex < currentWords.length) { showQuestion(); } else { showResult(); } }
-function showResult() {
-    document.getElementById("quiz-screen").style.display = "none";
-    document.getElementById("result-screen").style.display = "block";
-    document.getElementById("final-score").innerText =
-        `${currentWords.length} 問中 ${score} 問 正解！`;
-}
-showCategoryScreen();
-// =================================================================
-// 【着色確定版】新カテゴリ・データ一括追加コード（CSSダイレクト方式）
-// =================================================================
-
-// --- 1. 既存の「家・家具」カテゴリにベッドを追加 ---
-if (wordData["家・家具"]) {
-    const hasBed = wordData["家・家具"].some(w => w.english === "bed");
-    if (!hasBed) {
-        wordData["家・家具"].push({ english: "bed", japanese: "ベッド" });
-    }
-}
-
-// --- 2. 新規カテゴリのデータ登録（データ側で着色ターゲットを指定） ---
-
-// ① 身の回りのもの
-wordData["身の回りのもの"] = [
-    { english: "computer", japanese: "コンピュータ" },
-    { english: "radio", japanese: "ラジオ" },
-    { english: "calendar", japanese: "カレンダー" },
-    { english: "clock", japanese: "置き・掛け時計" },
-    { english: "cup", japanese: "カップ・茶わん" },
-    { english: "telephone", japanese: "電話" },
-    { english: "newspaper", japanese: "新聞" },
-    { english: "hat", japanese: "帽子（ふちがあるもの）" },
-    { english: "cap", japanese: "帽子（キャップ）" },
-    { english: "pants", japanese: "ズボン" },
-    { english: "sweater", japanese: "セーター" },
-    { english: "T-shirt", japanese: "Tシャツ" },
-    { english: "gloves", japanese: "手袋" },
-    { english: "uniform", japanese: "制服・ユニフォーム" },
-    { english: "watch", japanese: "腕時計" },
-    { english: "socks", japanese: "靴下" },
-    { english: "glasses", japanese: "メガネ" }
-];
-
-// ② 不規則動詞 (過去形)
-wordData["不規則動詞 (過去形)"] = [
-    { english: "cut", japanese: "cut (~を切る) の過去形", ing: "cutting" },
-    { english: "put", japanese: "put (~を置く) の過去形", ing: "putting" },
-    { english: "became", japanese: "become (~になる) の過去形", ing: "becoming" },
-    { english: "came", japanese: "come (来る) の過去形", ing: "coming" },
-    { english: "ran", japanese: "run (走る) の過去形", ing: "running" },
-    { english: "slept", japanese: "sleep (眠る) の過去形", ing: "sleeping" },
-    { english: "spent", japanese: "spend (~を過ごす) の過去形", ing: "spending" },
-    { english: "stood", japanese: "stand (立っている) の過去形", ing: "standing" },
-    { english: "taught", japanese: "teach (~を教える) の過去形", ing: "teaching" },
-    { english: "told", japanese: "tell (~に話す) の過去形", ing: "telling" },
-    { english: "thought", japanese: "think (~と考える) の過去形", ing: "thinking" },
-    { english: "understood", japanese: "understand (~を理解する) の過去形", ing: "understanding" },
-    { english: "won", japanese: "win (勝つ) の過去形", ing: "winning" },
-    { english: "brought", japanese: "bring (~を持ってくる) の過去形", ing: "bringing" },
-    { english: "built", japanese: "build (~を建てる) の過去形", ing: "building" },
-    { english: "bought", japanese: "buy (~を買う) の過去形", ing: "buying" },
-    { english: "caught", japanese: "catch (~をつかまえる) の過去形", ing: "catching" },
-    { english: "felt", japanese: "feel (感じる) の過去形", ing: "feeling" },
-    { english: "found", japanese: "find (~を見つける) の過去形", ing: "finding" },
-    { english: "had", japanese: "have (~を持っている) の過去形", ing: "having" },
-    { english: "heard", japanese: "hear (~が聞こえる) の過去形", ing: "hearing" },
-    { english: "kept", japanese: "keep (~を持ち続ける) の過去形", ing: "keeping" },
-    { english: "learned", japanese: "learn (~を学ぶ) の過去形", ing: "learning" },
-    { english: "left", japanese: "leave (去る) の過去形", ing: "leaving" },
-    { english: "lost", japanese: "lose (~を失う) の過去形", ing: "losing" },
-    { english: "made", japanese: "make (~を作る) の過去形", ing: "making" },
-    { english: "met", japanese: "meet (~と会う) の過去形", ing: "meeting" },
-    { english: "paid", japanese: "pay (~を支払う) の過去形", ing: "paying" },
-    { english: "read", japanese: "read (~を読む) の過去形", ing: "reading" },
-    { english: "said", japanese: "say (~と言う) の過去形", ing: "saying" },
-    { english: "sold", japanese: "sell (~を売る) の過去形", ing: "selling" },
-    { english: "sent", japanese: "send (~を送る) の過去形", ing: "sending" },
-    { english: "sat", japanese: "sit (座る) の過去形", ing: "sitting" },
-    { english: "began", japanese: "begin (~を始める) の過去形", ing: "beginning" },
-    { english: "broke", japanese: "break (~をこわす) の過去形", ing: "breaking" },
-    { english: "did", japanese: "do、does (~をする) の過去形", ing: "doing" },
-    { english: "drank", japanese: "drink (~を飲む) の過去形", ing: "drinking" },
-    { english: "drove", japanese: "drive (~を運転する) の過去形", ing: "driving" },
-    { english: "ate", japanese: "eat (~を食べる) の過去形", ing: "eating" },
-    { english: "got", japanese: "get (~を得る) の過去形", ing: "getting" },
-    { english: "gave", japanese: "give (~を与える) の過去形", ing: "giving" },
-    { english: "went", japanese: "go (行く) の過去形", ing: "going" },
-    { english: "knew", japanese: "know (~を知っている) の過去形", ing: "knowing" },
-    { english: "rose", japanese: "rise (昇る) の過去形", ing: "rising" },
-    { english: "saw", japanese: "see (見える) の過去形", ing: "seeing" },
-    { english: "showed", japanese: "show (~を見せる) の過去形", ing: "showing" },
-    { english: "sang", japanese: "sing (歌う) の過去形", ing: "singing" },
-    { english: "spoke", japanese: "speak (話す) の過去形", ing: "speaking" },
-    { english: "swam", japanese: "swim (泳ぐ) の過去形", ing: "swimming" },
-    { english: "took", japanese: "take (~を取る) の過去形", ing: "taking" },
-    { english: "woke", japanese: "wake (目を覚ます) の過去形", ing: "waking" },
-    { english: "wore", japanese: "wear (~を着ている) の過去形", ing: "wearing" },
-    { english: "wrote", japanese: "write (~を書く) の過去形", ing: "writing" }
-];
-
-// ③ 不規則動詞 (過去分詞)
-wordData["不規則動詞 (過去分詞)"] = [
-    { english: "cut", japanese: "cut (~を切る) の過去分詞", ing: "cutting" },
-    { english: "put", japanese: "put (~を置く) の過去分詞", ing: "putting" },
-    { english: "become", japanese: "become (~になる) の過去分詞", ing: "becoming" },
-    { english: "come", japanese: "come (来る) の過去分詞", ing: "coming" },
-    { english: "run", japanese: "run (走る) の過去分詞", ing: "running" },
-    { english: "slept", japanese: "sleep (眠る) の過去分詞", ing: "sleeping" },
-    { english: "spent", japanese: "spend (~を過ごす) の過去分詞", ing: "spending" },
-    { english: "stood", japanese: "stand (立っている) の過去分詞", ing: "standing" },
-    { english: "taught", japanese: "teach (~を教える) の過去分詞", ing: "teaching" },
-    { english: "told", japanese: "tell (~に話す) の過去分詞", ing: "telling" },
-    { english: "thought", japanese: "think (~と考える) の過去分詞", ing: "thinking" },
-    { english: "understood", japanese: "understand (~を理解する) の過去分詞", ing: "understanding" },
-    { english: "won", japanese: "win (勝つ) の過去分詞", ing: "winning" },
-    { english: "brought", japanese: "bring (~を持ってくる) の過去分詞", ing: "bringing" },
-    { english: "built", japanese: "build (~を建てる) の過去分詞", ing: "building" },
-    { english: "bought", japanese: "buy (~を買う) の過去分詞", ing: "buying" },
-    { english: "caught", japanese: "catch (~をつかまえる) の過去分詞", ing: "catching" },
-    { english: "felt", japanese: "feel (感じる) の過去分詞", ing: "feeling" },
-    { english: "found", japanese: "find (~を見つける) の過去分詞", ing: "finding" },
-    { english: "had", japanese: "have (~を持っている) の過去分詞", ing: "having" },
-    { english: "heard", japanese: "hear (~が聞こえる) の過去分詞", ing: "hearing" },
-    { english: "kept", japanese: "keep (~を持ち続ける) の過去分詞", ing: "keeping" },
-    { english: "learned (learnt)", japanese: "learn (~を学ぶ) の過去分詞", ing: "learning" },
-    { english: "left", japanese: "leave (去る) の過去分詞", ing: "leaving" },
-    { english: "lost", japanese: "lose (~を失う) の過去分詞", ing: "losing" },
-    { english: "made", japanese: "make (~を作る) の過去分詞", ing: "making" },
-    { english: "met", japanese: "meet (~と会う) の過去分詞", ing: "meeting" },
-    { english: "paid", japanese: "pay (~を支払う) の過去分詞", ing: "paying" },
-    { english: "read", japanese: "read (~を読む) の過去分詞", ing: "reading" },
-    { english: "said", japanese: "say (~と言う) の過去分詞", ing: "saying" },
-    { english: "sold", japanese: "sell (~を売る) の過去分詞", ing: "selling" },
-    { english: "sent", japanese: "send (~を送る) の過去分詞", ing: "sending" },
-    { english: "sat", japanese: "sit (座る) の過去分詞", ing: "sitting" },
-    { english: "begun", japanese: "begin (~を始める) の過去分詞", ing: "beginning" },
-    { english: "broken", japanese: "break (~をこわす) の過去分詞", ing: "breaking" },
-    { english: "done", japanese: "do、does (~をする) の過去分詞", ing: "doing" },
-    { english: "drunk", japanese: "drink (~を飲む) の過去分詞", ing: "drinking" },
-    { english: "driven", japanese: "drive (~を運転する) の過去分詞", ing: "driving" },
-    { english: "eaten", japanese: "eat (~を食べる) の過去分詞", ing: "eating" },
-    { english: "got (gotten)", japanese: "get (~を得る) の過去分詞", ing: "getting" },
-    { english: "given", japanese: "give (~を与える) の過去分詞", ing: "giving" },
-    { english: "gone", japanese: "go (行く) の過去分詞", ing: "going" },
-    { english: "known", japanese: "know (~を知っている) の過去分詞", ing: "knowing" },
-    { english: "risen", japanese: "rise (昇る) の過去分詞", ing: "rising" },
-    { english: "seen", japanese: "see (見える) の過去分詞", ing: "seeing" },
-    { english: "shown (showed)", japanese: "show (~を見せる) の過去分詞", ing: "showing" },
-    { english: "sung", japanese: "sing (歌う) の過去分詞", ing: "singing" },
-    { english: "spoken", japanese: "speak (話す) の過去分詞", ing: "speaking" },
-    { english: "swum", japanese: "swim (泳ぐ) の過去分詞", ing: "swimming" },
-    { english: "taken", japanese: "take (~を取る) の過去分詞", ing: "taking" },
-    { english: "woken", japanese: "wake (目を覚ます) の過去分詞", ing: "waking" },
-    { english: "worn", japanese: "wear (~を着ている) の過去分詞", ing: "wearing" },
-    { english: "written", japanese: "write (~を書く) の過去分詞", ing: "writing" }
-];
-
-// ④ 形容詞・副詞 (比較級)
-wordData["形容詞・副詞 (比較級)"] = [
-    { english: "cheaper", japanese: "cheap (安い) の比較級" },
-    { english: "cleaner", japanese: "clean (きれいな) の比較級" },
-    { english: "colder", japanese: "cold (寒い) の比較級" },
-    { english: "cooler", japanese: "cool (涼しい) の比較級" },
-    { english: "faster", japanese: "fast (速い・速く) の比較級" },
-    { english: "greater", japanese: "great (すごい) の比較級" },
-    { english: "harder", japanese: "hard (難しい) の比較級" },
-    { english: "higher", japanese: "high (高い) の比較級" },
-    { english: "lighter", japanese: "light (明るい・軽い) の比較級" },
-    { english: "longer", japanese: "long (長い) の比較級" },
-    { english: "nearer", japanese: "near (近い) の比較級" },
-    { english: "newer", japanese: "new (新しい) の比較級" },
-    { english: "older", japanese: "old (古い) の比較級" },
-    { english: "shorter", japanese: "short (短い) の比較級" },
-    { english: "smaller", japanese: "small (小さい) の比較級" },
-    { english: "stronger", japanese: "strong (強い) の比較級" },
-    { english: "taller", japanese: "tall (背が高い) の比較級" },
-    { english: "warmer", japanese: "warm (暖かい) の比較級" },
-    { english: "younger", japanese: "young (若い) の比較級" },
-    { english: "larger", japanese: "large (大きい) の比較級" },
-    { english: "later", japanese: "late (遅い) の比較級" },
-    { english: "bigger", japanese: "big (大きい) の比較級" },
-    { english: "hotter", japanese: "hot (暑い・熱い) の比較級" },
-    { english: "busier", japanese: "busy (忙しい) の比較級" },
-    { english: "earlier", japanese: "early (早く) の比較級" },
-    { english: "easier", japanese: "easy (簡単な) の比較級" },
-    { english: "happier", japanese: "happy (幸せな) の比較級" },
-    { english: "heavier", japanese: "heavy (重い) の比較級" },
-    { english: "prettier", japanese: "pretty (かわいい) の比較級" },
-    { english: "more beautiful", japanese: "beautiful (美しい) の比較級" },
-    { english: "more careful", japanese: "careful (注意深い) の比較級" },
-    { english: "more delicious", japanese: "delicious (おいしい) の比較級" },
-    { english: "more difficult", japanese: "difficult (難しい) の比較級" },
-    { english: "more easily", japanese: "easily (簡単に) の比較級" },
-    { english: "more exciting", japanese: "exciting (わくわくする) の比較級" },
-    { english: "more expensive", japanese: "expensive (高価な) の比較級" },
-    { english: "more famous", japanese: "famous (有名な) の比較級" },
-    { english: "more important", japanese: "important (重要な) の比較級" },
-    { english: "more interesting", japanese: "interesting (おもしろい) の比較級" },
-    { english: "more popular", japanese: "popular (人気のある) の比較級" },
-    { english: "more useful", japanese: "useful (便利な) の比較級" },
-    { english: "better", japanese: "good (良い) / well (元気に・上手に) の比較級" },
-    { english: "worse", japanese: "bad (悪い) / ill (病気の) の比較級" },
-    { english: "more", japanese: "many (多い[数]) / much (多い[量]) の比較級" },
-    { english: "less", japanese: "little (少しの[量]) の比較級" }
-];
-
-// ⑤ 形容詞・副詞 (最上級)
-wordData["形容詞・副詞 (最上級)"] = [
-    { english: "the cheapest", japanese: "cheap (安い) の最上級" },
-    { english: "the cleanest", japanese: "clean (きれいな) の最上級" },
-    { english: "the coldest", japanese: "cold (寒い) の最上級" },
-    { english: "the coolest", japanese: "cool (涼しい) の最上級" },
-    { english: "the fastest", japanese: "fast (速い・速く) の最上級" },
-    { english: "the greatest", japanese: "great (すごい) の最上級" },
-    { english: "the hardest", japanese: "hard (難しい) の最上級" },
-    { english: "the highest", japanese: "high (高い) の最上級" },
-    { english: "the lightest", japanese: "light (明るい・軽い) の最上級" },
-    { english: "the longest", japanese: "long (長い) の最上級" },
-    { english: "the nearest", japanese: "near (近い) の最上級" },
-    { english: "the newest", japanese: "new (新しい) の最上級" },
-    { english: "the oldest", japanese: "old (古い) の最上級" },
-    { english: "the shortest", japanese: "short (短い) の最上級" },
-    { english: "the smallest", japanese: "small (小さい) の最上級" },
-    { english: "the strongest", japanese: "strong (強い) の最上級" },
-    { english: "the tallest", japanese: "tall (背が高い) の最上級" },
-    { english: "the warmest", japanese: "warm (暖かい) の最上級" },
-    { english: "the youngest", japanese: "young (若い) の最上級" },
-    { english: "the largest", japanese: "large (大きい) の最上級" },
-    { english: "the latest", japanese: "late (遅い) の最上級" },
-    { english: "the biggest", japanese: "big (大きい) の最上級" },
-    { english: "the hottest", japanese: "hot (暑い・熱い) の最上級" },
-    { english: "the busiest", japanese: "busy (忙しい) の最上級" },
-    { english: "the earliest", japanese: "early (早く) の最上級" },
-    { english: "the easiest", japanese: "easy (簡単な) の最上級" },
-    { english: "the happiest", japanese: "happy (幸せな) の最上級" },
-    { english: "the heaviest", japanese: "heavy (重い) の最上級" },
-    { english: "the prettiest", japanese: "pretty (かわいい) の最上級" },
-    { english: "the most beautiful", japanese: "beautiful (美しい) の最上級" },
-    { english: "the most careful", japanese: "careful (注意深い) の最上級" },
-    { english: "the most delicious", japanese: "delicious (おいしい) の最上級" },
-    { english: "the most difficult", japanese: "difficult (難しい) の最上級" },
-    { english: "the most easily", japanese: "easily (簡単に) の最上級" },
-    { english: "the most exciting", japanese: "exciting (わくわくする) の最上級" },
-    { english: "the most expensive", japanese: "expensive (高価な) の最上級" },
-    { english: "the most famous", japanese: "famous (有名な) の最上級" },
-    { english: "the most important", japanese: "important (重要な) の最上級" },
-    { english: "the most interesting", japanese: "interesting (おもしろい) の最上級" },
-    { english: "the most popular", japanese: "popular (人気のある) の最上級" },
-    { english: "the most useful", japanese: "useful (便利な) の最上級" },
-    { english: "the best", japanese: "good (良い) / well (元気に・上手に) の最上級" },
-    { english: "the worst", japanese: "bad (悪い) / ill (病気の) の最上級" },
-    { english: "the most", japanese: "many (多い[数]) / much (多い[量]) の最上級" },
-    { english: "the least", japanese: "little (少しの[量]) の最上級" }
-];
-
-// NEW HORIZON 中3 ユニット0～1
-wordData["NEW HORIZON 中3 ユニット0～1"] = [
-    // 【Unit0】
-    { english: "discover ～", japanese: "【Unit0】<br>～を発見する" },
-    { english: "side", japanese: "【Unit0】<br>側、面" },
-    { english: "finally", japanese: "【Unit0】<br>ついに、やっと" },
-    { english: "musical", japanese: "【Unit0】<br>ミュージカル" },
-    { english: "actor", japanese: "【Unit0】<br>俳優" },
- 
-    // 【Unit1】 Part1
-    { english: "fashion", japanese: "【Unit1 Part1】<br>ファッション、人気のもの" },
-    { english: "regional", japanese: "【Unit1 Part1】<br>地方特有の、地域の" },
-    { english: "regional food", japanese: "【Unit1 Part1】<br>地域の食べ物" },
-    { english: "been", japanese: "【Unit1 Part1】<br>beの過去分詞" },
-    { english: "martial arts", japanese: "【Unit1 Part1】<br>武道" },
-    { english: "have never been to ～", japanese: "【Unit1 Part1】<br>～に一度も行ったことがない" },
- 
-    // 【Unit1】 Part2
-    { english: "foreigner", japanese: "【Unit1 Part2】<br>外国人" },
-    { english: "ever", japanese: "【Unit1 Part2】<br>（疑問文で）今まで、かつて" },
-    { english: "have been to ～", japanese: "【Unit1 Part2】<br>～に行ったことがある" },
-    { english: "I've", japanese: "【Unit1 Part2】<br>I have の短縮形" },
-    { english: "haven't", japanese: "【Unit1 Part2】<br>have notの短縮形" },
-    { english: "hasn't", japanese: "【Unit1 Part2】<br>has notの短縮形" },
-    { english: "many times", japanese: "【Unit1 Part2】<br>何回も、何度も" },
-    { english: "be popular among ～", japanese: "【Unit1 Part2】<br>～の間で人気がある" },
- 
-    // 【Unit1】 Read and Think1
-    { english: "global", japanese: "【Read and Think1】<br>全世界の、世界的な" },
-    { english: "genre", japanese: "【Read and Think1】<br>ジャンル、部門、分野" },
-    { english: "adventure", japanese: "【Read and Think1】<br>冒険、冒険心" },
-    { english: "adult", japanese: "【Read and Think1】<br>おとな" },
-    { english: "quality", japanese: "【Read and Think1】<br>質、品質" },
-    { english: "animation", japanese: "【Read and Think1】<br>アニメーション、動画" },
-    { english: "drawing", japanese: "【Read and Think1】<br>絵、図、スケッチ" },
-    { english: "delicate", japanese: "【Read and Think1】<br>繊細な、上品な" },
-    { english: "addition", japanese: "【Read and Think1】<br>加えること" },
-    { english: "in addition", japanese: "【Read and Think1】<br>加えて" },
-    { english: "match ～", japanese: "【Read and Think1】<br>～と調和する、匹敵する" },
-    { english: "positive", japanese: "【Read and Think1】<br>前向きな、肯定の" },
-    { english: "around the world", japanese: "【Read and Think1】<br>世界中には" },
-
-    // 【Unit1】 Read and Think2
-    { english: "ignore ～", japanese: "【Read and Think2】<br>～を無視する" },
-    { english: "existence", japanese: "【Read and Think2】<br>存在" },
-    { english: "roots", japanese: "【Read and Think2】<br>起源（複数形）" },
-    { english: "drawn", japanese: "【Read and Think2】<br>drawの過去分詞" },
-    { english: "express ～", japanese: "【Read and Think2】<br>～を表現する" },
-    { english: "express feelings", japanese: "【Read and Think2】<br>感情を表現する" },
-    { english: "movement", japanese: "【Read and Think2】<br>動き" },
-    { english: "scroll", japanese: "【Read and Think2】<br>巻物、掛け軸" },
-    { english: "technique", japanese: "【Read and Think2】<br>手法、テクニック" },
-    { english: "influence ～", japanese: "【Read and Think2】<br>～に影響を与える" },
-    { english: "influence American anime", japanese: "【Read and Think2】<br>アメリカのアニメに影響する" },
-    { english: "advantage", japanese: "【Read and Think2】<br>有利、強味" },
-    { english: "taste", japanese: "【Read and Think2】<br>味、味覚" },
-    { english: "link", japanese: "【Read and Think2】<br>つなぐ、連結する" },
-    { english: "be linked to ～", japanese: "【Read and Think2】<br>～とつながっている" },
-    { english: "traditional Japanese dishes", japanese: "【Read and Think2】<br>伝統的な日本料理" },
-    { english: "It is said that ～", japanese: "【Read and Think2】<br>～と言われている" },
-    { english: "take advantage of ～", japanese: "【Read and Think2】<br>～を利用する" }
-];
-
-// NEW HORIZON 中3 ユニット2
-wordData["NEW HORIZON 中3 ユニット2"] = [
-    // Part1
-    { english: "already", japanese: "【Unit2 Part1】<br>すでに、もう" },
-    { english: "essay", japanese: "【Unit2 Part1】<br>作文、随筆" },
-    { english: "yet", japanese: "【Unit2 Part1】<br>もう（疑問文）、まだ（否定文）" },
-    { english: "ethical", japanese: "【Unit2 Part1】<br>道徳的な、倫理的な" },
-    { english: "designer", japanese: "【Unit2 Part1】<br>デザイナー、設計者" },
-    { english: "interview ～", japanese: "【Unit2 Part1】<br>～にインタビューする" },
-    { english: "message", japanese: "【Unit2 Part1】<br>伝言、メッセージ" },
-    { english: "sleep", japanese: "【Unit2 Part1】<br>眠る" },
-    { english: "this weekend", japanese: "【Unit2 Part1】<br>今週末" },
-    { english: "sound great", japanese: "【Unit2 Part1】<br>すばらしそうに聞こえる" },
-
-    // Part2
-    { english: "accessory", japanese: "【Unit2 Part2】<br>付属品、アクセサリー" },
-    { english: "recycle ～", japanese: "【Unit2 Part2】<br>～を再生利用する" },
-    { english: "eco-friendly", japanese: "【Unit2 Part2】<br>環境に優しい" },
-    { english: "impact", japanese: "【Unit2 Part2】<br>影響、衝撃" },
-    { english: "since ～", japanese: "【Unit2 Part2】<br>～以来、～なので" },
-    { english: "introduce ～", japanese: "【Unit2 Part2】<br>～を導入する、紹介する" },
-    { english: "SDGs", japanese: "【Unit2 Part2】<br>持続可能な開発目標" },
-    { english: "How long ～?", japanese: "【Unit2 Part2】<br>どのくらい長く～" },
-    { english: "what kind of ～", japanese: "【Unit2 Part2】<br>どんな種類の～" },
-    { english: "be made of paper", japanese: "【Unit2 Part2】<br>紙でできている" },
-    { english: "since last year", japanese: "【Unit2 Part2】<br>昨年以来" },
-    { english: "be concerned about ～", japanese: "【Unit2 Part2】<br>～について心配している" },
-
-    // Read and Think 1
-    { english: "morally", japanese: "【Read and Think1】<br>道徳的に、倫理的に" },
-    { english: "clothing", japanese: "【Read and Think1】<br>衣類、衣料品" },
-    { english: "company", japanese: "【Read and Think1】<br>会社" },
-    { english: "chemical", japanese: "【Read and Think1】<br>化学物質" },
-    { english: "lead to ～", japanese: "【Read and Think1】<br>～に通じる" },
-    { english: "less", japanese: "【Read and Think1】<br>もっと少ない、より少ない" },
-    { english: "negative", japanese: "【Read and Think1】<br>否定的な、よくない" },
-    { english: "negative impact", japanese: "【Read and Think1】<br>よくない影響" },
-    { english: "animal-free", japanese: "【Read and Think1】<br>動物性原料を含まない" },
-    { english: "include ～", japanese: "【Read and Think1】<br>～を含む" },
-    { english: "include useful information", japanese: "【Read and Think1】<br>役に立つ情報を含む" },
-    { english: "vegan", japanese: "【Read and Think1】<br>絶対菜食主義者" },
-    { english: "leather", japanese: "【Read and Think1】<br>革、革製品" },
-    { english: "avoid ～", japanese: "【Read and Think1】<br>～を避ける" },
-    { english: "make efforts to ～", japanese: "【Read and Think1】<br>～するために努力する" },
-    { english: "wool", japanese: "【Read and Think1】<br>羊毛、毛織物" },
-    { english: "fur", japanese: "【Read and Think1】<br>毛皮、毛皮製品" },
-    { english: "you've", japanese: "【Read and Think1】<br>you haveの短縮形" },
-    { english: "be getting popular", japanese: "【Read and Think1】<br>人気になっている" },
-
-    // Read and Think 2
-    { english: "moreover", japanese: "【Read and Think2】<br>さらに、なおそのうえに" },
-    { english: "worker", japanese: "【Read and Think2】<br>労働者、働く人" },
-    { english: "developing", japanese: "【Read and Think2】<br>発展途上の" },
-    { english: "developing countries", japanese: "【Read and Think2】<br>発展途上国" },
-    { english: "condition", japanese: "【Read and Think2】<br>状況、状態" },
-    { english: "wage", japanese: "【Read and Think2】<br>賃金、給料" },
-    { english: "working", japanese: "【Read and Think2】<br>働くこと、働く～" },
-    { english: "fair", japanese: "【Read and Think2】<br>公正な、公平な、相当の" },
-    { english: "prohibit ～", japanese: "【Read and Think2】<br>～を禁止する" },
-    { english: "be kind to ～", japanese: "【Read and Think2】<br>～に親切である" },
-    { english: "more and more ～", japanese: "【Read and Think2】<br>ますます多くの～" },
-    { english: "labor", japanese: "【Read and Think2】<br>労働" },
-    { english: "child labor", japanese: "【Read and Think2】<br>児童労働" },
-    { english: "responsible", japanese: "【Read and Think2】<br>責任がある" },
-    { english: "be responsible for ～", japanese: "【Read and Think2】<br>～に責任がある" }
-];
-
-// NEW HORIZON 中3 ユニット3（1つ目のボタン：Part1～Part2）
-wordData["NEW HORIZON 中3 ユニット3 [Part1～2]"] = [
-    // Part1
-    { english: "many kinds of ～", japanese: "【Unit3 Part1】<br>たくさんの種類の～" },
-    { english: "danger", japanese: "【Unit3 Part1】<br>危険（性）" },
-    { english: "extinction", japanese: "【Unit3 Part1】<br>絶滅" },
-    { english: "face ～", japanese: "【Unit3 Part1】<br>～に直面する" },
-    { english: "challenge", japanese: "【Unit3 Part1】<br>難題、課題" },
-    { english: "human", japanese: "【Unit3 Part1】<br>人間の、人間的な、人間" },
-    { english: "endangered", japanese: "【Unit3 Part1】<br>絶滅の危機にさらされている" },
-    { english: "human activity", japanese: "【Unit3 Part1】<br>人間の活動" },
-    { english: "It is ~ (for 人) to …", japanese: "【Unit3 Part1】<br>(人にとって)…することは～だ" },
-    { english: "survive", japanese: "【Unit3 Part1】<br>生き残る" },
-    { english: "trouble", japanese: "【Unit3 Part1】<br>困難、迷惑、面倒" },
-    { english: "be in danger of ～", japanese: "【Unit3 Part1】<br>～の危険がある" },
-    { english: "because of the snow", japanese: "【Unit3 Part1】<br>雪のせいで" },
-    { english: "because of climate change", japanese: "【Unit3 Part1】<br>気候の変化のため" },
-
-    // Part2
-    { english: "cheetah", japanese: "【Unit3 Part2】<br>チーター" },
-    { english: "sea otter", japanese: "【Unit3 Part2】<br>ラッコ" },
-    { english: "article", japanese: "【Unit3 Part2】<br>記事、論文" },
-    { english: "hear of ～", japanese: "【Unit3 Part2】<br>～について聞く" },
-    { english: "and so on", japanese: "【Unit3 Part2】<br>～など" },
-    { english: "for example", japanese: "【Unit3 Part2】<br>例えば" },
-    { english: "Why don’t we ～?", japanese: "【Unit3 Part2】<br>～しませんか" },
-    { english: "want 人 to 動詞の原形", japanese: "【Unit3 Part2】<br>人に～して欲しい" }
-];
-
-// NEW HORIZON 中3 ユニット3（2つ目のボタン：Read and Think 1～2）
-wordData["NEW HORIZON 中3 ユニット3 [Read and Think1～2]"] = [
-    // Read and Think 1
-    { english: "the ocean", japanese: "【Read and Think1】<br>海洋、海" },
-    { english: "let 人 動詞の原形", japanese: "【Read and Think1】<br>人に～させる" },
-    { english: "the Pacific Ocean", japanese: "【Read and Think1】<br>太平洋" },
-    { english: "population", japanese: "【Read and Think1】<br>人口、（動物の）個体数" },
-    { english: "rapidly", japanese: "【Read and Think1】<br>急速に、速く" },
-    { english: "beginning", japanese: "【Read and Think1】<br>最初の部分、初め" },
-    { english: "century", japanese: "【Read and Think1】<br>世紀、100年" },
-    { english: "shock ～", japanese: "【Read and Think1】<br>～に衝撃を与える" },
-    { english: "safely", japanese: "【Read and Think1】<br>安全に" },
-    { english: "overhunting", japanese: "【Read and Think1】<br>乱獲" },
-    { english: "oil", japanese: "【Read and Think1】<br>石油、油" },
-    { english: "spill", japanese: "【Read and Think1】<br>流出、（液体などの）こぼれ" },
-    { english: "hunting", japanese: "【Read and Think1】<br>狩り、探し求めること" },
-    { english: "killer whale", japanese: "【Read and Think1】<br>シャチ" },
-    { english: "as a result", japanese: "【Read and Think1】<br>結果として" },
-
-    // Read and Think 2
-    { english: "native", japanese: "【Read and Think2】<br>その土地に固有の、原産の" },
-    { english: "be native to ～", japanese: "【Read and Think2】<br>～に固有である" },
-    { english: "logging", japanese: "【Read and Think2】<br>伐採" },
-    { english: "habitat", japanese: "【Read and Think2】<br>生息地" },
-    { english: "traffic accident", japanese: "【Read and Think2】<br>交通事故" },
-    { english: "decrease", japanese: "【Read and Think2】<br>減少、減少する" },
-    { english: "research", japanese: "【Read and Think2】<br>研究、調査" },
-    { english: "categorize ～", japanese: "【Read and Think2】<br>～を分類する" },
-    { english: "be categorized as ～", japanese: "【Read and Think2】<br>～として分類される" },
-    { english: "critically", japanese: "【Read and Think2】<br>危機的に、批判的に" },
-    { english: "citizen", japanese: "【Read and Think2】<br>市民" },
-    { english: "protect ～", japanese: "【Read and Think2】<br>～を保護する" },
-    { english: "role", japanese: "【Read and Think2】<br>役割" },
-    { english: "ecosystem", japanese: "【Read and Think2】<br>生態系" },
-    { english: "human being", japanese: "【Read and Think2】<br>人間 ※複数形は人類" },
-    { english: "relate ～", japanese: "【Read and Think2】<br>～を関連させる" },
-    { english: "be related to ～", japanese: "【Read and Think2】<br>～に関係している" },
-    { english: "It is ~ (for 人) to …", japanese: "【Read and Think2】<br>(人にとって)…することは～だ" },
-    { english: "action", japanese: "【Read and Think2】<br>行動" },
-    { english: "take action", japanese: "【Read and Think2】<br>行動する" },
-    { english: "help 人 動詞の原形", japanese: "【Read and Think2】<br>人が～するのを助ける" },
-    { english: "survive", japanese: "【Read and Think2】<br>生き残る" }
-];
-
-// NEW HORIZON 中3 ユニット3（3つ目のボタン：Real Life English & Stage Activity 1）
-wordData["NEW HORIZON 中3 ユニット3 [Real Life English & Stage Activity1]"] = [
-    // Real Life English
-    { english: "breed ～", japanese: "【Real Life English】<br>～を繁殖する、飼育する" },
-    { english: "release ～", japanese: "【Real Life English】<br>～を放す、解放する" },
-    { english: "reach ～", japanese: "【Real Life English】<br>～に達する、到着する" },
-    { english: "nowadays", japanese: "【Real Life English】<br>近頃は、この頃は" },
-    { english: "continue", japanese: "【Real Life English】<br>続ける" },
-
-    // Stage Activity 1
-    { english: "item", japanese: "【Stage Activity1】<br>品物、品目" },
-    { english: "piece", japanese: "【Stage Activity1】<br>かけら、部分、断片" },
-    { english: "cloth", japanese: "【Stage Activity1】<br>布" },
-    { english: "wrap ～", japanese: "【Stage Activity1】<br>～を包む" },
-    { english: "fold ～", japanese: "【Stage Activity1】<br>～を折る、折りたたむ" },
-    { english: "convenient", japanese: "【Stage Activity1】<br>便利な" },
-    { english: "instead", japanese: "【Stage Activity1】<br>その代わりに" },
-    { english: "resource", japanese: "【Stage Activity1】<br>資源" },
-    { english: "a piece of ～", japanese: "【Stage Activity1】<br>1つの～" },
-    { english: "fold ～ up", japanese: "【Stage Activity1】<br>～を折りたたむ" },
-    { english: "instead of ～", japanese: "【Stage Activity1】<br>～の代わりに" },
-    { english: "won't", japanese: "【Stage Activity1】<br>will notの短縮形" }
-];
-
-// NEW HORIZON 中3 ユニット4（1つ目のボタン：Part1～Part2）
-wordData["NEW HORIZON 中3 ユニット4 [Part1～2]"] = [
-    // Part1
-    { english: "be prepared", japanese: "【Unit4 Part1】<br>用意ができている" },
-    { english: "disaster", japanese: "【Unit4 Part1】<br>災害" },
-    { english: "shelter", japanese: "【Unit4 Part1】<br>避難所" },
-    { english: "store ～", japanese: "【Unit4 Part1】<br>～を蓄える" },
-    { english: "extinguisher", japanese: "【Unit4 Part1】<br>消火器" },
-    { english: "in case of ～", japanese: "【Unit4 Part1】<br>～の場合には" },
-
-    // Part2
-    { english: "done", japanese: "【Unit4 Part2】<br>doの過去分詞" },
-    { english: "prepare for ～", japanese: "【Unit4 Part2】<br>～の準備をする、備える" },
-    { english: "emergency", japanese: "【Unit4 Part2】<br>緊急事態" },
-    { english: "kit", japanese: "【Unit4 Part2】<br>道具 [用具] 一式" },
-    { english: "recommend ～", japanese: "【Unit4 Part2】<br>〜をすすめる、〜を推薦する" },
-    { english: "earthquake", japanese: "【Unit4 Part2】<br>地震" },
-    { english: "we’ve", japanese: "【Unit4 Part2】<br>we haveの短縮形" },
-    { english: "hasn’t", japanese: "【Unit4 Part2】<br>has notの短縮形" }
-];
-
-// NEW HORIZON 中3 ユニット4（2つ目のボタン：Read and Think 1～2）
-wordData["NEW HORIZON 中3 ユニット4 [Read and Think1～2]"] = [
-    // Read and Think 1
-    { english: "several", japanese: "【Read and Think1】<br>いくつかの" },
-    { english: "bridge", japanese: "【Read and Think1】<br>橋、かけ橋" },
-    { english: "between A and B", japanese: "【Read and Think1】<br>AとBの間で" },
-    { english: "energetic", japanese: "【Read and Think1】<br>精力的な、エネルギッシュな" },
-    { english: "encourage ～", japanese: "【Read and Think1】<br>～を勇気づける、励ます" },
-    { english: "personality", japanese: "【Read and Think1】<br>個性、性格" },
-    { english: "hit ～", japanese: "【Read and Think1】<br>～を襲う" },
-    { english: "comfort ～", japanese: "【Read and Think1】<br>～を慰める、元気づける" },
-    { english: "nearby", japanese: "【Read and Think1】<br>近くの" },
-    { english: "safe", japanese: "【Read and Think1】<br>安全な" },
-
-    // Read and Think 2
-    { english: "rode", japanese: "【Read and Think2】<br>ride（乗る）の過去形" },
-    { english: "bicycle", japanese: "【Read and Think2】<br>自転車" },
-    { english: "toward ～", japanese: "【Read and Think2】<br>～の方へ、～に向かって" },
-    { english: "apartment", japanese: "【Read and Think2】<br>アパート" },
-    { english: "caught", japanese: "【Read and Think2】<br>catchの過去形・過去分詞" },
-    { english: "tsunami", japanese: "【Read and Think2】<br>津波" },
-    { english: "sudden", japanese: "【Read and Think2】<br>突然の、不意の" },
-    { english: "news", japanese: "【Read and Think2】<br>ニュース、知らせ" },
-    { english: "shortly", japanese: "【Read and Think2】<br>まもなく、すぐに" },
-    { english: "corner", japanese: "【Read and Think2】<br>コーナー" },
-    { english: "exchange", japanese: "【Read and Think2】<br>交流、やりとり、交換する" },
-    { english: "program", japanese: "【Read and Think2】<br>プログラム、計画" },
-    { english: "support ～", japanese: "【Read and Think2】<br>～を支援する、支える" },
-    { english: "ordinary", japanese: "【Read and Think2】<br>ふつうの、通常の" },
-    { english: "crisis", japanese: "【Read and Think2】<br>危機、難局" },
-    { english: "be caught in ～", japanese: "【Read and Think2】<br>～に巻き込まれる" },
-    { english: "bring ～ together", japanese: "【Read and Think2】<br>～を団結させる" },
-    { english: "keep on ～ing", japanese: "【Read and Think2】<br>～し続ける" },
-    { english: "no longer ～", japanese: "【Read and Think2】<br>もはや～ない" }
-];
-    
-// --- 3. 選択肢（4択）作成ロジックの最適化 ---
-const originalMakeChoices = makeChoices;
-makeChoices = function(correctAnswer, allCategoryWords) {
-    const specialCategories = ["不規則動詞 (過去形)", "不規則動詞 (過去分詞)", "形容詞・副詞 (比較級)", "形容詞・副詞 (最上級)", "身の回りのもの"];
-    if (specialCategories.includes(currentCategory)) {
-        let finalChoices = [correctAnswer];
-        const currentWord = allCategoryWords.find(w => w.english === correctAnswer);
-        if (currentWord && currentWord.ing) {
-            finalChoices.push(currentWord.ing);
-        }
-        let otherWords = allCategoryWords.filter(w => w.english !== correctAnswer);
-        otherWords.sort(() => Math.random() - 0.5);
-        for (let i = 0; i < otherWords.length; i++) {
-            if (finalChoices.length >= 4) break;
-            finalChoices.push(otherWords[i].english);
-        }
-        while (finalChoices.length < 4) {
-            finalChoices.push("went", "made", "computer", "cheaper");
-        }
-        return finalChoices.sort(() => Math.random() - 0.5);
-    }
-    return originalMakeChoices(correctAnswer, allCategoryWords);
+        { english: "future", japanese: "将来" },
+        { english: "dream", japanese: "夢" }
+    ],
+    "動物": [
+        { english: "dog", japanese: "犬" },
+        { english: "cat", japanese: "猫" },
+        { english: "horse", japanese: "馬" },
+        { english: "bird", japanese: "鳥" },
+        { english: "mouse", japanese: "ネズミ" },
+        { english: "lion", japanese: "ライオン" },
+        { english: "bear", japanese: "熊（クマ）" },
+        { english: "tiger", japanese: "虎（トラ）" },
+        { english: "rabbit", japanese: "ウサギ" },
+        { english: "animal", japanese: "動物" }
+    ],
+    "体": [
+        { english: "body", japanese: "体" },
+        { english: "head", japanese: "頭" },
+        { english: "hair", japanese: "髪" },
+        { english: "face", japanese: "顔" },
+        { english: "eye", japanese: "目" },
+        { english: "nose", japanese: "鼻" },
+        { english: "mouth", japanese: "口" },
+        { english: "ear", japanese: "耳" },
+        { english: "tooth", japanese: "歯" },
+        { english: "hand", japanese: "手" },
+        { english: "finger", japanese: "手の指" },
+        { english: "foot", japanese: "足" },
+        { english: "health", japanese: "健康" },
+        { english: "heart", japanese: "心臓" },
+        { english: "stomach", japanese: "胃・おなか" }
+    ],
+    "身の回りのもの": [
+        { english: "computer", japanese: "コンピュータ" },
+        { english: "radio", japanese: "ラジオ" },
+        { english: "calendar", japanese: "カレンダー" },
+        { english: "clock", japanese: "置き・掛け時計" },
+        { english: "cup", japanese: "カップ・茶わん" },
+        { english: "telephone", japanese: "電話" },
+        { english: "newspaper", japanese: "新聞" },
+        { english: "hat", japanese: "帽子（ふちがあるもの）" },
+        { english: "cap", japanese: "帽子（キャップ）" },
+        { english: "pants", japanese: "ズボン" },
+        { english: "sweater", japanese: "セーター" },
+        { english: "T-shirt", japanese: "Tシャツ" },
+        { english: "gloves", japanese: "手袋" },
+        { english: "uniform", japanese: "制服・ユニフォーム" },
+        { english: "watch", japanese: "腕時計" },
+        { english: "socks", japanese: "靴下" },
+        { english: "glasses", japanese: "メガネ" }
+    ],
+    "不規則動詞 (過去形)": [
+        { english: "cut", japanese: "cut (~を切る) の過去形", ing: "cutting" },
+        { english: "put", japanese: "put (~を置く) の過去形", ing: "putting" },
+        { english: "became", japanese: "become (~になる) の過去形", ing: "becoming" },
+        { english: "came", japanese: "come (来る) の過去形", ing: "coming" },
+        { english: "ran", japanese: "run (走る) の過去形", ing: "running" },
+        { english: "slept", japanese: "sleep (眠る) の過去形", ing: "sleeping" },
+        { english: "spent", japanese: "spend (~を過ごす) の過去形", ing: "spending" },
+        { english: "stood", japanese: "stand (立っている) の過去形", ing: "standing" },
+        { english: "taught", japanese: "teach (~を教える) の過去形", ing: "teaching" },
+        { english: "told", japanese: "tell (~に話す) の過去形", ing: "telling" },
+        { english: "thought", japanese: "think (~と考える) の過去形", ing: "thinking" },
+        { english: "understood", japanese: "understand (~を理解する) の過去形", ing: "understanding" },
+        { english: "won", japanese: "win (勝つ) の過去形", ing: "winning" },
+        { english: "brought", japanese: "bring (~を持ってくる) の過去形", ing: "bringing" },
+        { english: "built", japanese: "build (~を建てる) の過去形", ing: "building" },
+        { english: "bought", japanese: "buy (~を買う) の過去形", ing: "buying" },
+        { english: "caught", japanese: "catch (~をつかまえる) の過去形", ing: "catching" },
+        { english: "felt", japanese: "feel (感じる) の過去形", ing: "feeling" },
+        { english: "found", japanese: "find (~を見つける) の過去形", ing: "finding" },
+        { english: "had", japanese: "have (~を持っている) の過去形", ing: "having" },
+        { english: "heard", japanese: "hear (~が聞こえる) の過去形", ing: "hearing" },
+        { english: "kept", japanese: "keep (~を持ち続ける) の過去形", ing: "keeping" },
+        { english: "learned", japanese: "learn (~を学ぶ) の過去形", ing: "learning" },
+        { english: "left", japanese: "leave (去る) の過去形", ing: "leaving" },
+        { english: "lost", japanese: "lose (~を失う) の過去形", ing: "losing" },
+        { english: "made", japanese: "make (~を作る) の過去形", ing: "making" },
+        { english: "met", japanese: "meet (~と会う) の過去形", ing: "meeting" },
+        { english: "paid", japanese: "pay (~を支払う) の過去形", ing: "paying" },
+        { english: "read", japanese: "read (~を読む) の過去形", ing: "reading" },
+        { english: "said", japanese: "say (~と言う) の過去形", ing: "saying" },
+        { english: "sold", japanese: "sell (~を売る) の過去形", ing: "selling" },
+        { english: "sent", japanese: "send (~を送る) の過去形", ing: "sending" },
+        { english: "sat", japanese: "sit (座る) の過去形", ing: "sitting" },
+        { english: "began", japanese: "begin (~を始める) の過去形", ing: "beginning" },
+        { english: "broke", japanese: "break (~をこわす) の過去形", ing: "breaking" },
+        { english: "did", japanese: "do、does (~をする) の過去形", ing: "doing" },
+        { english: "drank", japanese: "drink (~を飲む) の過去形", ing: "drinking" },
+        { english: "drove", japanese: "drive (~を運転する) の過去形", ing: "driving" },
+        { english: "ate", japanese: "eat (~を食べる) の過去形", ing: "eating" },
+        { english: "got", japanese: "get (~を得る) の過去形", ing: "getting" },
+        { english: "gave", japanese: "give (~を与える) の過去形", ing: "giving" },
+        { english: "went", japanese: "go (行く) の過去形", ing: "going" },
+        { english: "knew", japanese: "know (~を知っている) の過去形", ing: "knowing" },
+        { english: "rose", japanese: "rise (昇る) の過去形", ing: "rising" },
+        { english: "saw", japanese: "see (見える) の過去形", ing: "seeing" },
+        { english: "showed", japanese: "show (~を見せる) の過去形", ing: "showing" },
+        { english: "sang", japanese: "sing (歌う) の過去形", ing: "singing" },
+        { english: "spoke", japanese: "speak (話す) の過去形", ing: "speaking" },
+        { english: "swam", japanese: "swim (泳ぐ) の過去形", ing: "swimming" },
+        { english: "took", japanese: "take (~を取る) の過去形", ing: "taking" },
+        { english: "woke", japanese: "wake (目を覚ます) の過去形", ing: "waking" },
+        { english: "wore", japanese: "wear (~を着ている) の過去形", ing: "wearing" },
+        { english: "wrote", japanese: "write (~を書く) の過去形", ing: "writing" }
+    ],
+    "不規則動詞 (過去分詞)": [
+        { english: "cut", japanese: "cut (~を切る) の過去分詞", ing: "cutting" },
+        { english: "put", japanese: "put (~を置く) の過去分詞", ing: "putting" },
+        { english: "become", japanese: "become (~になる) の過去分詞", ing: "becoming" },
+        { english: "come", japanese: "come (来る) の過去分詞", ing: "coming" },
+        { english: "run", japanese: "run (走る) の過去分詞", ing: "running" },
+        { english: "slept", japanese: "sleep (眠る) の過去分詞", ing: "sleeping" },
+        { english: "spent", japanese: "spend (~を過ごす) の過去分詞", ing: "spending" },
+        { english: "stood", japanese: "stand (立っている) の過去分詞", ing: "standing" },
+        { english: "taught", japanese: "teach (~を教える) の過去分詞", ing: "teaching" },
+        { english: "told", japanese: "tell (~に話す) の過去分詞", ing: "telling" },
+        { english: "thought", japanese: "think (~と考える) の過去分詞", ing: "thinking" },
+        { english: "understood", japanese: "understand (~を理解する) の過去分詞", ing: "understanding" },
+        { english: "won", japanese: "win (勝つ) の過去分詞", ing: "winning" },
+        { english: "brought", japanese: "bring (~を持ってくる) の過去分詞", ing: "bringing" },
+        { english: "built", japanese: "build (~を建てる) の過去分詞", ing: "building" },
+        { english: "bought", japanese: "buy (~を買う) の過去分詞", ing: "buying" },
+        { english: "caught", japanese: "catch (~をつかまえる) の過去分詞", ing: "catching" },
+        { english: "felt", japanese: "feel (感じる) の過去分詞", ing: "feeling" },
+        { english: "found", japanese: "find (~を見つける) の過去分詞", ing: "finding" },
+        { english: "had", japanese: "have (~を持っている) の過去分詞", ing: "having" },
+        { english: "heard", japanese: "hear (~が聞こえる) の過去分詞", ing: "hearing" },
+        { english: "kept", japanese: "keep (~を持ち続ける) の過去分詞", ing: "keeping" },
+        { english: "learned (learnt)", japanese: "learn (~を学ぶ) の過去分詞", ing: "learning" },
+        { english: "left", japanese: "leave (去る) の過去分詞", ing: "leaving" },
+        { english: "lost", japanese: "lose (~を失う) の過去分詞", ing: "losing" },
+        { english: "made", japanese: "make (~を作る) の過去分詞", ing: "making" },
+        { english: "met", japanese: "meet (~と会う) の過去分詞", ing: "meeting" },
+        { english: "paid", japanese: "pay (~を支払う) の過去分詞", ing: "paying" },
+        { english: "read", japanese: "read (~を読む) の過去分詞", ing: "reading" },
+        { english: "said", japanese: "say (~と言う) の過去分詞", ing: "saying" },
+        { english: "sold", japanese: "sell (~を売る) の過去分詞", ing: "selling" },
+        { english: "sent", japanese: "send (~を送る) の過去分詞", ing: "sending" },
+        { english: "sat", japanese: "sit (座る) の過去分詞", ing: "sitting" },
+        { english: "begun", japanese: "begin (~を始める) の過去分詞", ing: "beginning" },
+        { english: "broken", japanese: "break (~をこわす) の過去分詞", ing: "breaking" },
+        { english: "done", japanese: "do、does (~をする) の過去分詞", ing: "doing" },
+        { english: "drunk", japanese: "drink (~を飲む) の過去分詞", ing: "drinking" },
+        { english: "driven", japanese: "drive (~を運転する) の過去分詞", ing: "driving" },
+        { english: "eaten", japanese: "eat (~を食べる) の過去分詞", ing: "eating" },
+        { english: "got (gotten)", japanese: "get (~を得る) の過去分詞", ing: "getting" },
+        { english: "given", japanese: "give (~を与える) の過去分詞", ing: "giving" },
+        { english: "gone", japanese: "go (行く) の過去分詞", ing: "going" },
+        { english: "known", japanese: "know (~を知っている) の過去分詞", ing: "knowing" },
+        { english: "risen", japanese: "rise (昇る) の過去分詞", ing: "rising" },
+        { english: "seen", japanese: "see (見える) の過去分詞", ing: "seeing" },
+        { english: "shown (showed)", japanese: "show (~を見せる) の過去分詞", ing: "showing" },
+        { english: "sung", japanese: "sing (歌う) の過去分詞", ing: "singing" },
+        { english: "spoken", japanese: "speak (話す) の過去分詞", ing: "speaking" },
+        { english: "swum", japanese: "swim (泳ぐ) の過去分詞", ing: "swimming" },
+        { english: "taken", japanese: "take (~を取る) の過去分詞", ing: "taking" },
+        { english: "woken", japanese: "wake (目を覚ます) の過去分詞", ing: "waking" },
+        { english: "worn", japanese: "wear (~を着ている) の過去分詞", ing: "wearing" },
+        { english: "written", japanese: "write (~を書く) の過去分詞", ing: "writing" }
+    ],
+    "形容詞・副詞 (比較級)": [
+        { english: "cheaper", japanese: "cheap (安い) の比較級" },
+        { english: "cleaner", japanese: "clean (きれいな) の比較級" },
+        { english: "colder", japanese: "cold (寒い) の比較級" },
+        { english: "cooler", japanese: "cool (涼しい) の比較級" },
+        { english: "faster", japanese: "fast (速い・速く) の比較級" },
+        { english: "greater", japanese: "great (すごい) の比較級" },
+        { english: "harder", japanese: "hard (難しい) の比較級" },
+        { english: "higher", japanese: "high (高い) の比較級" },
+        { english: "lighter", japanese: "light (明るい・軽い) の比較級" },
+        { english: "longer", japanese: "long (長い) の比較級" },
+        { english: "nearer", japanese: "near (近い) の比較級" },
+        { english: "newer", japanese: "new (新しい) の比較級" },
+        { english: "older", japanese: "old (古い) の比較級" },
+        { english: "shorter", japanese: "short (短い) の比較級" },
+        { english: "smaller", japanese: "small (小さい) の比較級" },
+        { english: "stronger", japanese: "strong (強い) の比較級" },
+        { english: "taller", japanese: "tall (背が高い) の比較級" },
+        { english: "warmer", japanese: "warm (暖かい) の比較級" },
+        { english: "younger", japanese: "young (若い) の比較級" },
+        { english: "larger", japanese: "large (大きい) の比較級" },
+        { english: "later", japanese: "late (遅い) の比較級" },
+        { english: "bigger", japanese: "big (大きい) の比較級" },
+        { english: "hotter", japanese: "hot (暑い・熱い) の比較級" },
+        { english: "busier", japanese: "busy (忙しい) の比較級" },
+        { english: "earlier", japanese: "early (早く) の比較級" },
+        { english: "easier", japanese: "easy (簡単な) の比較級" },
+        { english: "happier", japanese: "happy (幸せな) の比較級" },
+        { english: "heavier", japanese: "heavy (重い) の比較級" },
+        { english: "prettier", japanese: "pretty (かわいい) の比較級" },
+        { english: "more beautiful", japanese: "beautiful (美しい) の比較級" },
+        { english: "more careful", japanese: "careful (注意深い) の比較級" },
+        { english: "more delicious", japanese: "delicious (おいしい) の比較級" },
+        { english: "more difficult", japanese: "difficult (難しい) の比較級" },
+        { english: "more easily", japanese: "easily (簡単に) の比較級" },
+        { english: "more exciting", japanese: "exciting (わくわくする) の比較級" },
+        { english: "more expensive", japanese: "expensive (高価な) の比較級" },
+        { english: "more famous", japanese: "famous (有名な) の比較級" },
+        { english: "more important", japanese: "important (重要な) の比較級" },
+        { english: "more interesting", japanese: "interesting (おもしろい) の比較級" },
+        { english: "more popular", japanese: "popular (人気のある) の比較級" },
+        { english: "more useful", japanese: "useful (便利な) の比較級" },
+        { english: "better", japanese: "good (良い) / well (元気に・上手に) の比較級" },
+        { english: "worse", japanese: "bad (悪い) / ill (病気の) の比較級" },
+        { english: "more", japanese: "many (多い[数]) / much (多い[量]) の比較級" },
+        { english: "less", japanese: "little (少しの[量]) の比較級" }
+    ],
+    "形容詞・副詞 (最上級)": [
+        { english: "the cheapest", japanese: "cheap (安い) の最上級" },
+        { english: "the cleanest", japanese: "clean (きれいな) の最上級" },
+        { english: "the coldest", japanese: "cold (寒い) の最上級" },
+        { english: "the coolest", japanese: "cool (涼しい) の最上級" },
+        { english: "the fastest", japanese: "fast (速い・速く) の最上級" },
+        { english: "the greatest", japanese: "great (すごい) の最上級" },
+        { english: "the hardest", japanese: "hard (難しい) の最上級" },
+        { english: "the highest", japanese: "high (高い) の最上級" },
+        { english: "the lightest", japanese: "light (明るい・軽い) の最上級" },
+        { english: "the longest", japanese: "long (長い) の最上級" },
+        { english: "the nearest", japanese: "near (近い) の最上級" },
+        { english: "the newest", japanese: "new (新しい) の最上級" },
+        { english: "the oldest", japanese: "old (古い) の最上級" },
+        { english: "the shortest", japanese: "short (短い) の最上級" },
+        { english: "the smallest", japanese: "small (小さい) の最上級" },
+        { english: "the strongest", japanese: "strong (強い) の最上級" },
+        { english: "the tallest", japanese: "tall (背が高い) の最上級" },
+        { english: "the warmest", japanese: "warm (暖かい) の最上級" },
+        { english: "the youngest", japanese: "young (若い) の最上級" },
+        { english: "the largest", japanese: "large (大きい) の最上級" },
+        { english: "the latest", japanese: "late (遅い) の最上級" },
+        { english: "the biggest", japanese: "big (大きい) の最上級" },
+        { english: "the hottest", japanese: "hot (暑い・熱い) の最上級" },
+        { english: "the busiest", japanese: "busy (忙しい) の最上級" },
+        { english: "the earliest", japanese: "early (早く) の最上級" },
+        { english: "the easiest", japanese: "easy (簡単な) の最上級" },
+        { english: "the happiest", japanese: "happy (幸せな) の最上級" },
+        { english: "the heaviest", japanese: "heavy (重い) の最上級" },
+        { english: "the prettiest", japanese: "pretty (かわいい) の最上級" },
+        { english: "the most beautiful", japanese: "beautiful (美しい) の最上級" },
+        { english: "the most careful", japanese: "careful (注意深い) の最上級" },
+        { english: "the most delicious", japanese: "delicious (おいしい) の最上級" },
+        { english: "the most difficult", japanese: "difficult (難しい) の最上級" },
+        { english: "the most easily", japanese: "easily (簡単に) の最上級" },
+        { english: "the most exciting", japanese: "exciting (わくわくする) の最上級" },
+        { english: "the most expensive", japanese: "expensive (高価な) の最上級" },
+        { english: "the most famous", japanese: "famous (有名な) の最上級" },
+        { english: "the most important", japanese: "important (重要な) の最上級" },
+        { english: "the most interesting", japanese: "interesting (おもしろい) の最上級" },
+        { english: "the most popular", japanese: "popular (人気のある) の最上級" },
+        { english: "the most useful", japanese: "useful (便利な) の最上級" },
+        { english: "the best", japanese: "good (良い) / well (元気に・上手に) の最上級" },
+        { english: "the worst", japanese: "bad (悪い) / ill (病気の) の最上級" },
+        { english: "the most", japanese: "many (多い[数]) / much (多い[量]) の最上級" },
+        { english: "the least", japanese: "little (少しの[量]) の最上級" }
+    ],
+    "NEW HORIZON 中3 ユニット0～1": [
+        { english: "discover ～", japanese: "【Unit0】<br>～を発見する" },
+        { english: "side", japanese: "【Unit0】<br>側、面" },
+        { english: "finally", japanese: "【Unit0】<br>ついに、やっと" },
+        { english: "musical", japanese: "【Unit0】<br>ミュージカル" },
+        { english: "actor", japanese: "【Unit0】<br>俳優" },
+        { english: "fashion", japanese: "【Unit1 Part1】<br>ファッション、人気のもの" },
+        { english: "regional", japanese: "【Unit1 Part1】<br>地方特有の、地域の" },
+        { english: "regional food", japanese: "【Unit1 Part1】<br>地域の食べ物" },
+        { english: "been", japanese: "【Unit1 Part1】<br>beの過去分詞" },
+        { english: "martial arts", japanese: "【Unit1 Part1】<br>武道" },
+        { english: "have never been to ～", japanese: "【Unit1 Part1】<br>～に一度も行ったことがない" },
+        { english: "foreigner", japanese: "【Unit1 Part2】<br>外国人" },
+        { english: "ever", japanese: "【Unit1 Part2】<br>（疑問文で）今まで、かつて" },
+        { english: "have been to ～", japanese: "【Unit1 Part2】<br>～に行ったことがある" },
+        { english: "I've", japanese: "【Unit1 Part2】<br>I have の短縮形" },
+        { english: "haven't", japanese: "【Unit1 Part2】<br>have notの短縮形" },
+        { english: "hasn't", japanese: "【Unit1 Part2】<br>has notの短縮形" },
+        { english: "many times", japanese: "【Unit1 Part2】<br>何回も、何度も" },
+        { english: "be popular among ～", japanese: "【Unit1 Part2】<br>～の間で人気がある" },
+        { english: "global", japanese: "【Read and Think1】<br>全世界の、世界的な" },
+        { english: "genre", japanese: "【Read and Think1】<br>ジャンル、部門、分野" },
+        { english: "adventure", japanese: "【Read and Think1】<br>冒険、冒険心" },
+        { english: "adult", japanese: "【Read and Think1】<br>おとな" },
+        { english: "quality", japanese: "【Read and Think1】<br>質、品質" },
+        { english: "animation", japanese: "【Read and Think1】<br>アニメーション、動画" },
+        { english: "drawing", japanese: "【Read and Think1】<br>絵、図、スケッチ" },
+        { english: "delicate", japanese: "【Read and Think1】<br>繊細な、上品な" },
+        { english: "addition", japanese: "【Read and Think1】<br>加えること" },
+        { english: "in addition", japanese: "【Read and Think1】<br>加えて" },
+        { english: "match ～", japanese: "【Read and Think1】<br>～と調和する、匹敵する" },
+        { english: "positive", japanese: "【Read and Think1】<br>前向きな、肯定の" },
+        { english: "around the world", japanese: "【Read and Think1】<br>世界中には" },
+        { english: "ignore ～", japanese: "【Read and Think2】<br>～を無視する" },
+        { english: "existence", japanese: "【Read and Think2】<br>存在" },
+        { english: "roots", japanese: "【Read and Think2】<br>起源（複数形）" },
+        { english: "drawn", japanese: "【Read and Think2】<br>drawの過去分詞" },
+        { english: "express ～", japanese: "【Read and Think2】<br>～を表現する" },
+        { english: "express feelings", japanese: "【Read and Think2】<br>感情を表現する" },
+        { english: "movement", japanese: "【Read and Think2】<br>動き" },
+        { english: "scroll", japanese: "【Read and Think2】<br>巻物、掛け軸" },
+        { english: "technique", japanese: "【Read and Think2】<br>手法、テクニック" },
+        { english: "influence ～", japanese: "【Read and Think2】<br>～に影響を与える" },
+        { english: "influence American anime", japanese: "【Read and Think2】<br>アメリカのアニメに影響する" },
+        { english: "advantage", japanese: "【Read and Think2】<br>有利、強味" },
+        { english: "taste", japanese: "【Read and Think2】<br>味、味覚" },
+        { english: "link", japanese: "【Read and Think2】<br>つなぐ、連結する" },
+        { english: "be linked to ～", japanese: "【Read and Think2】<br>～とつながっている" },
+        { english: "traditional Japanese dishes", japanese: "【Read and Think2】<br>伝統的な日本料理" },
+        { english: "It is said that ～", japanese: "【Read and Think2】<br>～と言われている" },
+        { english: "take advantage of ～", japanese: "【Read and Think2】<br>～を利用する" }
+    ],
+    "NEW HORIZON 中3 ユニット2": [
+        { english: "already", japanese: "【Unit2 Part1】<br>すでに、もう" },
+        { english: "essay", japanese: "【Unit2 Part1】<br>作文、随筆" },
+        { english: "yet", japanese: "【Unit2 Part1】<br>もう（疑問文）、まだ（否定文）" },
+        { english: "ethical", japanese: "【Unit2 Part1】<br>道徳的な、倫理的な" },
+        { english: "designer", japanese: "【Unit2 Part1】<br>デザイナー、設計者" },
+        { english: "interview ～", japanese: "【Unit2 Part1】<br>～にインタビューする" },
+        { english: "message", japanese: "【Unit2 Part1】<br>伝言、メッセージ" },
+        { english: "sleep", japanese: "【Unit2 Part1】<br>眠る" },
+        { english: "this weekend", japanese: "【Unit2 Part1】<br>今週末" },
+        { english: "sound great", japanese: "【Unit2 Part1】<br>すばらしそうに聞こえる" },
+        { english: "accessory", japanese: "【Unit2 Part2】<br>付属品、アクセサリー" },
+        { english: "recycle ～", japanese: "【Unit2 Part2】<br>～を再生利用する" },
+        { english: "eco-friendly", japanese: "【Unit2 Part2】<br>環境に優しい" },
+        { english: "impact", japanese: "【Unit2 Part2】<br>影響、衝撃" },
+        { english: "since ～", japanese: "【Unit2 Part2】<br>～以来、～なので" },
+        { english: "introduce ～", japanese: "【Unit2 Part2】<br>～を導入する、紹介する" },
+        { english: "SDGs", japanese: "【Unit2 Part2】<br>持続可能な開発目標" },
+        { english: "How long ～?", japanese: "【Unit2 Part2】<br>どのくらい長く～" },
+        { english: "what kind of ～", japanese: "【Unit2 Part2】<br>どんな種類の～" },
+        { english: "be made of paper", japanese: "【Unit2 Part2】<br>紙でできている" },
+        { english: "since last year", japanese: "【Unit2 Part2】<br>昨年以来" },
+        { english: "be concerned about ～", japanese: "【Unit2 Part2】<br>～について心配している" },
+        { english: "morally", japanese: "【Read and Think1】<br>道徳的に、倫理的に" },
+        { english: "clothing", japanese: "【Read and Think1】<br>衣類、衣料品" },
+        { english: "company", japanese: "【Read and Think1】<br>会社" },
+        { english: "chemical", japanese: "【Read and Think1】<br>化学物質" },
+        { english: "lead to ～", japanese: "【Read and Think1】<br>～に通じる" },
+        { english: "less", japanese: "【Read and Think1】<br>もっと少ない、より少ない" },
+        { english: "negative", japanese: "【Read and Think1】<br>否定的な、よくない" },
+        { english: "negative impact", japanese: "【Read and Think1】<br>よくない影響" },
+        { english: "animal-free", japanese: "【Read and Think1】<br>動物性原料を含まない" },
+        { english: "include ～", japanese: "【Read and Think1】<br>～を含む" },
+        { english: "include useful information", japanese: "【Read and Think1】<br>役に立つ情報を含む" },
+        { english: "vegan", japanese: "【Read and Think1】<br>絶対菜食主義者" },
+        { english: "leather", japanese: "【Read and Think1】<br>革、革製品" },
+        { english: "avoid ～", japanese: "【Read and Think1】<br>～を避ける" },
+        { english: "make efforts to ～", japanese: "【Read and Think1】<br>～するために努力する" },
+        { english: "wool", japanese: "【Read and Think1】<br>羊毛、毛織物" },
+        { english: "fur", japanese: "【Read and Think1】<br>毛皮、毛皮製品" },
+        { english: "you've", japanese: "【Read and Think1】<br>you haveの短縮形" },
+        { english: "be getting popular", japanese: "【Read and Think1】<br>人気になっている" },
+        { english: "moreover", japanese: "【Read and Think2】<br>さらに、なおそのうえに" },
+        { english: "worker", japanese: "【Read and Think2】<br>労働者、働く人" },
+        { english: "developing", japanese: "【Read and Think2】<br>発展途上の" },
+        { english: "developing countries", japanese: "【Read and Think2】<br>発展途上国" },
+        { english: "condition", japanese: "【Read and Think2】<br>状況、状態" },
+        { english: "wage", japanese: "【Read and Think2】<br>賃金、給料" },
+        { english: "working", japanese: "【Read and Think2】<br>働くこと、働く～" },
+        { english: "fair", japanese: "【Read and Think2】<br>公正な、公平な、相当の" },
+        { english: "prohibit ～", japanese: "【Read and Think2】<br>～を禁止する" },
+        { english: "be kind to ～", japanese: "【Read and Think2】<br>～に親切である" },
+        { english: "more and more ～", japanese: "【Read and Think2】<br>ますます多くの～" },
+        { english: "labor", japanese: "【Read and Think2】<br>労働" },
+        { english: "child labor", japanese: "【Read and Think2】<br>児童労働" },
+        { english: "responsible", japanese: "【Read and Think2】<br>責任がある" },
+        { english: "be responsible for ～", japanese: "【Read and Think2】<br>～に責任がある" }
+    ],
+    "NEW HORIZON 中3 ユニット3 [Part1～2]": [
+        { english: "many kinds of ～", japanese: "【Unit3 Part1】<br>たくさんの種類の～" },
+        { english: "danger", japanese: "【Unit3 Part1】<br>危険（性）" },
+        { english: "extinction", japanese: "【Unit3 Part1】<br>絶滅" },
+        { english: "face ～", japanese: "【Unit3 Part1】<br>～に直面する" },
+        { english: "challenge", japanese: "【Unit3 Part1】<br>難題、課題" },
+        { english: "human", japanese: "【Unit3 Part1】<br>人間の、人間的な、人間" },
+        { english: "endangered", japanese: "【Unit3 Part1】<br>絶滅の危機にさらされている" },
+        { english: "human activity", japanese: "【Unit3 Part1】<br>人間の活動" },
+        { english: "It is ~ (for 人) to …", japanese: "【Unit3 Part1】<br>(人にとって)…することは～だ" },
+        { english: "survive", japanese: "【Unit3 Part1】<br>生き残る" },
+        { english: "trouble", japanese: "【Unit3 Part1】<br>困難、迷惑、面倒" },
+        { english: "be in danger of ～", japanese: "【Unit3 Part1】<br>～の危険がある" },
+        { english: "because of the snow", japanese: "【Unit3 Part1】<br>雪のせいで" },
+        { english: "because of climate change", japanese: "【Unit3 Part1】<br>気候の変化のため" },
+        { english: "cheetah", japanese: "【Unit3 Part2】<br>チーター" },
+        { english: "sea otter", japanese: "【Unit3 Part2】<br>ラッコ" },
+        { english: "article", japanese: "【Unit3 Part2】<br>記事、論文" },
+        { english: "hear of ～", japanese: "【Unit3 Part2】<br>～について聞く" },
+        { english: "and so on", japanese: "【Unit3 Part2】<br>～など" },
+        { english: "for example", japanese: "【Unit3 Part2】<br>例えば" },
+        { english: "Why don’t we ～?", japanese: "【Unit3 Part2】<br>～しませんか" },
+        { english: "want 人 to 動詞の原形", japanese: "【Unit3 Part2】<br>人に～して欲しい" }
+    ],
+    "NEW HORIZON 中3 ユニット3 [Read and Think1～2]": [
+        { english: "the ocean", japanese: "【Read and Think1】<br>海洋、海" },
+        { english: "let 人 動詞の原形", japanese: "【Read and Think1】<br>人に～させる" },
+        { english: "the Pacific Ocean", japanese: "【Read and Think1】<br>太平洋" },
+        { english: "population", japanese: "【Read and Think1】<br>人口、（動物の）個体数" },
+        { english: "rapidly", japanese: "【Read and Think1】<br>急速に、速く" },
+        { english: "beginning", japanese: "【Read and Think1】<br>最初の部分、初め" },
+        { english: "century", japanese: "【Read and Think1】<br>世紀、100年" },
+        { english: "shock ～", japanese: "【Read and Think1】<br>～に衝撃を与える" },
+        { english: "safely", japanese: "【Read and Think1】<br>安全に" },
+        { english: "overhunting", japanese: "【Read and Think1】<br>乱獲" },
+        { english: "oil", japanese: "【Read and Think1】<br>石油、油" },
+        { english: "spill", japanese: "【Read and Think1】<br>流出、（液体などの）こぼれ" },
+        { english: "hunting", japanese: "【Read and Think1】<br>狩り、探し求めること" },
+        { english: "killer whale", japanese: "【Read and Think1】<br>シャチ" },
+        { english: "as a result", japanese: "【Read and Think1】<br>結果として" },
+        { english: "native", japanese: "【Read and Think2】<br>その土地に固有の、原産の" },
+        { english: "be native to ～", japanese: "【Read and Think2】<br>～に固有である" },
+        { english: "logging", japanese: "【Read and Think2】<br>伐採" },
+        { english: "habitat", japanese: "【Read and Think2】<br>生息地" },
+        { english: "traffic accident", japanese: "【Read and Think2】<br>交通事故" },
+        { english: "decrease", japanese: "【Read and Think2】<br>減少、減少する" },
+        { english: "research", japanese: "【Read and Think2】<br>研究、調査" },
+        { english: "categorize ～", japanese: "【Read and Think2】<br>～を分類する" },
+        { english: "be categorized as ～", japanese: "【Read and Think2】<br>～として分類される" },
+        { english: "critically", japanese: "【Read and Think2】<br>危機的に、批判的に" },
+        { english: "citizen", japanese: "【Read and Think2】<br>市民" },
+        { english: "protect ～", japanese: "【Read and Think2】<br>～を保護する" },
+        { english: "role", japanese: "【Read and Think2】<br>役割" },
+        { english: "ecosystem", japanese: "【Read and Think2】<br>生態系" },
+        { english: "human being", japanese: "【Read and Think2】<br>人間 ※複数形は人類" },
+        { english: "relate ～", japanese: "【Read and Think2】<br>～を関連させる" },
+        { english: "be related to ～", japanese: "【Read and Think2】<br>～に関係している" },
+        { english: "It is ~ (for 人) to …", japanese: "【Read and Think2】<br>(人にとって)…することは～だ" },
+        { english: "action", japanese: "【Read and Think2】<br>行動" },
+        { english: "take action", japanese: "【Read and Think2】<br>行動する" },
+        { english: "help 人 動詞の原形", japanese: "【Read and Think2】<br>人が～するのを助ける" },
+        { english: "survive", japanese: "【Read and Think2】<br>生き残る" }
+    ],
+    "NEW HORIZON 中3 ユニット3 [Real Life English & Stage Activity1]": [
+        { english: "breed ～", japanese: "【Real Life English】<br>～を繁殖する、飼育する" },
+        { english: "release ～", japanese: "【Real Life English】<br>～を放す、解放する" },
+        { english: "reach ～", japanese: "【Real Life English】<br>～に達する、到着する" },
+        { english: "nowadays", japanese: "【Real Life English】<br>近頃は、この頃は" },
+        { english: "continue", japanese: "【Real Life English】<br>続ける" },
+        { english: "item", japanese: "【Stage Activity1】<br>品物、品目" },
+        { english: "piece", japanese: "【Stage Activity1】<br>かけら、部分、断片" },
+        { english: "cloth", japanese: "【Stage Activity1】<br>布" },
+        { english: "wrap ～", japanese: "【Stage Activity1】<br>～を包む" },
+        { english: "fold ～", japanese: "【Stage Activity1】<br>～を折る、折りたたむ" },
+        { english: "convenient", japanese: "【Stage Activity1】<br>便利な" },
+        { english: "instead", japanese: "【Stage Activity1】<br>その代わりに" },
+        { english: "resource", japanese: "【Stage Activity1】<br>資源" },
+        { english: "a piece of ～", japanese: "【Stage Activity1】<br>1つの～" },
+        { english: "fold ～ up", japanese: "【Stage Activity1】<br>～を折りたたむ" },
+        { english: "instead of ～", japanese: "【Stage Activity1】<br>～の代わりに" },
+        { english: "won't", japanese: "【Stage Activity1】<br>will notの短縮形" }
+    ],
+    "NEW HORIZON 中3 ユニット4 [Part1～2]": [
+        { english: "be prepared", japanese: "【Unit4 Part1】<br>用意ができている" },
+        { english: "disaster", japanese: "【Unit4 Part1】<br>災害" },
+        { english: "shelter", japanese: "【Unit4 Part1】<br>避難所" },
+        { english: "store ～", japanese: "【Unit4 Part1】<br>～を蓄える" },
+        { english: "extinguisher", japanese: "【Unit4 Part1】<br>消火器" },
+        { english: "in case of ～", japanese: "【Unit4 Part1】<br>～の場合には" },
+        { english: "done", japanese: "【Unit4 Part2】<br>doの過去分詞" },
+        { english: "prepare for ～", japanese: "【Unit4 Part2】<br>～の準備をする、備える" },
+        { english: "emergency", japanese: "【Unit4 Part2】<br>緊急事態" },
+        { english: "kit", japanese: "【Unit4 Part2】<br>道具 [用具] 一式" },
+        { english: "recommend ～", japanese: "【Unit4 Part2】<br>〜をすすめる、〜を推薦する" },
+        { english: "earthquake", japanese: "【Unit4 Part2】<br>地震" },
+        { english: "we’ve", japanese: "【Unit4 Part2】<br>we haveの短縮形" },
+        { english: "hasn’t", japanese: "【Unit4 Part2】<br>has notの短縮形" }
+    ],
+    "NEW HORIZON 中3 ユニット4 [Read and Think1～2]": [
+        { english: "several", japanese: "【Read and Think1】<br>いくつかの" },
+        { english: "bridge", japanese: "【Read and Think1】<br>橋、かけ橋" },
+        { english: "between A and B", japanese: "【Read and Think1】<br>AとBの間で" },
+        { english: "energetic", japanese: "【Read and Think1】<br>精力的な、エネルギッシュな" },
+        { english: "encourage ～", japanese: "【Read and Think1】<br>～を勇気づける、励ます" },
+        { english: "personality", japanese: "【Read and Think1】<br>個性、性格" },
+        { english: "hit ～", japanese: "【Read and Think1】<br>～を襲う" },
+        { english: "comfort ～", japanese: "【Read and Think1】<br>～を慰める、元気づける" },
+        { english: "nearby", japanese: "【Read and Think1】<br>近くの" },
+        { english: "safe", japanese: "【Read and Think1】<br>安全な" },
+        { english: "rode", japanese: "【Read and Think2】<br>ride（乗る）の過去形" },
+        { english: "bicycle", japanese: "【Read and Think2】<br>自転車" },
+        { english: "toward ～", japanese: "【Read and Think2】<br>～の方へ、～に向かって" },
+        { english: "apartment", japanese: "【Read and Think2】<br>アパート" },
+        { english: "caught", japanese: "【Read and Think2】<br>catchの過去形・過去分詞" },
+        { english: "tsunami", japanese: "【Read and Think2】<br>津波" },
+        { english: "sudden", japanese: "【Read and Think2】<br>突然の、不意の" },
+        { english: "news", japanese: "【Read and Think2】<br>ニュース、知らせ" },
+        { english: "shortly", japanese: "【Read and Think2】<br>まもなく、すぐに" },
+        { english: "corner", japanese: "【Read and Think2】<br>コーナー" },
+        { english: "exchange", japanese: "【Read and Think2】<br>交流、やりとり、交換する" },
+        { english: "program", japanese: "【Read and Think2】<br>プログラム、計画" },
+        { english: "support ～", japanese: "【Read and Think2】<br>～を支援する、支える" },
+        { english: "ordinary", japanese: "【Read and Think2】<br>ふつうの、通常の" },
+        { english: "crisis", japanese: "【Read and Think2】<br>危機、難局" },
+        { english: "be caught in ～", japanese: "【Read and Think2】<br>～に巻き込まれる" },
+        { english: "bring ～ together", japanese: "【Read and Think2】<br>～を団結させる" },
+        { english: "keep on ～ing", japanese: "【Read and Think2】<br>～し続ける" },
+        { english: "no longer ～", japanese: "【Read and Think2】<br>もはや～ない" }
+    ]
 };
 
-// --- 4. 【大改修：確実赤色化】既存の4択描画関数（updateQuizScreen）のボタン生成タイミングを横取りする最安全システム ---
-if (typeof updateQuizScreen === "function") {
-    const originalUpdateQuizScreen = updateQuizScreen;
-    updateQuizScreen = function() {
-        // 先に通常通りクイズ画面を描画させる
-        originalUpdateQuizScreen();
-        
-        // 比較級・最上級のときだけ、描画された直後のボタンを確実にHTML書き換え
-        if (currentCategory === "形容詞・副詞 (比較級)" || currentCategory === "形容詞・副詞 (最上級)") {
-            const buttons = document.querySelectorAll("#choices-container button, .choice-button");
-            buttons.forEach(btn => {
-                let txt = btn.textContent || btn.innerText;
-                if (!txt) return;
-                
-                let htmlResult = txt;
-                const irregulars = ["better", "worse", "less", "best", "worst", "least"];
-                let isIrregular = false;
-                
-                irregulars.forEach(irr => {
-                    if (txt === irr || txt === "the " + irr) {
-                        htmlResult = htmlResult.replace(irr, `<span style="color: red; font-weight: bold;">${irr}</span>`);
-                        isIrregular = true;
-                    }
-                });
-                
-                if (!isIrregular) {
-                    if (txt.includes("more ") || txt.includes("most ")) {
-                        htmlResult = htmlResult.replace("more", '<span style="color: red; font-weight: bold;">more</span>');
-                        htmlResult = htmlResult.replace("most", '<span style="color: red; font-weight: bold;">most</span>');
-                    } else {
-                        if (txt.endsWith("est")) {
-                            if (txt.endsWith("ggest")) htmlResult = txt.slice(0, -5) + '<span style="color: red; font-weight: bold;">ggest</span>';
-                            else if (txt.endsWith("ttest")) htmlResult = txt.slice(0, -5) + '<span style="color: red; font-weight: bold;">ttest</span>';
-                            else htmlResult = txt.slice(0, -3) + '<span style="color: red; font-weight: bold;">est</span>';
-                        } else if (txt.endsWith("er")) {
-                            if (txt.endsWith("gger")) htmlResult = txt.slice(0, -4) + '<span style="color: red; font-weight: bold;">gger</span>';
-                            else if (txt.endsWith("tter")) htmlResult = txt.slice(0, -4) + '<span style="color: red; font-weight: bold;">tter</span>';
-                            else htmlResult = txt.slice(0, -2) + '<span style="color: red; font-weight: bold;">er</span>';
-                        }
-                    }
-                }
-                btn.innerHTML = htmlResult;
-            });
-        }
-    };
+/* --- 1-2. 英語のカテゴリ分け（どのコースにどのカテゴリを入れるか） --- */
+const CATS = {
+    basic: ["数字 (1〜10)", "数字 (11～20)", "数字 (30～100, 千, 万)", "数字 (序数)", "曜日・週", "1月〜12月", "季節・天気", "色", "時間帯・暦", "家族", "人物", "国・地域", "食事・飲み物", "フルーツ・菓子", "料理・食材", "勉強", "学校の活動・行事", "スポーツ", "楽器・音楽", "乗り物", "家・家具", "自然", "街の施設（お出かけ）", "街の施設（駅・公共など）", "職業（仕事）", "動物", "体", "身の回りのもの"],
+    verbs: ["不規則動詞 (過去形)", "不規則動詞 (過去分詞)"],
+    adj: ["形容詞・副詞 (比較級)", "形容詞・副詞 (最上級)"],
+    horizon: ["NEW HORIZON 中3 ユニット0～1", "NEW HORIZON 中3 ユニット2", "NEW HORIZON 中3 ユニット3 [Part1～2]", "NEW HORIZON 中3 ユニット3 [Read and Think1～2]", "NEW HORIZON 中3 ユニット3 [Real Life English & Stage Activity1]", "NEW HORIZON 中3 ユニット4 [Part1～2]", "NEW HORIZON 中3 ユニット4 [Read and Think1～2]"]
+};
+
+/* --- 1-3. 歴史（近現代）の問題データ
+        回を増やすときは HISTORY の配列に { no, title, questions } を追加するだけ。
+        q: 問題文 / a: 正解 / wrong: 不正解の選択肢3つ --- */
+const HISTORY = [
+    {
+        no: 1,
+        title: "明治新政府の成立と三大改革",
+        questions: [
+            { q: "新政府が進めた、日本を近代国家にするための政治、経済、社会の改革を何というか。",
+              a: "明治維新", wrong: ["大政奉還", "富国強兵", "文明開化"] },
+            { q: "1868年、明治天皇が神にちかう形で出された新しい政治の方針を何というか。",
+              a: "五箇条の御誓文", wrong: ["五榜の掲示", "大日本帝国憲法", "学制"] },
+            { q: "江戸は何という名に改称されたか。",
+              a: "東京", wrong: ["京都", "大阪", "横浜"] },
+            { q: "明治以降、一人の天皇の在位中は元号を変えないとした決まりを何というか。",
+              a: "一世一元の制", wrong: ["王政復古", "版籍奉還", "太陽暦の採用"] },
+            { q: "明治政府が目指した、中央政府が地方を直接治める国家を何というか。",
+              a: "中央集権国家", wrong: ["立憲国家", "封建国家", "民主国家"] },
+            { q: "1869年、新政府が全国の藩主に、土地と人民を天皇に返させたことを何というか。",
+              a: "版籍奉還", wrong: ["廃藩置県", "大政奉還", "王政復古"] },
+            { q: "1871年、藩を廃止して県を置き、各県に県令を、東京、大阪、京都の3府には府知事を、中央から派遣したことを何というか。",
+              a: "廃藩置県", wrong: ["版籍奉還", "地租改正", "四民平等"] },
+            { q: "倒幕の中心勢力だった少数の公家や、薩摩・長州・土佐・肥前藩の出身者たちに実権をにぎられた新政府は何と呼ばれたか。",
+              a: "藩閥政府", wrong: ["幕府", "政党内閣", "軍閥政府"] },
+            { q: "身分制度の廃止により、元の公家・大名は何と呼ばれるようになったか。",
+              a: "華族", wrong: ["士族", "平民", "皇族"] },
+            { q: "身分制度の廃止により、大名の家臣などの武士は何と呼ばれるようになったか。",
+              a: "士族", wrong: ["華族", "平民", "皇族"] },
+            { q: "身分制度の廃止により、百姓・町人は何と呼ばれるようになったか。",
+              a: "平民", wrong: ["華族", "士族", "皇族"] },
+            { q: "1871年に出された、えた身分やひにん身分などの呼び名を廃止し、身分や職業を平民と同じとする布告を何というか。",
+              a: "解放令", wrong: ["学制", "徴兵令", "五榜の掲示"] },
+            { q: "1872年に公布された、6歳以上の男女全てに小学校で教育を受けさせることを定めた法令を何というか。",
+              a: "学制", wrong: ["教育勅語", "学校令", "徴兵令"] },
+            { q: "政府などに雇い入れられ、学問や技術、軍事を教えた外国人を何というか。",
+              a: "お雇い外国人", wrong: ["宣教師", "留学生", "御用商人"] },
+            { q: "1873年に出され、満20歳になった男子に兵役を義務づけた法令を何というか。",
+              a: "徴兵令", wrong: ["学制", "地租改正", "解放令"] },
+            { q: "1873年から政府が行った税制改革を何というか。",
+              a: "地租改正", wrong: ["殖産興業", "徴兵令", "秩禄処分"] },
+            { q: "土地の所有者に発行された、土地の所有者や土地の広さ、地価などを記載した証書を何というか。",
+              a: "地券", wrong: ["戸籍", "藩札", "免状"] },
+            { q: "①1873年の税制改革の直後、税率は地価の何％だったか。②税制改革への反対一揆の結果、1877年に税率は地価の何％になったか。",
+              a: "①3％　②2.5％", wrong: ["①2.5％　②3％", "①5％　②2.5％", "①3％　②1.5％"] },
+            { q: "1873年の税制改革では、税を何で納めることになったか。",
+              a: "現金", wrong: ["米", "労役", "特産物"] }
+        ]
+    }
+];
+
+/* --- 1-4. 最初の画面のコース一覧（色もここで指定） --- */
+const SECTIONS = [
+    { id: "basic",   title: "基本的な英単語",     icon: "🌱", c1: "#ff9a44", c2: "#fc6076", type: "english", categories: CATS.basic },
+    { id: "verbs",   title: "不規則動詞",         icon: "🏃", c1: "#a770ef", c2: "#6a5af9", type: "english", categories: CATS.verbs },
+    { id: "adj",     title: "形容詞・副詞",       icon: "✨", c1: "#11998e", c2: "#2bc48a", type: "english", categories: CATS.adj },
+    { id: "horizon", title: "NEW HORIZON 中3",    icon: "📖", c1: "#2193b0", c2: "#4db8e8", type: "english", categories: CATS.horizon },
+    { id: "history", title: "歴史（近現代）",     icon: "🏯", c1: "#cb2d3e", c2: "#ef473a", type: "history" }
+];
+
+/* =====================================================================
+   2. 共通の道具
+   ===================================================================== */
+const $app = document.getElementById("app");
+const $screen = document.getElementById("screen");
+
+function shuffle(array) {
+    const a = [...array];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
 }
 
-// --- 5. カテゴリの並び順制御（「動物」と「体」の間に「身の回りのもの」を配置） ---
-    if (typeof showCategoryScreen === "function") {
-    const originalShowCategoryScreen = showCategoryScreen;
-    showCategoryScreen = function() {
-        const categories = Object.keys(wordData);
-        const container = document.getElementById("category-container");
-        if (container) {
-            container.innerHTML = "";
-            let sortedCategories = [];
-            const normalOrderBefore = ["学校の活動・行事", "スポーツ", "楽器・音楽", "乗り物", "家・家具", "自然", "街の施設（お出かけ）", "街の施設（駅・公共など）", "職業（仕事）", "動物"];
-            normalOrderBefore.forEach(cat => {
-                if (categories.includes(cat)) sortedCategories.push(cat);
-            });
-            if (categories.includes("身の回りのもの")) {
-                sortedCategories.push("身の回りのもの");
+/* 要素を作る小さな関数 */
+function el(tag, attrs = {}, children = []) {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+        if (k === "class") e.className = v;
+        else if (k === "text") e.textContent = v;
+        else if (k === "html") e.innerHTML = v;
+        else if (k === "style") e.style.cssText = v;
+        else if (k.startsWith("on")) e[k] = v;
+        else e.setAttribute(k, v);
+    }
+    [].concat(children).forEach(c => { if (c) e.appendChild(c); });
+    return e;
+}
+
+/* 画面を丸ごと入れ替える */
+function mount(...nodes) {
+    $screen.replaceChildren(...nodes.filter(Boolean));
+    window.scrollTo(0, 0);
+}
+
+function setAccent(color) { $app.style.setProperty("--c", color); }
+
+function backButton(label, onClick) {
+    return el("button", { class: "back-btn", text: label, onclick: onClick });
+}
+
+/* =====================================================================
+   3. 音声（iPhone・Android 両対応）
+   ===================================================================== */
+const Speech = (() => {
+    const supported = "speechSynthesis" in window;
+    let voices = [];
+
+    function loadVoices() { voices = supported ? speechSynthesis.getVoices() : []; }
+    if (supported) {
+        loadVoices();
+        // Android の Chrome は音声リストの読み込みが遅れるため、変化を監視する
+        speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    // 英語の音声を選ぶ（Android は "en_US" のように _ を使うことがあるので両方に対応）
+    function pickVoice() {
+        const english = voices.filter(v => /^en([-_]|$)/i.test(v.lang));
+        return english.find(v => /^en[-_]US$/i.test(v.lang)) || english[0] || null;
+    }
+
+    // 予備：ブラウザの読み上げが使えないとき、オンライン音声を再生（通信が必要）
+    function fallback(text) {
+        const url = "https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=" + encodeURIComponent(text);
+        new Audio(url).play().catch(() => {
+            alert("この端末では音声を再生できませんでした。Chrome などのブラウザで開いてください。");
+        });
+    }
+
+    function speakNow(text) {
+        const u = new SpeechSynthesisUtterance(text);
+        const v = pickVoice();
+        u.lang = "en-US";
+        if (v) { u.voice = v; u.lang = v.lang; }
+        u.rate = 0.95;
+        u.onerror = e => {
+            if (e.error !== "interrupted" && e.error !== "canceled") fallback(text);
+        };
+        speechSynthesis.resume();   // Android で一時停止状態になっている場合の対策
+        speechSynthesis.speak(u);
+    }
+
+    function speak(text) {
+        if (!supported) { fallback(text); return; }
+        if (speechSynthesis.speaking || speechSynthesis.pending) {
+            // 読み上げ中なら止めてから少し待つ（Android は cancel 直後の speak が無音になるため）
+            speechSynthesis.cancel();
+            setTimeout(() => speakNow(text), 150);
+        } else {
+            // iPhone は操作直後でないと音が出ないので、待たずにすぐ実行
+            speakNow(text);
+        }
+    }
+
+    return { speak };
+})();
+
+/* 読み上げ用に単語を整える */
+function speechText(word) {
+    let t = word.english;
+    if (t === "read" && word.japanese.includes("過去")) return "red";   // 過去形の read は「レッド」
+    return t
+        .replace(/\([^)]*\)/g, "")        // (gotten) など括弧内を除く
+        .replace(/[～~…]/g, " ")
+        .replace(/’/g, "'")
+        .replace(/[^\x00-\x7F]/g, " ")    // 「人」「動詞の原形」などの日本語を除く
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+/* =====================================================================
+   4. 出題データの作成（英語・歴史とも同じ形にそろえる）
+      item = { prompt, answer, choices(), speakText? }
+   ===================================================================== */
+function makeEnglishItems(category) {
+    const pool = WORDS[category];
+    return shuffle(pool).slice(0, 10).map(w => ({
+        prompt: w.japanese,
+        answer: w.english,
+        speakText: speechText(w),
+        choices() {
+            const list = [w.english];
+            if (w.ing) list.push(w.ing);                 // 不規則動詞：ing形も紛らわしい選択肢にする
+            for (const other of shuffle(pool)) {
+                if (list.length >= 4) break;
+                if (!list.includes(other.english)) list.push(other.english);
             }
-            const normalOrderAfter = ["体", "不規則動詞 (過去形)", "不規則動詞 (過去分詞)", "形容詞・副詞 (比較級)", "形容詞・副詞 (最上級)"];
-            normalOrderAfter.forEach(cat => {
-                if (categories.includes(cat)) sortedCategories.push(cat);
-            });
-            categories.forEach(cat => {
-                if (!sortedCategories.includes(cat)) sortedCategories.push(cat);
-            });
-            sortedCategories.forEach(category => {
-                const button = document.createElement("button");
-                button.className = "category-button";
-                button.innerText = category;
-                button.onclick = () => selectCategory(category);
-                container.appendChild(button);
-            });
+            return shuffle(list);
+        }
+    }));
+}
+
+function makeHistoryItems(lesson, mode) {
+    const source = mode === "all" ? lesson.questions : shuffle(lesson.questions).slice(0, 10);
+    return source.map(q => ({
+        prompt: q.q,
+        answer: q.a,
+        choices: () => shuffle([q.a, ...q.wrong])
+    }));
+}
+
+/* =====================================================================
+   5. 画面：最初の画面・コース別メニュー
+   ===================================================================== */
+function showHome() {
+    setAccent("#4a90e2");
+    const list = SECTIONS.map(sec => el("button", {
+        class: "btn home-btn",
+        style: `--c1:${sec.c1};--c2:${sec.c2}`,
+        text: `${sec.icon}  ${sec.title}`,
+        onclick: () => (sec.type === "history" ? showHistoryMenu(sec) : showEnglishMenu(sec))
+    }));
+    mount(el("h1", { text: "学習するコースを選んでね" }), ...list);
+}
+
+function showEnglishMenu(sec) {
+    setAccent(sec.c1);
+    const buttons = sec.categories.map(cat => el("button", {
+        class: "btn cat-btn",
+        text: cat,
+        onclick: () => startEnglish(sec, cat)
+    }));
+    mount(
+        backButton("← 最初の画面へ", showHome),
+        el("h1", { text: sec.title }),
+        ...buttons
+    );
+}
+
+/* 歴史メニュー：上に検索ボックス、その下に各回のボタン */
+function showHistoryMenu(sec) {
+    setAccent(sec.c1);
+    const listArea = el("div");
+    const search = el("input", {
+        class: "search-box", type: "search",
+        placeholder: "🔍 検索（例：廃藩置県、第1回）"
+    });
+
+    function renderList() {
+        const word = search.value.trim();
+        listArea.replaceChildren();
+        const hits = HISTORY.filter(lesson => {
+            if (!word) return true;
+            const text = `第${lesson.no}回 ${lesson.title} ` +
+                lesson.questions.map(q => q.q + q.a).join(" ");
+            return text.includes(word);
+        });
+        if (hits.length === 0) {
+            listArea.appendChild(el("div", { class: "no-result", text: "見つかりませんでした" }));
             return;
         }
-        originalShowCategoryScreen();
-    };
-  showCategoryScreen();
-};
-
-// ==========================================
-
-        // 発音機能（現在出題中の英単語を喋らせる）
-    function speakWord() {
-
-    // 音声機能対応チェック
-    if (!('speechSynthesis' in window)) {
-        alert('このブラウザは音声再生に対応していません。Chromeをご利用ください。');
-        return;
+        hits.forEach(lesson => {
+            const n = lesson.questions.length;
+            listArea.appendChild(el("div", { class: "lesson" }, [
+                el("div", { class: "lesson-title", text: `第${lesson.no}回「${lesson.title}（${n}問）」` }),
+                el("button", {
+                    class: "btn cat-btn", text: `📋 全問題を順番に（${n}問）`,
+                    onclick: () => startHistory(sec, lesson, "all")
+                }),
+                el("button", {
+                    class: "btn cat-btn", text: `🎲 ランダム ${Math.min(10, n)}問`,
+                    onclick: () => startHistory(sec, lesson, "random")
+                })
+            ]));
+        });
     }
 
-    const currentQuestion = currentWords[currentIndex];
-
-    // 「～」や「~」を除去して読み上げ
-let word = currentQuestion.english
-        .replace(/～/g, '')
-        .replace(/~/g, '')
-        .trim();
-if (
-    word === "read" &&
-    currentQuestion.japanese.includes("過去")
-) {
-    word = "red";
+    search.oninput = renderList;
+    renderList();
+    mount(
+        backButton("← 最初の画面へ", showHome),
+        el("h1", { text: sec.title }),
+        search,
+        listArea
+    );
 }
-    // 前回の読み上げを停止
-    speechSynthesis.cancel();
 
-    const uttr = new SpeechSynthesisUtterance(word);
-    uttr.lang = 'en-US';
-    uttr.rate = 1.0;
-
-    speechSynthesis.speak(uttr);
+/* =====================================================================
+   6. 出題の開始
+   ===================================================================== */
+function startEnglish(sec, category) {
+    const opts = {
+        title: category,
+        kind: "english",
+        color: sec.c1,
+        items: makeEnglishItems(category),
+        onBack: () => showEnglishMenu(sec),
+        onRetry: () => startEnglish(sec, category)
+    };
+    runQuiz(opts);
 }
-    </script>
+
+function startHistory(sec, lesson, mode) {
+    const label = mode === "all" ? "全問題（順番どおり）" : "ランダム10問";
+    const opts = {
+        title: `第${lesson.no}回 ${label}`,
+        kind: "history",
+        color: sec.c1,
+        items: makeHistoryItems(lesson, mode),
+        onBack: () => showHistoryMenu(sec),
+        onRetry: () => startHistory(sec, lesson, mode)
+    };
+    runQuiz(opts);
+}
+
+/* =====================================================================
+   7. クイズ本体（英語・歴史 共通）
+   ===================================================================== */
+function runQuiz(opts) {
+    const state = { index: 0, score: 0, wrong: [], answered: false };
+    setAccent(opts.color);
+    showQuestion();
+
+    function showQuestion() {
+        state.answered = false;
+        const item = opts.items[state.index];
+        const total = opts.items.length;
+
+        const message = el("div", { class: "result-message" });
+        const nextBtn = el("button", {
+            class: "btn action-btn",
+            style: "display:none",
+            text: state.index + 1 < total ? "次へ進む" : "結果を見る",
+            onclick: () => { state.index++; state.index < total ? showQuestion() : showResult(); }
+        });
+
+        const choiceButtons = item.choices().map(text => {
+            const btn = el("button", { class: "btn choice-btn", text });
+            btn.onclick = () => answer(btn, text);
+            return btn;
+        });
+
+        function answer(clicked, text) {
+            if (state.answered) return;
+            state.answered = true;
+            if (text === item.answer) {
+                clicked.classList.add("correct");
+                message.textContent = "⭕ 正解！";
+                message.style.color = "#2ecc71";
+                state.score++;
+            } else {
+                clicked.classList.add("incorrect");
+                message.textContent = `❌ 不正解！ 正解は: ${item.answer}`;
+                message.style.color = "#e74c3c";
+                choiceButtons.forEach(b => { if (b.textContent === item.answer) b.classList.add("correct"); });
+                state.wrong.push(item);
+            }
+            nextBtn.style.display = "block";
+        }
+
+        const questionBlock = opts.kind === "english"
+            ? el("div", { class: "japanese", html: item.prompt })
+            : el("div", { class: "question-text", text: item.prompt });
+
+        const soundBtn = item.speakText
+            ? el("button", { class: "btn sound-btn", text: "🔊 発音を聞く", onclick: () => Speech.speak(item.speakText) })
+            : null;
+
+        mount(
+            el("div", { class: "quiz-head" }, [
+                backButton("← 戻る", opts.onBack),
+                el("div", { class: "progress", text: `第 ${state.index + 1} 問 / 全 ${total} 問` })
+            ]),
+            el("div", { class: "quiz-title", text: opts.title }),
+            questionBlock,
+            soundBtn,
+            el("div", {}, choiceButtons),
+            message,
+            nextBtn
+        );
+    }
+
+    function showResult() {
+        const total = opts.items.length;
+        const nodes = [
+            el("h1", { text: opts.review ? "誤答復習 終了！" : "テスト終了！" }),
+            el("div", { class: "final-score", text: `${total} 問中 ${state.score} 問 正解！` })
+        ];
+
+        if (state.wrong.length > 0) {
+            const wrongItems = state.wrong;
+            nodes.push(el("button", {
+                class: "btn review-btn",
+                text: `✏️ 誤答復習（${wrongItems.length}問）`,
+                onclick: () => runQuiz({
+                    ...opts,
+                    title: "誤答復習",
+                    items: wrongItems,
+                    review: true,
+                    onRetry: () => runQuiz({ ...opts, title: "誤答復習", items: wrongItems, review: true })
+                })
+            }));
+        } else {
+            nodes.push(el("div", { class: "perfect", text: "🎉 全問正解です！" }));
+        }
+
+        nodes.push(
+            el("button", { class: "btn action-btn", text: "もう一度挑戦", onclick: opts.onRetry }),
+            el("button", { class: "btn", text: "← 戻る", onclick: opts.onBack })
+        );
+        mount(...nodes);
+    }
+}
+
+/* =====================================================================
+   8. 起動
+   ===================================================================== */
+showHome();
+</script>
 </body>
 </html>
