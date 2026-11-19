@@ -70,6 +70,8 @@ h1 { font-size: 19px; text-align: center; margin: 4px 0 18px; }
     padding: 6px 4px; cursor: pointer; font-family: inherit;
 }
 .sound-btn { max-width: 200px; margin: 0 auto 20px; padding: 10px; font-size: 16px; }
+.speech-note { font-size: 12px; color: #c0392b; line-height: 1.6; text-align: left; margin: -8px 0 14px; }
+.speech-note:empty { display: none; }
 
 /* ========== 歴史メニュー ========== */
 .search-box {
@@ -1231,41 +1233,64 @@ const Speech = (() => {
     }
 
     // 英語の音声を選ぶ（Android は "en_US" のように _ を使うことがあるので両方に対応）
+    // 通信が必要な音声より、端末内の音声（localService）を優先する
     function pickVoice() {
         const english = voices.filter(v => /^en([-_]|$)/i.test(v.lang));
-        return english.find(v => /^en[-_]US$/i.test(v.lang)) || english[0] || null;
+        const local = english.filter(v => v.localService);
+        const list = local.length ? local : english;
+        return list.find(v => /^en[-_]US$/i.test(v.lang)) || list[0] || null;
     }
 
-    // 予備：ブラウザの読み上げが使えないとき、オンライン音声を再生（通信が必要）
-    function fallback(text) {
-        const url = "https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=" + encodeURIComponent(text);
-        new Audio(url).play().catch(() => {
-            alert("この端末では音声を再生できませんでした。Chrome などのブラウザで開いてください。");
-        });
+    // 読み上げの試し方。うまくいかなければ、次の方法を順に試す
+    const attempts = [
+        u => { const v = pickVoice(); u.lang = v ? v.lang : "en-US"; if (v) u.voice = v; },
+        u => { u.lang = "en-US"; },
+        u => { u.lang = "en"; }
+    ];
+
+    const HELP = "端末の「テキスト読み上げ」に英語の音声データが入っていない可能性があります。" +
+        "設定 →「言語と入力」（または「ユーザー補助」）→「テキスト読み上げの出力」→ " +
+        "Google テキスト読み上げエンジン（歯車）→「音声データをインストール」→ 英語（米国）を入れてから、もう一度押してください。";
+
+    // 最後の手段：オンライン音声（通信が必要。非公式の方法のため使えないこともある）
+    function fallback(text, reason, notify) {
+        const audio = new Audio("https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=" + encodeURIComponent(text));
+        audio.referrerPolicy = "no-referrer";
+        const fail = () => notify && notify(`音声を再生できませんでした（${reason || "不明"}）。${HELP}`);
+        audio.onerror = fail;
+        audio.play().catch(fail);
     }
 
-    function speakNow(text) {
+    function attempt(text, i, notify, reason) {
+        if (i >= attempts.length) { fallback(text, reason, notify); return; }
         const u = new SpeechSynthesisUtterance(text);
-        const v = pickVoice();
-        u.lang = "en-US";
-        if (v) { u.voice = v; u.lang = v.lang; }
+        attempts[i](u);
         u.rate = 0.95;
+        let started = false, moved = false;
+        const next = why => { if (!moved) { moved = true; attempt(text, i + 1, notify, why); } };
+        u.onstart = () => { started = true; };
         u.onerror = e => {
-            if (e.error !== "interrupted" && e.error !== "canceled") fallback(text);
+            if (e.error === "interrupted" || e.error === "canceled") return;
+            next(e.error);
         };
+        // エラーも音も出ないまま止まる端末への対策：3秒たっても始まらなければ次の方法へ
+        setTimeout(() => {
+            if (!started && !moved) { speechSynthesis.cancel(); next(reason || "反応なし"); }
+        }, 3000);
         speechSynthesis.resume();   // Android で一時停止状態になっている場合の対策
         speechSynthesis.speak(u);
     }
 
-    function speak(text) {
-        if (!supported) { fallback(text); return; }
+    function speak(text, notify) {
+        if (notify) notify("");
+        if (!supported) { fallback(text, "非対応のブラウザ", notify); return; }
         if (speechSynthesis.speaking || speechSynthesis.pending) {
             // 読み上げ中なら止めてから少し待つ（Android は cancel 直後の speak が無音になるため）
             speechSynthesis.cancel();
-            setTimeout(() => speakNow(text), 150);
+            setTimeout(() => attempt(text, 0, notify), 150);
         } else {
             // iPhone は操作直後でないと音が出ないので、待たずにすぐ実行
-            speakNow(text);
+            attempt(text, 0, notify);
         }
     }
 
@@ -1358,7 +1383,7 @@ function showHistoryMenu(sec, word = "") {
     function lessonCard(lesson, keyword) {
         const n = lesson.questions.length;
         return el("div", { class: "lesson" }, [
-            el("div", { class: "lesson-title", text: `第${lesson.no}回 ${lesson.title}` }),
+            el("div", { class: "lesson-title", text: `第${lesson.no}回　${lesson.title}` }),
             el("button", {
                 class: "btn cat-btn", text: `📋 全問題を順番に（${n}問）`,
                 onclick: () => startHistory(sec, lesson, "all", keyword)
@@ -1525,8 +1550,12 @@ function runQuiz(opts) {
             ? el("div", { class: "japanese", html: item.prompt })
             : el("div", { class: "question-text", text: item.prompt });
 
+        const speechNote = el("div", { class: "speech-note" });
         const soundBtn = item.speakText
-            ? el("button", { class: "btn sound-btn", text: "🔊 発音を聞く", onclick: () => Speech.speak(item.speakText) })
+            ? el("button", {
+                class: "btn sound-btn", text: "🔊 発音を聞く",
+                onclick: () => Speech.speak(item.speakText, msg => { speechNote.textContent = msg; })
+            })
             : null;
 
         mount(
@@ -1537,6 +1566,7 @@ function runQuiz(opts) {
             el("div", { class: "quiz-title", text: opts.title }),
             questionBlock,
             soundBtn,
+            soundBtn ? speechNote : null,
             el("div", {}, choiceButtons),
             message,
             nextBtn
