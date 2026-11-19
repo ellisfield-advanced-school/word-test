@@ -1359,7 +1359,7 @@ function showEnglishMenu(sec) {
     setAccent(sec.c1);
     const buttons = sec.categories.map(cat => el("button", {
         class: "btn cat-btn",
-        text: cat,
+        text: cat.replace(/^NEW HORIZON 中3\s*/, ""),   // ボタンでは「NEW HORIZON 中3」を省く
         onclick: () => startEnglish(sec, cat)
     }));
     mount(
