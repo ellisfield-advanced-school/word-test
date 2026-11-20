@@ -132,6 +132,14 @@ mark { background: #fff3a0; border-radius: 3px; padding: 0 1px; }
 .japanese { font-size: 28px; font-weight: bold; margin: 20px 0; text-align: center; line-height: 1.4; }
 .question-text { font-size: 18px; font-weight: bold; margin: 16px 0 20px; line-height: 1.7; text-align: left; }
 .choice-btn { font-size: 18px; }
+.lookup { margin-top: 22px; border: 1px solid #e1e8ed; border-radius: 10px; padding: 10px 12px; background: #fafbfc; }
+.lookup summary { font-weight: bold; font-size: 14px; cursor: pointer; color: #555; }
+.lookup .search-box { margin: 12px 0 10px; }
+.lookup-buttons { display: flex; gap: 8px; }
+.lookup-buttons .btn { margin-bottom: 0; font-size: 14px; padding: 10px 4px; }
+.lookup-note { font-size: 12px; color: #c0392b; line-height: 1.6; margin-top: 8px; text-align: left; }
+.lookup-note:empty { display: none; }
+.lookup-help { font-size: 11px; color: #888; line-height: 1.6; margin-top: 8px; }
 .choice-btn.selected { border-color: var(--c); background: #f3f8ff; }
 .btn:disabled { opacity: 0.45; cursor: default; }
 .correct { color: #2ecc71; border-color: #2ecc71 !important; background: #eafeec; }
@@ -2272,6 +2280,74 @@ function speechText(word) {
 }
 
 /* =====================================================================
+   3b. 歴史用語を調べる（辞書サイト・ChatGPT・Gemini を別のタブで開く）
+   ===================================================================== */
+function copyToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).catch(() => copyFallback(text));
+    } else {
+        copyFallback(text);
+    }
+}
+
+function copyFallback(text) {
+    const area = el("textarea", { style: "position:fixed;opacity:0" });
+    area.value = text;
+    document.body.appendChild(area);
+    area.select();
+    try { document.execCommand("copy"); } catch (e) { /* コピーできない端末では何もしない */ }
+    area.remove();
+}
+
+function termLookup() {
+    const input = el("input", {
+        class: "search-box", type: "text", autocomplete: "off", enterkeyhint: "search",
+        placeholder: "調べたい用語（例：地租改正）"
+    });
+    const note = el("div", { class: "lookup-note" });
+    const question = term =>
+        `日本の中学校の歴史（近現代）で学ぶ「${term}」について、中学生にもわかるように、やさしい言葉で短く説明してください。` +
+        "いつ頃のできごとか、どんな内容か、なぜ重要かも教えてください。";
+    const openTab = url => window.open(url, "_blank", "noopener");
+
+    // 用語が入力されているときだけ動く
+    const withTerm = action => () => {
+        const term = input.value.trim();
+        if (!term) { note.textContent = "調べたい用語を入力してください。"; return; }
+        note.textContent = "";
+        action(term);
+    };
+
+    const buttons = [
+        el("button", {
+            class: "btn", text: "📖 辞書",
+            onclick: withTerm(term => openTab("https://kotobank.jp/search?q=" + encodeURIComponent(term)))
+        }),
+        el("button", {
+            class: "btn", text: "ChatGPT",
+            onclick: withTerm(term => openTab("https://chatgpt.com/?q=" + encodeURIComponent(question(term))))
+        }),
+        el("button", {
+            class: "btn", text: "Gemini",
+            // Gemini には質問文を自動で入れる方法がないため、コピーしてから開く
+            onclick: withTerm(term => {
+                copyToClipboard(question(term));
+                openTab("https://gemini.google.com/app");
+                note.textContent = "質問文をコピーしました。開いたGeminiの入力欄に貼り付けて送信してください。";
+            })
+        })
+    ];
+
+    return el("details", { class: "lookup" }, [
+        el("summary", { text: "🔎 意味が分からない用語を調べる" }),
+        input,
+        el("div", { class: "lookup-buttons" }, buttons),
+        note,
+        el("div", { class: "lookup-help", text: "辞書（コトバンク）、ChatGPT、Gemini が別のタブで開きます。AIの説明は、教科書や先生の説明とあわせて確認しましょう。" })
+    ]);
+}
+
+/* =====================================================================
    4. 出題データの作成（英語・歴史とも同じ形にそろえる）
       item = { prompt, answer, choices(), speakText? }
    ===================================================================== */
@@ -2819,7 +2895,8 @@ function runQuiz(opts) {
             el("div", {}, choiceButtons),
             submitBtn,
             message,
-            nextBtn
+            nextBtn,
+            opts.kind === "history" ? termLookup() : null
         );
     }
 
