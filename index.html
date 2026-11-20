@@ -132,6 +132,8 @@ mark { background: #fff3a0; border-radius: 3px; padding: 0 1px; }
 .japanese { font-size: 28px; font-weight: bold; margin: 20px 0; text-align: center; line-height: 1.4; }
 .question-text { font-size: 18px; font-weight: bold; margin: 16px 0 20px; line-height: 1.7; text-align: left; }
 .choice-btn { font-size: 18px; }
+.choice-btn.selected { border-color: var(--c); background: #f3f8ff; }
+.btn:disabled { opacity: 0.45; cursor: default; }
 .correct { color: #2ecc71; border-color: #2ecc71 !important; background: #eafeec; }
 .incorrect { color: #e74c3c; border-color: #e74c3c !important; background: #fdedec; }
 .result-message { font-size: 18px; font-weight: bold; margin: 15px 0; text-align: center; min-height: 1.4em; }
@@ -1889,6 +1891,187 @@ const HISTORY = [
     }
 ];
 
+/* --- 1-3b. 年代問題のデータ（y: 年 / e: できごと / l: 何回の内容か） --- */
+const DATES = [
+    { y: 1868, e: "五箇条の御誓文", l: [1] },
+    { y: 1868, e: "一世一元の制の制定", l: [1] },
+    { y: 1869, e: "版籍奉還", l: [1] },
+    { y: 1871, e: "廃藩置県", l: [1] },
+    { y: 1871, e: "解放令（賤称廃止令）", l: [1] },
+    { y: 1872, e: "学制の公布", l: [1] },
+    { y: 1873, e: "徴兵令", l: [1] },
+    { y: 1873, e: "地租改正", l: [1] },
+    { y: 1871, e: "岩倉使節団の派遣", l: [2] },
+    { y: 1871, e: "日清修好条規の締結", l: [2] },
+    { y: 1872, e: "富岡製糸場の操業開始", l: [2] },
+    { y: 1873, e: "西郷隆盛・板垣退助らが政府を去る", l: [2] },
+    { y: 1875, e: "樺太・千島交換条約", l: [2] },
+    { y: 1875, e: "江華島事件", l: [2] },
+    { y: 1876, e: "日朝修好条規", l: [2] },
+    { y: 1879, e: "琉球処分（沖縄県の設置）", l: [2] },
+    { y: 1895, e: "尖閣諸島の沖縄県編入", l: [2] },
+    { y: 1905, e: "竹島の島根県編入", l: [2] },
+    { y: 1874, e: "民撰議院設立の建白書", l: [3] },
+    { y: 1877, e: "西南戦争", l: [3] },
+    { y: 1880, e: "国会期成同盟の結成", l: [3] },
+    { y: 1881, e: "国会開設の勅諭", l: [3] },
+    { y: 1881, e: "自由党の結成", l: [3] },
+    { y: 1882, e: "立憲改進党の結成", l: [3] },
+    { y: 1882, e: "福島事件", l: [3] },
+    { y: 1884, e: "秩父事件", l: [3] },
+    { y: 1885, e: "内閣制度の創設", l: [3] },
+    { y: 1889, e: "大日本帝国憲法の発布", l: [3] },
+    { y: 1890, e: "教育勅語の発布", l: [3] },
+    { y: 1890, e: "第1回帝国議会の開会", l: [3] },
+    { y: 1883, e: "鹿鳴館の建設", l: [4] },
+    { y: 1886, e: "ノルマントン号事件", l: [4] },
+    { y: 1894, e: "日英通商航海条約の調印", l: [4] },
+    { y: 1894, e: "甲午農民戦争", l: [4] },
+    { y: 1894, e: "日清戦争の開戦", l: [4] },
+    { y: 1895, e: "下関条約", l: [4] },
+    { y: 1895, e: "三国干渉", l: [4] },
+    { y: 1898, e: "ドイツが膠州湾を租借", l: [4] },
+    { y: 1900, e: "立憲政友会の結成", l: [4] },
+    { y: 1911, e: "関税自主権の完全な回復", l: [4] },
+    { y: 1900, e: "義和団による北京の公使館包囲", l: [5] },
+    { y: 1902, e: "日英同盟", l: [5] },
+    { y: 1904, e: "日露戦争の開戦", l: [5] },
+    { y: 1905, e: "ポーツマス条約", l: [5] },
+    { y: 1905, e: "日比谷焼き打ち事件", l: [5] },
+    { y: 1906, e: "南満州鉄道株式会社の設立", l: [5] },
+    { y: 1910, e: "韓国併合", l: [5] },
+    { y: 1910, e: "朝鮮総督府の設置", l: [5] },
+    { y: 1911, e: "辛亥革命", l: [5] },
+    { y: 1912, e: "中華民国の成立", l: [5] },
+    { y: 1890, e: "北里柴三郎の破傷風血清療法", l: [6] },
+    { y: 1890, e: "森鷗外「舞姫」の発表", l: [6] },
+    { y: 1897, e: "横山大観「無我」の制作", l: [6] },
+    { y: 1901, e: "八幡製鉄所の操業開始", l: [6] },
+    { y: 1901, e: "滝廉太郎「荒城の月」の作曲", l: [6] },
+    { y: 1906, e: "夏目漱石「坊っちゃん」の発表", l: [6] },
+    { y: 1910, e: "大逆事件", l: [6] },
+    { y: 1914, e: "サラエボ事件", l: [7] },
+    { y: 1914, e: "第一次世界大戦の開戦", l: [7] },
+    { y: 1915, e: "二十一か条の要求", l: [7] },
+    { y: 1917, e: "ロシア革命", l: [7] },
+    { y: 1918, e: "シベリア出兵", l: [7] },
+    { y: 1919, e: "ヴェルサイユ条約の調印", l: [7] },
+    { y: 1919, e: "ワイマール憲法の制定", l: [7] },
+    { y: 1919, e: "五・四運動", l: [7] },
+    { y: 1919, e: "三・一独立運動", l: [7] },
+    { y: 1920, e: "国際連盟の設立", l: [7] },
+    { y: 1928, e: "ソ連で五か年計画が始まる", l: [7] },
+    { y: 1911, e: "青鞜社の結成", l: [8] },
+    { y: 1912, e: "護憲運動（第一次護憲運動）", l: [8] },
+    { y: 1916, e: "吉野作造が民本主義を主張", l: [8] },
+    { y: 1918, e: "米騒動", l: [8] },
+    { y: 1918, e: "原敬内閣の成立", l: [8] },
+    { y: 1920, e: "第1回メーデー", l: [8] },
+    { y: 1922, e: "全国水平社の結成", l: [8] },
+    { y: 1922, e: "日本共産党の結成", l: [8] },
+    { y: 1923, e: "関東大震災", l: [8, 9] },
+    { y: 1925, e: "普通選挙法の成立", l: [8] },
+    { y: 1925, e: "治安維持法の制定", l: [8] },
+    { y: 1925, e: "ラジオ放送の開始", l: [8] },
+    { y: 1922, e: "ムッソリーニが政権をにぎる", l: [9] },
+    { y: 1924, e: "加藤高明内閣の成立", l: [9] },
+    { y: 1927, e: "金融恐慌", l: [9] },
+    { y: 1927, e: "蒋介石が南京に国民政府をつくる", l: [9] },
+    { y: 1929, e: "ニューヨークで株価が大暴落（世界恐慌）", l: [9] },
+    { y: 1930, e: "昭和恐慌", l: [9] },
+    { y: 1930, e: "ロンドン海軍軍縮会議", l: [9] },
+    { y: 1933, e: "ニューディール政策の開始", l: [9] },
+    { y: 1933, e: "ヒトラーが政権をにぎる", l: [9] },
+    { y: 1931, e: "柳条湖事件", l: [10] },
+    { y: 1931, e: "満州事変の開始", l: [10] },
+    { y: 1932, e: "満州国の建国", l: [10] },
+    { y: 1932, e: "五・一五事件", l: [10] },
+    { y: 1933, e: "日本が国際連盟を脱退", l: [10] },
+    { y: 1936, e: "二・二六事件", l: [10] },
+    { y: 1936, e: "日独防共協定", l: [10] },
+    { y: 1937, e: "盧溝橋事件", l: [10] },
+    { y: 1937, e: "日中戦争の開始", l: [10] },
+    { y: 1937, e: "南京占領", l: [10] },
+    { y: 1938, e: "国家総動員法の制定", l: [10] },
+    { y: 1940, e: "大政翼賛会の結成", l: [10] },
+    { y: 1940, e: "創氏改名", l: [10] },
+    { y: 1941, e: "米の配給制の開始", l: [10] },
+    { y: 1939, e: "独ソ不可侵条約", l: [11] },
+    { y: 1939, e: "第二次世界大戦の開戦", l: [11] },
+    { y: 1940, e: "日独伊三国同盟", l: [11] },
+    { y: 1941, e: "日ソ中立条約", l: [11] },
+    { y: 1941, e: "大西洋憲章", l: [11] },
+    { y: 1941, e: "太平洋戦争の開戦", l: [11] },
+    { y: 1941, e: "東条英機内閣の成立", l: [11] },
+    { y: 1942, e: "ミッドウェー海戦", l: [11] },
+    { y: 1943, e: "学徒出陣", l: [12] },
+    { y: 1943, e: "スターリングラードの戦いでソ連が勝利", l: [12] },
+    { y: 1943, e: "イタリアの降伏", l: [12] },
+    { y: 1943, e: "ガダルカナル島から日本軍が撤退", l: [12] },
+    { y: 1944, e: "サイパン島の陥落", l: [12] },
+    { y: 1944, e: "パリの解放", l: [12] },
+    { y: 1944, e: "東条英機内閣の退陣", l: [12] },
+    { y: 1945, e: "ドイツの降伏", l: [12] },
+    { y: 1945, e: "東京大空襲", l: [12] },
+    { y: 1945, e: "沖縄戦", l: [12] },
+    { y: 1945, e: "ヤルタ会談", l: [12] },
+    { y: 1945, e: "ポツダム宣言の発表", l: [12] },
+    { y: 1945, e: "広島・長崎への原子爆弾の投下", l: [12] },
+    { y: 1945, e: "日本の降伏（終戦）", l: [12] },
+    { y: 1945, e: "GHQの設置", l: [13] },
+    { y: 1945, e: "治安維持法の廃止", l: [13] },
+    { y: 1945, e: "労働組合法の制定", l: [13] },
+    { y: 1945, e: "選挙法の改正（満20歳以上の男女に選挙権）", l: [13] },
+    { y: 1946, e: "日本国憲法の公布", l: [13] },
+    { y: 1946, e: "東京裁判の開始", l: [13] },
+    { y: 1947, e: "日本国憲法の施行", l: [13] },
+    { y: 1947, e: "教育基本法の制定", l: [13] },
+    { y: 1947, e: "民法の改正", l: [13] },
+    { y: 1945, e: "国際連合の設立", l: [14] },
+    { y: 1948, e: "大韓民国・朝鮮民主主義人民共和国の成立", l: [14] },
+    { y: 1949, e: "北大西洋条約機構（NATO）の結成", l: [14] },
+    { y: 1949, e: "中華人民共和国の成立", l: [14] },
+    { y: 1950, e: "朝鮮戦争の開始", l: [14] },
+    { y: 1950, e: "警察予備隊の創設", l: [14] },
+    { y: 1951, e: "サンフランシスコ平和条約の調印", l: [14] },
+    { y: 1951, e: "日米安全保障条約の調印", l: [14] },
+    { y: 1954, e: "自衛隊の発足", l: [14] },
+    { y: 1954, e: "第五福竜丸の被ばく", l: [14] },
+    { y: 1955, e: "ワルシャワ条約機構の結成", l: [14] },
+    { y: 1955, e: "自由民主党の結成", l: [14] },
+    { y: 1960, e: "安保闘争", l: [14] },
+    { y: 1960, e: "アフリカで17か国が独立", l: [14] },
+    { y: 1953, e: "テレビ放送の開始", l: [15] },
+    { y: 1955, e: "アジア・アフリカ会議", l: [15] },
+    { y: 1956, e: "日ソ共同宣言", l: [15] },
+    { y: 1956, e: "日本の国際連合加盟", l: [15] },
+    { y: 1962, e: "キューバ危機", l: [15] },
+    { y: 1964, e: "東京オリンピック・パラリンピックの開催", l: [15] },
+    { y: 1965, e: "日韓基本条約", l: [15] },
+    { y: 1967, e: "公害対策基本法の制定", l: [15] },
+    { y: 1968, e: "川端康成がノーベル文学賞を受賞", l: [15] },
+    { y: 1971, e: "環境庁の設置", l: [15] },
+    { y: 1972, e: "沖縄の日本復帰", l: [15] },
+    { y: 1972, e: "日中共同声明", l: [15] },
+    { y: 1973, e: "石油危機（第四次中東戦争）", l: [15] },
+    { y: 1978, e: "日中平和友好条約", l: [15] },
+    { y: 1975, e: "第1回サミットの開催", l: [16] },
+    { y: 1979, e: "ソ連のアフガニスタン侵攻", l: [16] },
+    { y: 1989, e: "ベルリンの壁の崩壊", l: [16] },
+    { y: 1989, e: "マルタ会談", l: [16] },
+    { y: 1989, e: "APECの発足", l: [16] },
+    { y: 1990, e: "東西ドイツの統一", l: [16] },
+    { y: 1991, e: "バブル経済の崩壊", l: [16] },
+    { y: 1992, e: "PKO協力法の成立", l: [16] },
+    { y: 1993, e: "EUの発足", l: [16] },
+    { y: 1995, e: "阪神・淡路大震災", l: [16] },
+    { y: 2001, e: "アメリカ同時多発テロ事件", l: [16] },
+    { y: 2008, e: "世界金融危機（リーマン・ショック）", l: [16] },
+    { y: 2011, e: "東日本大震災", l: [16] },
+    { y: 2015, e: "SDGsの採択", l: [16] },
+    { y: 2022, e: "ロシアのウクライナ侵攻", l: [16] }
+];
+
 /* --- 1-4. 最初の画面のコース一覧（色もここで指定） --- */
 const SECTIONS = [
     { id: "basic",   title: "基本的な英単語",     icon: "🌱", c1: "#ff9a44", c2: "#fc6076", type: "english", categories: CATS.basic },
@@ -2119,6 +2302,50 @@ function makeHistoryItems(lesson, mode) {
     }));
 }
 
+/* ---- 年代問題 ----
+   ①年→できごと：「〇〇年に起こったできごとを選びなさい」（同じ年のできごとが2つ以上あれば、2つ選ぶ）
+   ②できごと→年：「〇〇は何年のできごとか」 */
+function yearToEvents(year, scope) {
+    const correct = shuffle(scope.filter(d => d.y === year)).slice(0, 2).map(d => d.e);
+    const other = d => d.y !== year;   // 同じ年のできごとは、まちがいの選択肢に入れない
+    const wrongPool = [...new Set([...shuffle(scope.filter(other)), ...shuffle(DATES.filter(other))].map(d => d.e))]
+        .filter(e => !correct.includes(e));
+    const wrong = wrongPool.slice(0, 4 - correct.length);
+    const base = {
+        prompt: `${year}年に起こったできごとを、次から${correct.length}つ選びなさい。`,
+        choices: () => shuffle([...correct, ...wrong])
+    };
+    return correct.length > 1 ? { ...base, answers: correct } : { ...base, answer: correct[0] };
+}
+
+function eventToYear(d) {
+    const near = new Set();
+    const known = [...new Set(DATES.map(x => x.y))].filter(v => v !== d.y && Math.abs(v - d.y) <= 8);
+    shuffle(known).forEach(v => { if (near.size < 3) near.add(v); });
+    for (let k = 1; near.size < 3; k++) {
+        shuffle([d.y - k, d.y + k]).forEach(v => { if (near.size < 3 && v <= 2026) near.add(v); });
+    }
+    const years = [d.y, ...near].sort((a, b) => a - b).map(v => `${v}年`);
+    return { prompt: `${d.e}は何年のできごとか。`, answer: `${d.y}年`, choices: () => years };
+}
+
+/* lessonNo が null なら全範囲。①を約4割、②を約6割まぜて10問作る */
+function makeYearItems(lessonNo, count = 10) {
+    const scope = DATES.filter(d => lessonNo == null || d.l.includes(lessonNo));
+    const years = [...new Set(scope.map(d => d.y))];
+    const typeA = shuffle(years).map(y => yearToEvents(y, scope));
+    const typeB = shuffle(scope).map(eventToYear);
+    const nA = Math.min(typeA.length, Math.ceil(count * 0.4));
+    const picked = [...typeA.slice(0, nA), ...typeB.slice(0, count - nA)];
+    if (picked.length < count) picked.push(...typeA.slice(nA, nA + count - picked.length));
+    return shuffle(picked).slice(0, count);
+}
+
+function yearQuizSize(lessonNo) {
+    const scope = DATES.filter(d => lessonNo == null || d.l.includes(lessonNo));
+    return Math.min(10, new Set(scope.map(d => d.y)).size + scope.length);
+}
+
 /* =====================================================================
    5. 画面：最初の画面・コース別メニュー
    ===================================================================== */
@@ -2217,6 +2444,11 @@ function showHistoryMenu(sec, word = "") {
     const search = makeSearchBox("🔍 検索（例：1871年、廃藩置県、第1回）", word, keyword => {
         listArea.replaceChildren();
         if (!keyword) {
+            listArea.appendChild(el("button", {
+                class: "btn action-btn",
+                text: "🕰 年代問題（全範囲 ランダム10問）",
+                onclick: () => startYearQuiz(sec, null, () => showHistoryMenu(sec, search.value.trim()))
+            }));
             HISTORY.forEach(lesson => listArea.appendChild(lessonButton(lesson)));
             return;
         }
@@ -2272,6 +2504,10 @@ function showHistoryLesson(sec, lesson, word = "", fromWord = "") {
         el("button", {
             class: "btn cat-btn", text: `🎲 ランダム ${Math.min(10, n)}問`,
             onclick: () => startHistory(sec, lesson, "random", backHere)
+        }),
+        el("button", {
+            class: "btn cat-btn", text: `🕰 年代問題（${yearQuizSize(lesson.no)}問）`,
+            onclick: () => startYearQuiz(sec, lesson.no, backHere)
         }),
         search,
         hitArea
@@ -2459,6 +2695,18 @@ function startHistory(sec, lesson, mode, onBack) {
     });
 }
 
+/* 年代問題を出題する（lessonNo が null なら全範囲） */
+function startYearQuiz(sec, lessonNo, onBack) {
+    runQuiz({
+        title: lessonNo == null ? "年代問題（全範囲 ランダム10問）" : `第${lessonNo}回　年代問題`,
+        kind: "history",
+        color: sec.c1,
+        items: makeYearItems(lessonNo),
+        onBack,
+        onRetry: () => startYearQuiz(sec, lessonNo, onBack)
+    });
+}
+
 /* 検索結果の問題だけを出題する */
 function startSearchQuiz(sec, hits, keyword, onBack) {
     runQuiz({
@@ -2496,27 +2744,54 @@ function runQuiz(opts) {
             onclick: () => { state.index++; state.index < total ? showQuestion() : showResult(); }
         });
 
+        const answers = item.answers || [item.answer];   // 正解（「2つ選ぶ」問題では2つ）
+        const multi = answers.length > 1;
+        const selected = [];                              // 選択中のボタン（2つ選ぶ問題のとき）
+
         const choiceButtons = item.choices().map(text => {
             const btn = el("button", { class: "btn choice-btn", text });
-            btn.onclick = () => answer(btn, text);
+            btn.onclick = () => (multi ? toggle(btn) : judge([btn]));
             return btn;
         });
 
-        function answer(clicked, text) {
+        // 2つ選ぶ問題：タップで選択・解除し、必要な数が選ばれたら「決定」を押せる
+        const submitBtn = multi
+            ? el("button", { class: "btn action-btn", text: "決定", onclick: () => judge(selected) })
+            : null;
+        if (submitBtn) submitBtn.disabled = true;
+
+        function toggle(btn) {
+            if (state.answered) return;
+            const i = selected.indexOf(btn);
+            if (i >= 0) {
+                selected.splice(i, 1);
+                btn.classList.remove("selected");
+            } else {
+                selected.push(btn);
+                btn.classList.add("selected");
+                if (selected.length > answers.length) selected.shift().classList.remove("selected");
+            }
+            submitBtn.disabled = selected.length !== answers.length;
+        }
+
+        function judge(chosen) {
             if (state.answered) return;
             state.answered = true;
-            if (text === item.answer) {
-                clicked.classList.add("correct");
+            const texts = chosen.map(b => b.textContent);
+            const ok = texts.length === answers.length && answers.every(a => texts.includes(a));
+            chosen.forEach(b => b.classList.remove("selected"));
+            choiceButtons.forEach(b => { if (answers.includes(b.textContent)) b.classList.add("correct"); });
+            if (ok) {
                 message.textContent = "⭕ 正解！";
                 message.style.color = "#2ecc71";
                 state.score++;
             } else {
-                clicked.classList.add("incorrect");
-                message.textContent = `❌ 不正解！ 正解は: ${item.answer}`;
+                chosen.forEach(b => { if (!answers.includes(b.textContent)) b.classList.add("incorrect"); });
+                message.textContent = `❌ 不正解！ 正解は: ${answers.join("、")}`;
                 message.style.color = "#e74c3c";
-                choiceButtons.forEach(b => { if (b.textContent === item.answer) b.classList.add("correct"); });
                 state.wrong.push(item);
             }
+            if (submitBtn) submitBtn.style.display = "none";
             nextBtn.style.display = "block";
         }
 
@@ -2542,6 +2817,7 @@ function runQuiz(opts) {
             soundBtn,
             soundBtn ? speechNote : null,
             el("div", {}, choiceButtons),
+            submitBtn,
             message,
             nextBtn
         );
