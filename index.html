@@ -1261,6 +1261,48 @@ const HISTORY = [
             { q: "エクアドルやガーナで黄熱病を研究し、自らも感染して亡くなった細菌学者はだれか。",
               a: "野口英世", wrong: ["北里柴三郎", "志賀潔", "秦佐八郎"] }
         ]
+    },
+    {
+        no: 7,
+        title: "第一次世界大戦と日本",
+        questions: [
+            { q: "20世紀初めにヨーロッパで対立した①イギリス・フランス・ロシア、②ドイツ・オーストリア・イタリアの同盟関係を何というか。",
+              a: "①三国協商　②三国同盟", wrong: ["①三国同盟　②三国協商", "①三国協商　②日英同盟", "①三国干渉　②三国同盟"] },
+            { q: "オスマン帝国（トルコ）の弱体化で、スラブ民族の独立運動が高まり、「ヨーロッパの火薬庫」と呼ばれていた半島を何というか。",
+              a: "バルカン半島", wrong: ["イベリア半島", "朝鮮半島", "アラビア半島"] },
+            { q: "1914年、オーストリアの皇位継承者夫妻が、スラブ系セルビア人に暗殺される事件が起こった都市はどこか。",
+              a: "サラエボ", wrong: ["ベオグラード", "ウィーン", "パリ"] },
+            { q: "オーストリアのセルビアへの宣戦布告に続き、ヨーロッパ各国が同盟国側と連合国側に分かれて始まった戦争を何というか。",
+              a: "第一次世界大戦", wrong: ["第二次世界大戦", "日露戦争", "クリミア戦争"] },
+            { q: "国民と経済、資源を総動員して、国力を使い果たすような戦争のしかたを何というか。",
+              a: "総力戦", wrong: ["持久戦", "局地戦", "殲滅戦"] },
+            { q: "①ロシアで皇帝が退位し、史上初の社会主義政府ができたできごとを何というか。②このとき、新政府を発足させた社会主義者はだれか。",
+              a: "①ロシア革命　②レーニン", wrong: ["①ロシア革命　②スターリン", "①辛亥革命　②レーニン", "①ロシア革命　②トロツキー"] },
+            { q: "社会主義の広がりをおそれたイギリス・フランス・アメリカ・日本が、ロシアの革命政府に対して起こした干渉戦争を何というか。",
+              a: "シベリア出兵", wrong: ["日露戦争", "三国干渉", "満州事変"] },
+            { q: "社会主義の中でも、私的財産を認めず、全てを共有することによって、貧富のない理想社会をつくろうとする思想を何というか。",
+              a: "共産主義", wrong: ["資本主義", "民主主義", "帝国主義"] },
+            { q: "レーニンの後、指導者となったスターリンが進めた計画経済を何というか。",
+              a: "五か年計画", wrong: ["新経済政策", "ニューディール政策", "殖産興業"] },
+            { q: "1919年に結ばれた、第一次世界大戦の講和条約を何というか。",
+              a: "ヴェルサイユ条約", wrong: ["ポーツマス条約", "下関条約", "不戦条約"] },
+            { q: "アメリカのウィルソン大統領が提唱した、それぞれの民族のことは自分たちで決めるという原則を何というか。",
+              a: "民族自決", wrong: ["集団安全保障", "国際協調", "民主主義"] },
+            { q: "1920年に設立された、世界平和と国際協調のための国際機関を何というか。",
+              a: "国際連盟", wrong: ["国際連合", "三国同盟", "ワシントン会議"] },
+            { q: "1921〜22年にアメリカで開かれ、海軍軍縮条約の締結などが行われた会議を何というか。",
+              a: "ワシントン会議", wrong: ["パリ講和会議", "ロンドン海軍軍縮会議", "ウィーン会議"] },
+            { q: "1919年、ドイツで制定された、世界で初めて勤労の権利、労働者の団結権、人間らしく生きる権利を定めた憲法を何というか。",
+              a: "ワイマール憲法", wrong: ["大日本帝国憲法", "人権宣言", "権利章典"] },
+            { q: "1915年に、日本が中国の袁世凱政府に認めさせた、山東省のドイツ権益を引きつぐことなどを示した文書を何というか。",
+              a: "二十一か条の要求", wrong: ["五・四運動", "日清修好条規", "三国干渉"] },
+            { q: "1919年5月4日、パリ講和会議の内容に抗議した北京の学生たちの反日運動から中国全土に広がった、反帝国主義運動を何というか。",
+              a: "五・四運動", wrong: ["三・一独立運動", "辛亥革命", "義和団事件"] },
+            { q: "1919年3月1日、京城（現在のソウル）から朝鮮半島全体に広がった独立運動を何というか。",
+              a: "三・一独立運動", wrong: ["五・四運動", "義兵運動", "甲午農民戦争"] },
+            { q: "インドで、非暴力・不服従の抵抗運動を指導したのはだれか。",
+              a: "ガンディー", wrong: ["ネルー", "孫文", "ホー・チ・ミン"] }
+        ]
     }
 ];
 
@@ -1350,11 +1392,11 @@ function backButton(label, onClick) {
    3. 音声（iPhone・Android 両対応）
    ===================================================================== */
 const Speech = (() => {
-    const supported = "speechSynthesis" in window;
+    const isSupported = () => "speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined";
     let voices = [];
 
-    function loadVoices() { voices = supported ? speechSynthesis.getVoices() : []; }
-    if (supported) {
+    function loadVoices() { voices = isSupported() ? speechSynthesis.getVoices() : []; }
+    if (isSupported()) {
         loadVoices();
         // Android の Chrome は音声リストの読み込みが遅れるため、変化を監視する
         speechSynthesis.onvoiceschanged = loadVoices;
@@ -1369,10 +1411,24 @@ const Speech = (() => {
         return list.find(v => /^en[-_]US$/i.test(v.lang)) || list[0] || null;
     }
 
+    // 使っているブラウザの名前（案内メッセージ用）
+    function browserName() {
+        const ua = navigator.userAgent;
+        if (/Line\//i.test(ua)) return "LINE";
+        if (/Instagram|FBAN|FBAV/i.test(ua)) return "アプリ内ブラウザ";
+        if (/SamsungBrowser/i.test(ua)) return "Samsung Internet";
+        if (/Firefox|FxiOS/i.test(ua)) return "Firefox";
+        if (/EdgA|EdgiOS/i.test(ua)) return "Edge";
+        if (/OPR|Opera/i.test(ua)) return "Opera";
+        if (/; wv\)/.test(ua)) return "アプリ内ブラウザ";
+        if (/Chrome|CriOS/i.test(ua)) return "Chrome";
+        return "不明";
+    }
+
     // 読み上げの試し方。うまくいかなければ、次の方法を順に試す
     const attempts = [
-        u => { const v = pickVoice(); u.lang = v ? v.lang : "en-US"; if (v) u.voice = v; },
         u => { u.lang = "en-US"; },
+        u => { const v = pickVoice(); u.lang = v ? v.lang : "en-US"; if (v) u.voice = v; },
         u => { u.lang = "en"; }
     ];
 
@@ -1384,7 +1440,17 @@ const Speech = (() => {
     function fallback(text, reason, notify) {
         const audio = new Audio("https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=" + encodeURIComponent(text));
         audio.referrerPolicy = "no-referrer";
-        const fail = () => notify && notify(`音声を再生できませんでした（${reason || "不明"}）。${HELP}`);
+        const fail = () => {
+            if (!notify) return;
+            if (reason === "非対応のブラウザ") {
+                const name = browserName();
+                notify(name === "Chrome"
+                    ? "Chrome の読み上げ機能が使えない状態です。Chrome を最新版に更新し、タブをすべて閉じて開き直してください。"
+                    : `このブラウザ（${name}）では英語の音声が使えません。Google Chrome で開き直してください。`);
+            } else {
+                notify(`音声を再生できませんでした（${reason || "不明"}／${browserName()}）。${HELP}`);
+            }
+        };
         audio.onerror = fail;
         audio.play().catch(fail);
     }
@@ -1393,7 +1459,7 @@ const Speech = (() => {
         if (i >= attempts.length) { fallback(text, reason, notify); return; }
         const u = new SpeechSynthesisUtterance(text);
         attempts[i](u);
-        u.rate = 0.95;
+        u.rate = 0.8;
         let started = false, moved = false;
         const next = why => { if (!moved) { moved = true; attempt(text, i + 1, notify, why); } };
         u.onstart = () => { started = true; };
@@ -1411,7 +1477,7 @@ const Speech = (() => {
 
     function speak(text, notify) {
         if (notify) notify("");
-        if (!supported) { fallback(text, "非対応のブラウザ", notify); return; }
+        if (!isSupported()) { fallback(text, "非対応のブラウザ", notify); return; }
         if (speechSynthesis.speaking || speechSynthesis.pending) {
             // 読み上げ中なら止めてから少し待つ（Android は cancel 直後の speak が無音になるため）
             speechSynthesis.cancel();
