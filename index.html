@@ -90,6 +90,45 @@ h1 { font-size: 19px; text-align: center; margin: 4px 0 18px; }
 .hit-answer { color: #c0392b; font-weight: bold; margin-top: 4px; }
 mark { background: #fff3a0; border-radius: 3px; padding: 0 1px; }
 
+/* ========== 語句整序 ========== */
+.mix-btn { background: #e67e22; border-color: #e67e22; color: #fff; }
+.mix-btn:active { background: #e67e22; filter: brightness(0.92); }
+.question-box {
+    font-size: 18px; font-weight: bold; line-height: 1.6; margin: 16px 0;
+    text-align: left; padding: 14px; background: #f8f9fa;
+    border-left: 5px solid var(--c); border-radius: 4px;
+}
+.section-label { font-size: 12px; color: #7f8c8d; text-align: left; margin-bottom: 2px; font-weight: bold; }
+.answer-area, .word-pool {
+    border-radius: 8px; min-height: 76px; margin: 0 0 14px; padding: 10px;
+    display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; background: #fff;
+}
+.answer-area { border: 2px dashed #bdc3c7; }
+.word-pool { border: 2px solid var(--c); }
+.word {
+    background: #ecf0f1; border: 1px solid #bdc3c7; border-radius: 20px;
+    padding: 8px 16px; font-size: 16px; cursor: pointer; user-select: none;
+}
+.word:active { background: #d6dbdf; }
+/* 解答エリアの最初の単語だけ、見た目上1文字目を大文字にする */
+.answer-area .word:first-child::first-letter { text-transform: uppercase; }
+.control-btns { display: flex; gap: 12px; margin-top: 8px; }
+.control-btns .btn { margin-bottom: 0; }
+.reset-btn { background: #95a5a6; border-color: #95a5a6; color: #fff; }
+.reset-btn:active { background: #95a5a6; filter: brightness(0.92); }
+.submit-btn { background: #2ecc71; border-color: #2ecc71; color: #fff; }
+.submit-btn:active { background: #2ecc71; filter: brightness(0.92); }
+.review-zone {
+    max-height: 260px; overflow-y: auto; margin-bottom: 18px; border: 1px solid #e1e8ed;
+    padding: 6px 10px; border-radius: 8px; background: #fafbfc; text-align: left;
+}
+.review-item { border-bottom: 1px solid #ecf0f1; padding: 8px 0; font-size: 14px; line-height: 1.6; }
+.review-item:last-child { border-bottom: none; }
+.review-q { font-weight: bold; }
+.review-a { color: #27ae60; }
+.review-w { color: #e74c3c; }
+.comment { text-align: center; font-weight: bold; margin-bottom: 18px; }
+
 /* ========== クイズ画面 ========== */
 .quiz-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .quiz-title { font-size: 13px; color: #888; text-align: center; margin-bottom: 4px; }
@@ -998,6 +1037,173 @@ const CATS = {
     horizon: ["NEW HORIZON 中3 ユニット0～1", "NEW HORIZON 中3 ユニット2", "NEW HORIZON 中3 ユニット3 [Part1～2]", "NEW HORIZON 中3 ユニット3 [Read and Think1～2]", "NEW HORIZON 中3 ユニット3 [Real Life English & Stage Activity1]", "NEW HORIZON 中3 ユニット4 [Part1～2]", "NEW HORIZON 中3 ユニット4 [Read and Think1～2]"]
 };
 
+/* --- 1-2b. 中学英語 語句整序の問題データ（単元ごと）
+        ja: 日本語の文 / words: 正しい順に並べた語句（この順番が正解） --- */
+const ORDER = [
+    {
+        name: "現在完了形",
+        items: [
+            { ja: "あなたは今までに北海道に行ったことがありますか。", words: ["Have", "you", "ever", "been", "to", "Hokkaido", "?"] },
+            { ja: "私は一度も彼らに会ったことがありません。", words: ["I", "have", "never", "met", "them", "."] },
+            { ja: "彼はこれまでに3回、その映画を見たことがあります。", words: ["He", "has", "seen", "the movie", "three times", "."] },
+            { ja: "ケンはもう出発してしまいましたか。", words: ["Has", "Ken", "already", "left", "?"] },
+            { ja: "彼女は去年から東京に住んでいます。", words: ["She", "has", "lived", "in Tokyo", "since last year", "."] },
+            { ja: "彼らは東京に2回行ったことがあります。", words: ["They", "have", "been", "to", "Tokyo", "twice", "."] },
+            { ja: "ユミはちょうど駅に着いたところです。", words: ["Yumi", "has", "just", "arrived", "at the station", "."] },
+            { ja: "トムはまだ昼食を食べていません。", words: ["Tom", "has", "not", "eaten", "lunch", "yet", "."] },
+            { ja: "あなたは今までにピアノを弾いたことがありますか。", words: ["Have", "you", "ever", "played", "the piano", "?"] },
+            { ja: "私たちは2時間、テレビを見続けています。", words: ["We", "have", "been", "watching", "TV", "for", "two hours", "."] },
+            { ja: "あなたは以前、その有名なサッカー選手に会ったことがありますか。", words: ["Have", "you", "met", "the famous", "soccer player", "before", "?"] },
+            { ja: "トムはちょうどそのレポートを書き終わったところです。", words: ["Tom", "has", "just", "finished", "writing", "the report", "."] },
+            { ja: "彼らは3日間ずっと忙しいです。", words: ["They", "have", "been", "busy", "for", "three days", "."] },
+            { ja: "私はコアラを一度も見たことがありません。", words: ["I", "have", "never", "seen", "a koala", "."] },
+            { ja: "ケンはすでに昼食を食べてしまいました。", words: ["Ken", "has", "already", "eaten", "lunch", "."] },
+            { ja: "あなたはもうその本を読み終えましたか。", words: ["Have", "you", "finished", "reading", "the book", "yet", "?"] },
+            { ja: "私は3回、このコンピュータを使ったことがあります。", words: ["I", "have", "used", "this computer", "three times", "."] },
+            { ja: "あなたはこの本を読んだことがありますか。", words: ["Have", "you", "read", "this book", "before", "?"] },
+            { ja: "私はちょうど宿題を終えたところです。", words: ["I", "have", "just", "finished", "my homework", "."] },
+            { ja: "メアリーは以前、横浜で昼食を食べたことがあります。", words: ["Mary", "has", "eaten", "lunch", "in Yokohama", "before", "."] },
+            { ja: "私たちは3回、歌舞伎を見たことがあります。", words: ["We", "have", "seen", "Kabuki", "three times", "."] },
+            { ja: "あなたは今までカナダに行ったことがありますか。", words: ["Have", "you", "ever", "been", "to", "Canada", "?"] },
+            { ja: "あなたはどのくらい長く東京に滞在していますか。", words: ["How long", "have", "you", "stayed", "in Tokyo", "?"] },
+            { ja: "彼らはどのくらい長く互いを知っていますか。", words: ["How long", "have", "they", "known", "each other", "?"] },
+            { ja: "エイミーはどのくらい長くその犬を飼っていますか。", words: ["How long", "has", "Amy", "had", "the dog", "?"] },
+            { ja: "あなたはどのくらい長くその歌手のファンですか。", words: ["How long", "have", "you", "been", "a fan of the singer", "?"] }
+        ]
+    },
+    {
+        name: "現在進行形",
+        items: [
+            { ja: "彼は今、公園で走っています。", words: ["He", "is", "running", "in the park", "now", "."] },
+            { ja: "あなたは今、何をしていますか。", words: ["What", "are", "you", "doing", "now", "?"] },
+            { ja: "私たちは今、英語を勉強していません。", words: ["We", "are", "not", "studying", "English", "now", "."] },
+            { ja: "トムとケンはテニスをしています。", words: ["Tom", "and", "Ken", "are", "playing", "tennis", "."] },
+            { ja: "彼女は今、音楽を聞いていますか。", words: ["Is", "she", "listening", "to", "music", "now", "?"] }
+        ]
+    },
+    {
+        name: "受け身 規則動詞 1",
+        items: [
+            { ja: "この計画は昨日決定されました。", words: ["This plan", "was", "decided", "yesterday", "."] },
+            { ja: "そのシャツは昨日洗われました。", words: ["The shirt", "was", "washed", "yesterday", "."] },
+            { ja: "そのデータは何回もチェックされました。", words: ["The data", "was", "checked", "many times", "."] },
+            { ja: "これらの物語はずっと前に作り出されました。", words: ["These stories", "were", "created", "a long time ago", "."] },
+            { ja: "その公園は毎朝、掃除されています。", words: ["The park", "is", "cleaned", "every morning", "."] },
+            { ja: "そのかわいい猫は、みんなに愛されています。", words: ["The cute cat", "is", "loved", "by", "everyone", "."] },
+            { ja: "その試合は雨によって止められました。（中断しました）", words: ["The game", "was", "stopped", "by", "the rain", "."] },
+            { ja: "そのアーチストは多くのファンに歓迎されました。", words: ["The artist", "was", "welcomed", "by", "many fans", "."] },
+            { ja: "あの古いお寺は多くの観光客に訪問されています。", words: ["That old temple", "is", "visited", "by", "many tourists", "."] },
+            { ja: "このコンピューターは何人かの生徒によって使われています。", words: ["This computer", "is", "used", "by", "some students", "."] },
+            { ja: "このおいしいスープは私の父によって料理されました。", words: ["This delicious soup", "was", "cooked", "by", "my father", "."] },
+            { ja: "日本の歴史は、多くの学生によって学ばれています。", words: ["Japanese", "history", "is", "studied", "by", "many students", "."] },
+            { ja: "私たちの教室は毎日、私たちによって掃除されます。", words: ["Our classroom", "is", "cleaned", "by us", "every day", "."] },
+            { ja: "そのゲートは5時に閉められました。", words: ["The gate", "was", "closed", "at", "five o'clock", "."] }
+        ]
+    },
+    {
+        name: "受け身 規則動詞 2",
+        items: [
+            { ja: "この場所は世界遺産に選ばれています。", words: ["This place", "is", "selected", "as", "a World Heritage site", "."] },
+            { ja: "何人かのボランティアがお祭りのために必要とされています。", words: ["Some volunteers", "are", "needed", "for", "the festival", "."] },
+            { ja: "多くの種類のパンがこの店で焼かれています。", words: ["Many kinds of", "bread", "are", "baked", "at", "this shop", "."] },
+            { ja: "この美しい花は、英語でサンフラワーと呼ばれています。", words: ["This beautiful flower", "is", "called", "sunflower", "in English", "."] },
+            { ja: "あなたは学校で何と呼ばれていますか?", words: ["What", "are", "you", "called", "at school", "?"] },
+            { ja: "彼は学校で何と呼ばれていますか?", words: ["What", "is", "he", "called", "at school", "?"] },
+            { ja: "私は彼女の誕生日パーティーに招待されました。", words: ["I", "was", "invited", "to", "her birthday party", "."] },
+            { ja: "その有名な絵は、若い芸術家によって描かれました。", words: ["The famous picture", "was", "painted", "by", "a young artist", "."] },
+            { ja: "京都は世界中から多くの人々に訪れられています。", words: ["Kyoto", "is", "visited", "by", "many people", "from", "all over the world", "."] },
+            { ja: "その小さな犬は川から救助されました。", words: ["The little dog", "was", "saved", "from", "the river", "."] },
+            { ja: "重い箱が部屋の中に運び込まれました。", words: ["Heavy boxes", "were", "carried", "into", "the room", "."] },
+            { ja: "誰が最優秀選手に選ばれましたか。", words: ["Who", "was", "selected", "as", "the best player", "?"] },
+            { ja: "清潔な水がこの村の人々によって必要とされています。", words: ["Clean water", "is", "needed", "by", "the people", "in this village", "."] },
+            { ja: "その人気の音楽は、有名なピアニストによって演奏されました。", words: ["The popular music", "was", "played", "by", "a famous pianist", "."] },
+            { ja: "アメリカは1492年にコロンブスによって発見されました。", words: ["America", "was", "discovered", "by Columbus", "in 1492", "."] },
+            { ja: "これらのお皿は夕食の後に洗われますか。", words: ["Are", "these dishes", "washed", "after dinner", "?"] },
+            { ja: "そのサッカーの試合は、何百万人もの人々によって観られました。", words: ["The soccer game", "was", "watched", "by", "millions of", "people", "."] }
+        ]
+    },
+    {
+        name: "受け身 不規則動詞 1",
+        items: [
+            { ja: "このケーキは母によって切られました。", words: ["This cake", "was", "cut", "by", "my mother", "."] },
+            { ja: "その新しい動物はアフリカで発見されました。", words: ["The new animal", "was", "found", "in Africa", "."] },
+            { ja: "英語はグリーン先生によって教えられています。", words: ["English", "is", "taught", "by", "Mr. Green", "."] },
+            { ja: "この家は10年前に建てられました。", words: ["This house", "was", "built", "ten years ago", "."] },
+            { ja: "東京には多くの高い建物が建てられました。", words: ["Many tall buildings", "were", "built", "in Tokyo", "."] },
+            { ja: "そのボールは、カイトによって捕球されました。", words: ["The ball", "was", "caught", "by", "Kaito", "."] },
+            { ja: "昨日、一匹の大きな魚が彼によって捕まえられました。", words: ["A big fish", "was", "caught", "by him", "yesterday", "."] },
+            { ja: "この本は多くの子供たちに読まれています。", words: ["This book", "is", "read", "by", "many children", "."] },
+            { ja: "この漫画本は多くの10代の若者に読まれています。", words: ["This comic book", "is", "read", "by", "many teenagers", "."] },
+            { ja: "あの店ではホットコーヒーが売られています。", words: ["Hot coffee", "is", "sold", "at", "that shop", "."] },
+            { ja: "たくさんの美しい花がそのお店で売られています。", words: ["Many beautiful flowers", "are", "sold", "at", "the shop", "."] },
+            { ja: "一個の荷物が2日前に送られました。（発送されました）", words: ["A package", "was", "sent", "two days ago", "."] },
+            { ja: "一通の英語のEメールが私に送られてきました。", words: ["An English email", "was", "sent", "to me", "."] },
+            { ja: "現在、私の腕時計は壊れています。", words: ["My watch", "is", "broken", "now", "."] },
+            { ja: "このコンピューターはいつ壊れたのですか。", words: ["When", "was", "this computer", "broken", "?"] },
+            { ja: "お米は多くの人々に食べられています。", words: ["Rice", "is", "eaten", "by", "many people", "."] },
+            { ja: "その魚は彼の家族によって食べられました。", words: ["The fish", "was", "eaten", "by", "his", "family", "."] },
+            { ja: "そのクッキーは私の兄弟に食べられてしまいました。", words: ["The cookies", "were", "eaten", "by", "my brother", "."] },
+            { ja: "この腕時計は祖父から与えられました。（もらいました）", words: ["This watch", "was", "given", "by", "my grandfather", "."] },
+            { ja: "彼は昨日、図書館で見かけられました。", words: ["He", "was", "seen", "at", "the library", "yesterday", "."] },
+            { ja: "この歌は多くの人々に歌われています。", words: ["This song", "is", "sung", "by", "many people", "."] },
+            { ja: "その歌はコンサートで歌われました。", words: ["The song", "was", "sung", "at", "the concert", "."] },
+            { ja: "英語は多くの国々で話されています。", words: ["English", "is", "spoken", "in", "many countries", "."] },
+            { ja: "中国語がその女性によって話されました。", words: ["Chinese", "was", "spoken", "by", "the woman", "."] },
+            { ja: "京都でたくさんの美しい写真が撮られました。", words: ["Many beautiful pictures", "were", "taken", "in", "Kyoto", "."] },
+            { ja: "その面白い物語はメアリーによって書かれました。", words: ["The interesting story", "was", "written", "by", "Mary", "."] },
+            { ja: "この手紙は英語で書かれています。", words: ["This letter", "is", "written", "in", "English", "."] }
+        ]
+    },
+    {
+        name: "受け身 不規則動詞 2",
+        items: [
+            { ja: "その歴史は授業で教えられました。", words: ["The history", "was", "taught", "in", "the class", "."] },
+            { ja: "このお寺は100年前に建てられたのですか。", words: ["Was", "this temple", "built", "100 years ago", "?"] },
+            { ja: "この机は木で作られています。（木製です）", words: ["This desk", "is", "made of", "wood", "."] },
+            { ja: "このジャケットは羊毛（ウール）で作られています。", words: ["This jacket", "is", "made of", "wool", "."] },
+            { ja: "チーズは牛乳から作られます。", words: ["Cheese", "is", "made from", "milk", "."] },
+            { ja: "ワインはブドウから作られます。", words: ["Wine", "is", "made from", "grapes", "."] },
+            { ja: "その悲しい物語は私たちの授業で読まれました。", words: ["The sad story", "was", "read", "in", "our class", "."] },
+            { ja: "それらのチケットは5分で売り切れました。", words: ["Those tickets", "were", "sold out", "in", "five minutes", "."] },
+            { ja: "何本かの傘が雨の日に売れました。", words: ["Some umbrellas", "were", "sold", "on rainy days", "."] },
+            { ja: "毎年、クリスマスカードが多くの友達に送られます。", words: ["Christmas cards", "are", "sent to", "many friends", "every year", "."] },
+            { ja: "昨夜、窓が強風によって割られました。（割れました）", words: ["The window", "was", "broken", "by", "the strong wind", "last night", "."] },
+            { ja: "たくさんのリンゴが、一匹の野生の熊に食べられてしまいました。", words: ["Many apples", "were", "eaten", "by", "a wild bear", "."] },
+            { ja: "昨日、私たちはたくさんの宿題を与えられました。", words: ["We", "were", "given", "much homework", "yesterday", "."] },
+            { ja: "いくつかのアドバイスが生徒たちに与えられました。", words: ["Some advice", "was", "given", "to", "the students", "."] },
+            { ja: "美しい山が窓から見えました。", words: ["The beautiful mountain", "was", "seen", "from", "the window", "."] },
+            { ja: "富士山は世界中の人々に知られています。", words: ["Mt. Fuji", "is", "known to", "people", "around the world", "."] },
+            { ja: "彼は有名な歌手として知られています。", words: ["He", "is", "known as", "a famous singer", "."] },
+            { ja: "福岡はその有名な神社で知られています。", words: ["Fukuoka", "is", "known for", "the famous shrine", "."] },
+            { ja: "ハッピーバースデーは世界中で歌われています。", words: ["Happy Birthday", "is", "sung", "around the world", "."] },
+            { ja: "式典で校歌が歌われました。", words: ["The school song", "was", "sung", "at", "the ceremony", "."] },
+            { ja: "この国ではフランス語は話されていません。", words: ["French", "is", "not", "spoken", "in", "this country", "."] },
+            { ja: "フランス語はカナダで話されていますか。", words: ["Is", "French", "spoken", "in", "Canada", "?"] }
+        ]
+    },
+    {
+        name: "受け身 不規則動詞 3",
+        items: [
+            { ja: "その高い木は明日、切られる予定です。", words: ["The tall tree", "will be", "cut", "tomorrow", "."] },
+            { ja: "その部屋はきれいに保たれなければなりません。", words: ["The room", "must be", "kept", "clean", "."] },
+            { ja: "牛乳は冷蔵庫の中に保存されなければいけません。", words: ["Milk", "must be", "kept", "in", "the refrigerator", "."] },
+            { ja: "来年、新しい図書館が建てられる予定です。", words: ["A new library", "will be", "built", "next year", "."] },
+            { ja: "このメッセージは全員に送信される予定です。", words: ["This message", "will be", "sent to", "everyone", "."] },
+            { ja: "そのルールは破られてはいけません。", words: ["The rules", "must not", "be", "broken", "."] },
+            { ja: "今夜は多くの星が見られます。", words: ["Many stars", "can be", "seen", "tonight", "."] },
+            { ja: "この公園では野生のシカが見られます。", words: ["Wild deer", "can be", "seen", "in", "this park", "."] },
+            { ja: "このレポートは次の金曜日までに書かれなければいけません。", words: ["This report", "must be", "written", "by", "next Friday", "."] },
+            { ja: "その有名なお祭りは多くの人々に楽しまれるでしょう。", words: ["The famous festival", "will be", "enjoyed", "by", "many people", "."] },
+            { ja: "その島は世界遺産に選ばれるべきです。", words: ["The island", "should be", "selected", "as", "a World Heritage site", "."] },
+            { ja: "あの山からは美しい湖が見られます。", words: ["A beautiful lake", "can be", "seen", "from", "that mountain", "."] },
+            { ja: "今度のコンサートは多くの若者に楽しまれるでしょう。", words: ["The next concert", "will be", "enjoyed", "by", "many young people", "."] },
+            { ja: "その部屋からは美しい自然が見られます。", words: ["Beautiful nature", "can be", "seen", "from", "the room", "."] },
+            { ja: "そのトピックは生徒たちによって決められなければなりません。", words: ["The topic", "must be", "decided", "by", "the students", "."] },
+            { ja: "そのデータはより注意深くチェックされるべきです。", words: ["The data", "should be", "checked", "more carefully", "."] }
+        ]
+    }
+];
+
 /* --- 1-3. 歴史（近現代）の問題データ
         回を増やすときは HISTORY の配列に { no, title, questions } を追加するだけ。
         q: 問題文 / a: 正解 / wrong: 不正解の選択肢3つ --- */
@@ -1211,7 +1417,7 @@ const HISTORY = [
             { q: "日本がロシアから得た鉄道の利権を基に設立し、鉄道や炭鉱の開発、製鉄所の建設などを行った、半官半民の会社を何というか。",
               a: "南満州鉄道株式会社（満鉄）", wrong: ["東洋拓殖会社", "日本郵船", "八幡製鉄所"] },
             { q: "三民主義を唱えて、中国で革命を指導した人物はだれか。",
-              a: "孫文", wrong: ["袁世凱", "蔣介石", "毛沢東"] },
+              a: "孫文", wrong: ["袁世凱", "蒋介石", "毛沢東"] },
             { q: "1911年、武昌（武漢）で軍隊が反乱を起こしたのをきっかけに、多くの省が清からの独立を宣言した革命を何というか。",
               a: "辛亥革命", wrong: ["義和団事件", "太平天国の乱", "五・四運動"] },
             { q: "①1912年、孫文を臨時大総統として成立した国を何というか。②孫文から臨時大総統の地位をゆずられた袁世凱はどこに首都を移したか。",
@@ -1303,6 +1509,130 @@ const HISTORY = [
             { q: "インドで、非暴力・不服従の抵抗運動を指導したのはだれか。",
               a: "ガンディー", wrong: ["ネルー", "孫文", "ホー・チ・ミン"] }
         ]
+    },
+    {
+        no: 8,
+        title: "大正デモクラシー",
+        questions: [
+            { q: "1912年、立憲政友会の内閣からかわった藩閥の桂太郎首相に対して起こった、憲法に基づく政治を守ろうとする運動を何というか。",
+              a: "護憲運動", wrong: ["自由民権運動", "普通選挙運動", "尊王攘夷運動"] },
+            { q: "第一次世界大戦中、経済が活発になり、日本で生産や消費がのびたことを何というか。",
+              a: "大戦景気", wrong: ["戦後恐慌", "昭和恐慌", "金融恐慌"] },
+            { q: "好況による物価の上昇とシベリア出兵をきっかけとした米価の値上がりから起こった、米の安売りを求める運動を何というか。",
+              a: "米騒動", wrong: ["打ちこわし", "秩父事件", "日比谷焼き打ち事件"] },
+            { q: "寺内正毅内閣が退陣した後に内閣を組織した、立憲政友会の総裁で「平民宰相」と呼ばれた政治家はだれか。",
+              a: "原敬", wrong: ["加藤高明", "犬養毅", "桂太郎"] },
+            { q: "議会で多数をしめる政党が組織し、内閣総理大臣をはじめ、大臣の多くがその政党の出身者で構成される内閣を何というか。",
+              a: "政党内閣", wrong: ["超然内閣", "軍人内閣", "挙国一致内閣"] },
+            { q: "大正時代に民主主義が強く唱えられた風潮を何というか。",
+              a: "大正デモクラシー", wrong: ["自由民権運動", "文明開化", "護憲運動"] },
+            { q: "吉野作造が主張した、普通選挙によって国民の意向を政治に反映させるという考えを何というか。",
+              a: "民本主義", wrong: ["民族自決", "天皇機関説", "共産主義"] },
+            { q: "憲法学者の美濃部達吉が主張した、主権は国家にあり、天皇は国家の最高機関として憲法に従って統治するという学説を何というか。",
+              a: "天皇機関説", wrong: ["民本主義", "民族自決", "王権神授説"] },
+            { q: "①労働者が労働条件の改善などを求めて起こした労働運動を何というか。②1920年に初めて開かれ、翌年からは5月1日に開かれるようになった、労働者が権利を訴える集会やデモを何というか。",
+              a: "①労働争議　②メーデー", wrong: ["①小作争議　②メーデー", "①労働争議　②ストライキ", "①労働組合　②メーデー"] },
+            { q: "小作人が小作料の減額などを求めて起こした抗議行動を何というか。",
+              a: "小作争議", wrong: ["労働争議", "米騒動", "百姓一揆"] },
+            { q: "ロシア革命の影響を受けて日本で非合法に結成された、共産主義をかかげる政党を何というか。",
+              a: "日本共産党", wrong: ["社会民主党", "立憲政友会", "労働農民党"] },
+            { q: "青鞜社を結成し、女性運動を進めた女性はだれか。",
+              a: "平塚らいてう", wrong: ["与謝野晶子", "津田梅子", "市川房枝"] },
+            { q: "部落差別に苦しんできた被差別部落の人々が1922年に京都で結成し、差別解放運動を進めた団体を何というか。",
+              a: "全国水平社", wrong: ["日本農民組合", "新婦人協会", "青鞜社"] },
+            { q: "1925年に成立した、納税額による制限を廃止し、満25歳以上の全ての男性に選挙権をあたえる法律を何というか。",
+              a: "普通選挙法", wrong: ["治安維持法", "国家総動員法", "徴兵令"] },
+            { q: "1925年に制定され、共産主義を取りしまるのに使われた法律を何というか。",
+              a: "治安維持法", wrong: ["普通選挙法", "国家総動員法", "治安警察法"] },
+            { q: "1925年に始まった、新しい情報伝達手段は何か。",
+              a: "ラジオ放送", wrong: ["テレビ放送", "電話", "新聞"] },
+            { q: "「羅生門」、「蜘蛛の糸」などの知的な短編小説を書いたのはだれか。",
+              a: "芥川龍之介", wrong: ["夏目漱石", "小林多喜二", "志賀直哉"] },
+            { q: "小林多喜二の小説のような、労働者の生活をえがいた文学を何というか。",
+              a: "プロレタリア文学", wrong: ["自然主義文学", "白樺派", "浪漫主義文学"] },
+            { q: "1923年、東京・横浜が被害を受けた大災害を何というか。",
+              a: "関東大震災", wrong: ["阪神・淡路大震災", "東日本大震災", "安政の大地震"] }
+        ]
+    },
+    {
+        no: 9,
+        title: "世界恐慌",
+        questions: [
+            { q: "1929年、アメリカで株価が大暴落した。①株式市場のあるアメリカの都市はどこか。②アメリカの株価大暴落から世界中に広まった深刻な不況を何というか。",
+              a: "①ニューヨーク　②世界恐慌", wrong: ["①ワシントン　②世界恐慌", "①ニューヨーク　②昭和恐慌", "①シカゴ　②世界恐慌"] },
+            { q: "アメリカのローズベルト大統領の下で行われた、政府が公共事業をおこし、労働者を保護した新規まき直しという政策を何というか。",
+              a: "ニューディール政策", wrong: ["五か年計画", "ブロック経済", "新経済政策"] },
+            { q: "オーストラリア、インドなどの植民地との関係を強め、その中だけで経済を成り立たせようとした国はどこか。",
+              a: "イギリス", wrong: ["フランス", "アメリカ", "ドイツ"] },
+            { q: "本国と植民地との関係を密接にして貿易を拡大し、それ以外の国の商品に対する輸入関税を高くする経済の仕組みを何というか。",
+              a: "ブロック経済", wrong: ["計画経済", "自由貿易", "統制経済"] },
+            { q: "五か年計画という計画経済を実施していたため、世界的な大不況の影響を受けずに工業を発展させることができた国はどこか。",
+              a: "ソ連", wrong: ["アメリカ", "イギリス", "ドイツ"] },
+            { q: "人間の平等を否定し、強い者が弱い者を支配することを認める思想や政治運動を何というか。",
+              a: "ファシズム", wrong: ["社会主義", "民主主義", "帝国主義"] },
+            { q: "強い指導者の下、個人の自由や民主主義を否定し、個人の利益より国家の利益を優先させる考えを何というか。",
+              a: "全体主義", wrong: ["民主主義", "社会主義", "自由主義"] },
+            { q: "①イタリアで独裁政治を行った人物はだれか。②イタリアで独裁政治を行った人物が率いた政党を何というか。",
+              a: "①ムッソリーニ　②ファシスト党", wrong: ["①ヒトラー　②ファシスト党", "①ムッソリーニ　②ナチス", "①ムッソリーニ　②国民党"] },
+            { q: "①ドイツで独裁政治を行った人物はだれか。②ドイツで独裁政治を行った人物が率いた政党の略称を何というか。",
+              a: "①ヒトラー　②ナチス", wrong: ["①ムッソリーニ　②ナチス", "①ヒトラー　②ファシスト党", "①スターリン　②ナチス"] },
+            { q: "1924年の加藤高明内閣以来の、憲政会（後の立憲民政党）と立憲政友会の党首が交互に内閣を組織する慣例を何というか。",
+              a: "憲政の常道", wrong: ["大正デモクラシー", "民本主義", "護憲運動"] },
+            { q: "第一次世界大戦後の1923年に東京・横浜を中心に発生し、経済に大きな打撃をあたえたできごとは何か。",
+              a: "関東大震災", wrong: ["阪神・淡路大震災", "昭和恐慌", "金融恐慌"] },
+            { q: "銀行の経営悪化を心配した国民が預金を引き出そうとして取り付けさわぎが起こり、多くの銀行が休業した1927年のできごとを何というか。",
+              a: "金融恐慌", wrong: ["世界恐慌", "昭和恐慌", "戦後恐慌"] },
+            { q: "世界恐慌が日本にもおよび、1930年から日本経済も大きな打撃を受けたできごとを何というか。",
+              a: "昭和恐慌", wrong: ["世界恐慌", "金融恐慌", "戦後恐慌"] },
+            { q: "数多くの企業の経営が悪化したり、倒産したりしたことで激しくなった、労働者が待遇改善を要求する運動を何というか。",
+              a: "労働争議", wrong: ["小作争議", "米騒動", "打ちこわし"] },
+            { q: "米やまゆの価格が暴落し、生活が苦しくなった農家が起こした、小作料の減免などを求める運動を何というか。",
+              a: "小作争議", wrong: ["労働争議", "米騒動", "百姓一揆"] },
+            { q: "孫文の死後、国民党を率いていた蒋介石が、南京に建てた政府を何というか。",
+              a: "国民政府", wrong: ["北京政府", "満州国", "中華人民共和国"] },
+            { q: "1930年に海軍軍縮会議が行われた都市はどこか。",
+              a: "ロンドン", wrong: ["ワシントン", "パリ", "ジュネーブ"] }
+        ]
+    },
+    {
+        no: 10,
+        title: "日本の中国侵略",
+        questions: [
+            { q: "中国の東北部にいた日本軍を何というか。",
+              a: "関東軍", wrong: ["関東都督府", "八路軍", "国民党軍"] },
+            { q: "①1931年9月18日、奉天郊外で満鉄の線路が爆破された事件を何というか。②この事件を機に日本軍が軍事行動を開始し、中国東北部を占領したできごとを何というか。",
+              a: "①柳条湖事件　②満州事変", wrong: ["①盧溝橋事件　②満州事変", "①柳条湖事件　②日中戦争", "①柳条湖事件　②五・一五事件"] },
+            { q: "1932年、清の最後の皇帝溥儀を元首として中国東北部に建国された国を何というか。",
+              a: "満州国", wrong: ["中華民国", "大韓帝国", "中華人民共和国"] },
+            { q: "中国の訴えを受けてリットン調査団を派遣し、総会で日本に占領地からの撤兵などを求めた国際機関は何か。",
+              a: "国際連盟", wrong: ["国際連合", "国際赤十字", "国際司法裁判所"] },
+            { q: "1936年、共産主義勢力の進出に対抗するという理由で、日本とドイツが結んだ協定を何というか。",
+              a: "日独防共協定", wrong: ["日独伊三国同盟", "日英同盟", "日ソ中立条約"] },
+            { q: "1932年、犬養毅首相が、海軍の青年将校などによって暗殺された事件を何というか。",
+              a: "五・一五事件", wrong: ["二・二六事件", "大津事件", "大逆事件"] },
+            { q: "1936年、陸軍の青年将校が、大臣などを殺傷し、東京の中心部を占拠した事件を何というか。",
+              a: "二・二六事件", wrong: ["五・一五事件", "大逆事件", "日比谷焼き打ち事件"] },
+            { q: "①1937年、北京郊外で日本と中国の軍隊が衝突した事件を何というか。②この事件をきっかけに始まった、日本と中国の全面戦争を何というか。",
+              a: "①盧溝橋事件　②日中戦争", wrong: ["①柳条湖事件　②日中戦争", "①盧溝橋事件　②満州事変", "①盧溝橋事件　②太平洋戦争"] },
+            { q: "中国で、1921年の共産党の結成に参加し、1935年に党の実権をにぎって国民政府と戦っていた人物はだれか。",
+              a: "毛沢東", wrong: ["蒋介石", "孫文", "周恩来"] },
+            { q: "内戦状態にあった共産党と蒋介石が率いる国民党が、日本との戦争のために結成した協力体制を何というか。",
+              a: "抗日民族統一戦線", wrong: ["三国協商", "北伐", "大政翼賛会"] },
+            { q: "1937年末に日本軍が占領して、一般の市民にも多くの犠牲者が出た中国の首都はどこか。",
+              a: "南京", wrong: ["北京", "上海", "重慶"] },
+            { q: "戦争を続けることを最優先として、さまざまな政策が行われる体制を何というか。",
+              a: "戦時体制", wrong: ["計画経済", "ブロック経済", "立憲体制"] },
+            { q: "1938年に制定され、政府が、労働力や資源を、議会の同意なく戦争に動員できる権限を持つことを定めた法律を何というか。",
+              a: "国家総動員法", wrong: ["治安維持法", "普通選挙法", "徴兵令"] },
+            { q: "挙国一致の体制を作るため、政党が解散し、新たに結成された機関を何というか。",
+              a: "大政翼賛会", wrong: ["立憲政友会", "立憲民政党", "関東軍"] },
+            { q: "米の流通が政府の管理下に置かれ、米穀通帳によって支給されるようになった仕組みを何というか。",
+              a: "配給制", wrong: ["専売制", "徴用制", "公定価格制"] },
+            { q: "政府の統制と動員を支え、住民を相互に監視させる目的で、町内会などの下に約10戸を単位として作られた組織を何というか。",
+              a: "隣組", wrong: ["青年団", "五人組", "大政翼賛会"] },
+            { q: "①日本が、植民地の人々を日本人に同化させようとした政策を何というか。②植民地の人々を日本人に同化させる政策のうち、姓名の表し方を日本式に改めさせたことを何というか。",
+              a: "①皇民化政策　②創氏改名", wrong: ["①皇民化政策　②神社参拝", "①大東亜共栄圏　②創氏改名", "①皇民化政策　②徴用"] }
+        ]
     }
 ];
 
@@ -1312,6 +1642,7 @@ const SECTIONS = [
     { id: "verbs",   title: "不規則動詞",         icon: "🏃", c1: "#a770ef", c2: "#6a5af9", type: "english", categories: CATS.verbs },
     { id: "adj",     title: "形容詞・副詞",       icon: "✨", c1: "#11998e", c2: "#2bc48a", type: "english", categories: CATS.adj },
     { id: "horizon", title: "NEW HORIZON 中3",    icon: "📖", c1: "#2193b0", c2: "#4db8e8", type: "english", categories: CATS.horizon },
+    { id: "order",   title: "中学英語 語句整序",  icon: "🧩", c1: "#d81b60", c2: "#f06292", type: "order" },
     { id: "history", title: "歴史（近現代）",     icon: "🏯", c1: "#cb2d3e", c2: "#ef473a", type: "history" }
 ];
 
@@ -1544,7 +1875,7 @@ function showHome() {
         class: "btn home-btn",
         style: `--c1:${sec.c1};--c2:${sec.c2}`,
         text: `${sec.icon}  ${sec.title}`,
-        onclick: () => (sec.type === "history" ? showHistoryMenu(sec) : showEnglishMenu(sec))
+        onclick: () => SCREENS[sec.type](sec)
     }));
     mount(el("h1", { class: "home-title", text: "学習するコースを選んでね" }), ...list);
 }
@@ -1650,6 +1981,160 @@ function showHistoryMenu(sec, word = "") {
         search,
         listArea
     );
+}
+
+/* 語句整序メニュー */
+const MIX = "ミックス";
+
+function showOrderMenu(sec) {
+    setAccent(sec.c1);
+    const buttons = ORDER.map(cat => el("button", {
+        class: "btn cat-btn",
+        text: cat.name,
+        onclick: () => startOrder(sec, cat.name)
+    }));
+    mount(
+        backButton("← 最初の画面へ", showHome),
+        el("h1", { text: sec.title }),
+        ...buttons,
+        el("button", { class: "btn mix-btn", text: "単元ミックスモード", onclick: () => startOrder(sec, MIX) })
+    );
+}
+
+function startOrder(sec, name) {
+    const pool = name === MIX
+        ? ORDER.flatMap(cat => cat.items.map(item => ({ ...item, label: cat.name })))
+        : ORDER.find(cat => cat.name === name).items;
+    runOrder({
+        title: name === MIX ? "単元ミックスモード" : name,
+        color: sec.c1,
+        items: shuffle(pool).slice(0, 10),
+        onBack: () => showOrderMenu(sec),
+        onRetry: () => startOrder(sec, name)
+    });
+}
+
+/* 固有名詞（文頭でも小文字にしない語） */
+const PROPER_NOUNS = [
+    "I", "Tokyo", "Kyoto", "Hokkaido", "Okinawa", "Fukuoka", "Tom", "Ken", "Yumi", "Mary", "Amy", "Kaito",
+    "Mr. Green", "Columbus", "English", "Japanese", "French", "Chinese", "America", "Hawaii", "Africa",
+    "Canada", "France", "Mt. Fuji", "Christmas", "Happy Birthday", "Christmas cards", "TV", "Friday", "Kabuki"
+];
+const isProperNoun = word => PROPER_NOUNS.includes(word) || /^[A-Z][a-z]+'s\b/.test(word) && PROPER_NOUNS.some(n => word.startsWith(n));
+
+/* 語句を「選ぶボタン」にする。文頭の語は、固有名詞でなければ小文字で見せる */
+function makeTokens(words) {
+    return words.map((w, i) => ({
+        w,
+        shown: i === 0 && !isProperNoun(w) ? w.charAt(0).toLowerCase() + w.slice(1) : w
+    }));
+}
+
+/* 結果の表示用に、語句をつないで1つの文にする（先頭を大文字にし、記号の前の空白を詰める） */
+function sentenceOf(shownWords) {
+    const s = shownWords.join(" ").replace(/ ([.?!,])/g, "$1");
+    return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function runOrder(opts) {
+    const state = { index: 0, score: 0, wrong: [], records: [] };
+    setAccent(opts.color);
+    showQuestion();
+
+    function showQuestion() {
+        const item = opts.items[state.index];
+        const total = opts.items.length;
+        let picked = [];
+        let pool = shuffle(makeTokens(item.words));
+
+        const answerZone = el("div", { class: "answer-area" });
+        const poolZone = el("div", { class: "word-pool" });
+        const chip = (token, onclick) => el("span", { class: "word", role: "button", text: token.shown, onclick });
+
+        function draw() {
+            answerZone.replaceChildren(...picked.map((token, i) =>
+                chip(token, () => { pool.push(picked.splice(i, 1)[0]); draw(); })));
+            poolZone.replaceChildren(...pool.map((token, i) =>
+                chip(token, () => { picked.push(pool.splice(i, 1)[0]); draw(); })));
+        }
+
+        function reset() {
+            picked = [];
+            pool = shuffle(makeTokens(item.words));
+            draw();
+        }
+
+        function submit() {
+            const ok = picked.map(t => t.w).join(" ") === item.words.join(" ");
+            if (ok) state.score++; else state.wrong.push(item);
+            state.records.push({
+                ja: item.ja,
+                ok,
+                correct: sentenceOf(makeTokens(item.words).map(t => t.shown)),
+                user: picked.length ? sentenceOf(picked.map(t => t.shown)) : "（空欄）"
+            });
+            state.index++;
+            state.index < total ? showQuestion() : showResult();
+        }
+
+        draw();
+        mount(
+            el("div", { class: "quiz-head" }, [
+                backButton("← 戻る", opts.onBack),
+                el("div", { class: "progress", text: `第 ${state.index + 1} 問 / 全 ${total} 問` })
+            ]),
+            el("div", { class: "quiz-title", text: opts.title }),
+            el("div", { class: "question-box", text: item.label ? `[${item.label}] ${item.ja}` : item.ja }),
+            el("div", { class: "section-label", text: "【解答エリア】" }),
+            answerZone,
+            el("div", { class: "section-label", text: "【選択肢】（タップして移動）" }),
+            poolZone,
+            el("div", { class: "control-btns" }, [
+                el("button", { class: "btn reset-btn", text: "リセット", onclick: reset }),
+                el("button", { class: "btn submit-btn", text: "決定", onclick: submit })
+            ])
+        );
+    }
+
+    function showResult() {
+        const total = opts.items.length;
+        const percent = state.score / total * 100;
+        const comment =
+            percent === 100 ? "素晴らしい！満点です！💯" :
+            percent >= 80 ? "お見事！あともう少しです！👍" :
+            percent >= 50 ? "ナイスファイト！復習してもう一度挑戦しよう！" :
+                            "一歩ずつ進みましょう！次はもっと取れるはずです！";
+
+        const review = el("div", { class: "review-zone" }, state.records.map((r, i) =>
+            el("div", { class: "review-item" }, [
+                el("div", { class: "review-q", text: `${i + 1}. ${r.ja} ${r.ok ? "✅" : "❌"}` }),
+                el("div", { class: "review-a", text: `正解: ${r.correct}` }),
+                r.ok ? null : el("div", { class: "review-w", text: `解答: ${r.user}` })
+            ])));
+
+        const nodes = [
+            el("h1", { text: opts.review ? "誤答復習 終了！" : "テスト終了！" }),
+            el("div", { class: "final-score", text: `${total} 問中 ${state.score} 問 正解！` }),
+            el("div", { class: "comment", text: comment }),
+            review
+        ];
+
+        if (state.wrong.length > 0) {
+            const wrongItems = state.wrong;
+            const reviewOpts = { ...opts, title: "誤答復習", items: wrongItems, review: true };
+            reviewOpts.onRetry = () => runOrder(reviewOpts);
+            nodes.push(el("button", {
+                class: "btn review-btn",
+                text: `✏️ 誤答復習（${wrongItems.length}問）`,
+                onclick: () => runOrder(reviewOpts)
+            }));
+        }
+        nodes.push(
+            el("button", { class: "btn action-btn", text: "もう一度挑戦", onclick: opts.onRetry }),
+            el("button", { class: "btn", text: "← 戻る", onclick: opts.onBack })
+        );
+        mount(...nodes);
+    }
 }
 
 /* =====================================================================
@@ -1802,6 +2287,9 @@ function runQuiz(opts) {
 /* =====================================================================
    8. 起動
    ===================================================================== */
+// コースの種類ごとに、開く画面を決める
+const SCREENS = { english: showEnglishMenu, order: showOrderMenu, history: showHistoryMenu };
+
 showHome();
 </script>
 </body>
