@@ -78,10 +78,6 @@ h1 { font-size: 19px; text-align: center; margin: 4px 0 18px; }
     width: 100%; padding: 12px 14px; font-size: 16px; border: 2px solid var(--c);
     border-radius: 10px; margin-bottom: 16px; font-family: inherit;
 }
-.lesson { border: 2px solid var(--c); border-radius: 12px; padding: 12px; margin-bottom: 14px; }
-.lesson-title { font-weight: bold; font-size: 15px; margin-bottom: 10px; line-height: 1.5; }
-.lesson .btn { margin-bottom: 8px; font-size: 15px; padding: 12px; }
-.lesson .btn:last-child { margin-bottom: 0; }
 .no-result { text-align: center; color: #888; padding: 20px 0; }
 
 .hit-heading { font-weight: bold; font-size: 15px; margin: 6px 0 10px; }
@@ -1762,6 +1758,134 @@ const HISTORY = [
             { q: "「戸主」中心の男性優位の家制度をやめ、男女平等に基づく家族制度を原則として、改められた法律は何か。",
               a: "民法", wrong: ["刑法", "商法", "労働基準法"] }
         ]
+    },
+    {
+        no: 14,
+        title: "戦後の国際社会と日本",
+        questions: [
+            { q: "1945年、連合国が二度の世界大戦への反省から創った、国際機関を何というか。",
+              a: "国際連合", wrong: ["国際連盟", "国際赤十字", "世界貿易機関"] },
+            { q: "アメリカを中心とする資本主義諸国と、ソ連を中心とする共産主義諸国との、戦争になりかねない厳しい対立を何というか。",
+              a: "冷たい戦争（冷戦）", wrong: ["第二次世界大戦", "ベトナム戦争", "民族紛争"] },
+            { q: "①1949年に西側諸国が結成した軍事同盟を何というか。②1955年に東側陣営が作った軍事同盟を何というか。",
+              a: "①北大西洋条約機構（NATO）　②ワルシャワ条約機構", wrong: ["①ワルシャワ条約機構　②北大西洋条約機構（NATO）", "①北大西洋条約機構（NATO）　②日米安全保障条約", "①三国同盟　②ワルシャワ条約機構"] },
+            { q: "1949年、国民党との内戦に勝利した共産党が、毛沢東を主席として建国した国の正式な名称を何というか。",
+              a: "中華人民共和国", wrong: ["中華民国", "大韓民国", "朝鮮民主主義人民共和国"] },
+            { q: "①1948年、朝鮮半島で、アメリカに占領された北緯38度線より南の地域に成立した国を何というか。②1948年、朝鮮半島で、ソ連に占領された北緯38度線より北の地域に成立した国を何というか。",
+              a: "①大韓民国（韓国）　②朝鮮民主主義人民共和国（北朝鮮）", wrong: ["①朝鮮民主主義人民共和国（北朝鮮）　②大韓民国（韓国）", "①中華民国　②朝鮮民主主義人民共和国（北朝鮮）", "①大韓民国（韓国）　②中華人民共和国"] },
+            { q: "1950年、朝鮮半島に成立した2つの国の間で始まった戦争を何というか。",
+              a: "朝鮮戦争", wrong: ["ベトナム戦争", "日中戦争", "湾岸戦争"] },
+            { q: "ヨーロッパの植民地となっていたが、第二次世界大戦後に独立運動が活発化し、1960年には17の国が独立を果たした地域はどこか。",
+              a: "アフリカ", wrong: ["東南アジア", "南アメリカ", "中東"] },
+            { q: "植民地支配から独立した発展途上国と、先進工業国との間の経済格差の問題を何というか。",
+              a: "南北問題", wrong: ["東西問題", "民族問題", "環境問題"] },
+            { q: "朝鮮半島で戦争が始まると、大量の軍需物資が日本で調達され、日本は好況になり、経済復興が早まった。この好況を何というか。",
+              a: "特需景気", wrong: ["高度経済成長", "バブル経済", "大戦景気"] },
+            { q: "1950年に作られた警察予備隊を強化して1954年に発足した、日本国内の治安維持を行う組織を何というか。",
+              a: "自衛隊", wrong: ["保安隊", "国連平和維持軍", "在日米軍"] },
+            { q: "①1951年、日本が48か国と結んで独立を回復した条約を何というか。②この条約に調印した首相はだれか。",
+              a: "①サンフランシスコ平和条約　②吉田茂", wrong: ["①日米安全保障条約　②吉田茂", "①サンフランシスコ平和条約　②鳩山一郎", "①サンフランシスコ平和条約　②佐藤栄作"] },
+            { q: "1951年、日本の安全と東アジアの平和を守るため、日本にアメリカ軍基地を残すことを決めた条約を何というか。",
+              a: "日米安全保障条約", wrong: ["サンフランシスコ平和条約", "日米修好通商条約", "日ソ共同宣言"] },
+            { q: "1954年、太平洋のビキニ環礁で行われたアメリカの水素爆弾の実験で被ばくした、遠洋まぐろ漁船を何というか。",
+              a: "第五福竜丸", wrong: ["ノルマントン号", "氷川丸", "洞爺丸"] },
+            { q: "日本の漁船が被ばくしたできごとをきっかけに広がった、核兵器の禁止を求める運動を何というか。",
+              a: "原水爆禁止運動", wrong: ["護憲運動", "安保闘争", "自由民権運動"] },
+            { q: "アメリカの冷戦政策を支持する保守勢力が、1955年に結成した政党を何というか。",
+              a: "自由民主党", wrong: ["日本社会党", "立憲政友会", "日本共産党"] },
+            { q: "保守勢力が作った政党が、社会党と対立しながら、38年間にわたって政権をとり続けた政治体制を何というか。",
+              a: "55年体制", wrong: ["憲政の常道", "戦時体制", "藩閥政治"] },
+            { q: "1960年、アメリカとの条約の改定に際して起こった激しい反対運動を何というか。",
+              a: "安保闘争", wrong: ["護憲運動", "原水爆禁止運動", "自由民権運動"] }
+        ]
+    },
+    {
+        no: 15,
+        title: "日本の外交と経済発展",
+        questions: [
+            { q: "1955年にインドネシアのバンドンで開かれ、植民地から独立した29か国が参加した会議を何というか。",
+              a: "アジア・アフリカ会議", wrong: ["国際連合総会", "サミット", "マルタ会談"] },
+            { q: "1962年、キューバにソ連が核ミサイル基地を建設したことから起きた、米ソの核兵器による全面戦争の危機を何というか。",
+              a: "キューバ危機", wrong: ["ベルリン危機", "ベトナム戦争", "朝鮮戦争"] },
+            { q: "中国とソ連が支援する北ベトナムや南ベトナム解放民族戦線と、アメリカとの間で行われた戦争を何というか。",
+              a: "ベトナム戦争", wrong: ["朝鮮戦争", "湾岸戦争", "中東戦争"] },
+            { q: "1956年、ソ連と国交を回復したときに鳩山一郎内閣が調印した宣言を何というか。",
+              a: "日ソ共同宣言", wrong: ["日ソ中立条約", "日中共同声明", "サンフランシスコ平和条約"] },
+            { q: "1965年に、日本が韓国政府を朝鮮半島唯一の政府として認めて結んだ条約を何というか。",
+              a: "日韓基本条約", wrong: ["日朝修好条規", "日中共同声明", "日中平和友好条約"] },
+            { q: "1972年、田中角栄内閣が中国との国交の正常化のために調印したものを何というか。",
+              a: "日中共同声明", wrong: ["日中平和友好条約", "日韓基本条約", "日ソ共同宣言"] },
+            { q: "1978年、中国との間に結ばれた条約を何というか。",
+              a: "日中平和友好条約", wrong: ["日中共同声明", "日清修好条規", "下関条約"] },
+            { q: "サンフランシスコ平和条約締結後もアメリカの統治下に置かれ、1972年に日本に復帰した領土はどこか。",
+              a: "沖縄", wrong: ["小笠原諸島", "奄美群島", "北方領土"] },
+            { q: "佐藤栄作内閣が示した、核兵器を「持たず、作らず、持ちこませず」とする国の方針を何というか。",
+              a: "非核三原則", wrong: ["専守防衛", "武器輸出三原則", "集団的自衛権"] },
+            { q: "1955年から1973年の間、日本経済が年平均で10％程度の成長を続けたことを何というか。",
+              a: "高度経済成長", wrong: ["特需景気", "バブル経済", "石油危機"] },
+            { q: "主なエネルギー源が石炭から石油にかわったことを何というか。",
+              a: "エネルギー革命", wrong: ["産業革命", "農地改革", "石油危機"] },
+            { q: "1964年に日本で開催された、4年ごとに行われる国際的なスポーツの祭典を何というか。",
+              a: "東京オリンピック・パラリンピック", wrong: ["ワールドカップ", "アジア競技大会", "万国博覧会"] },
+            { q: "大気汚染や水質汚濁が原因で、人体に被害が出る問題を何というか。",
+              a: "公害", wrong: ["地球温暖化", "少子高齢化", "南北問題"] },
+            { q: "環境の悪化による被害をなくすために、①1967年に制定された法律を何というか。②公害に対応するため、1971年に設置された国の機関を何というか。",
+              a: "①公害対策基本法　②環境庁", wrong: ["①環境基本法　②環境庁", "①公害対策基本法　②環境省", "①公害対策基本法　②厚生省"] },
+            { q: "第四次中東戦争により石油価格が急騰したことを何というか。",
+              a: "石油危機（オイル・ショック）", wrong: ["世界恐慌", "バブル経済", "特需景気"] },
+            { q: "1953年に放送が始まり、国民がスポーツや芸能などの娯楽を楽しむようになったものは何か。",
+              a: "テレビ放送", wrong: ["ラジオ放送", "映画", "インターネット"] },
+            { q: "戦後活躍した映画監督で、「羅生門」などの作品が海外でも高い評価を得ている人物はだれか。",
+              a: "黒澤明", wrong: ["小津安二郎", "溝口健二", "宮崎駿"] },
+            { q: "漫画の「火の鳥」やテレビアニメの「鉄腕アトム」の原作をえがいた漫画家はだれか。",
+              a: "手塚治虫", wrong: ["宮崎駿", "水木しげる", "石ノ森章太郎"] },
+            { q: "1968年に日本人で初めてノーベル文学賞を受賞した作家はだれか。",
+              a: "川端康成", wrong: ["大江健三郎", "夏目漱石", "三島由紀夫"] }
+        ]
+    },
+    {
+        no: 16,
+        title: "現代の日本と世界",
+        questions: [
+            { q: "1979年にはソ連が侵攻し、2001年にはアメリカが攻撃した、アジアの国はどこか。",
+              a: "アフガニスタン", wrong: ["イラク", "イラン", "パキスタン"] },
+            { q: "1989年に冷戦の象徴になっていた壁が取りはらわれ、1990年に東西統一をはたしたヨーロッパの国はどこか。",
+              a: "ドイツ", wrong: ["フランス", "ポーランド", "オーストリア"] },
+            { q: "1989年にマルタ会談でアメリカのブッシュ大統領と、ソ連のゴルバチョフ共産党書記長が宣言した内容は何か。",
+              a: "冷戦の終結", wrong: ["核兵器の廃止", "ドイツの統一", "ソ連の解体"] },
+            { q: "世界の主な国の指導者が参加して1975年から毎年開かれている主要国首脳会議をカタカナで何というか。",
+              a: "サミット", wrong: ["フォーラム", "シンポジウム", "ワークショップ"] },
+            { q: "ヨーロッパ共同体が域内の市場の統合を完成させて1993年に発足した地域統合組織の略称を、アルファベットで何というか。",
+              a: "EU", wrong: ["NATO", "ASEAN", "APEC"] },
+            { q: "1989年に発足した、アジア太平洋経済協力会議の略称を、アルファベットで何というか。",
+              a: "APEC", wrong: ["EU", "ASEAN", "NAFTA"] },
+            { q: "民族・宗教・文化のちがいなどから起こる紛争を何というか。",
+              a: "地域紛争", wrong: ["世界大戦", "冷戦", "南北問題"] },
+            { q: "2001年9月11日、イスラーム過激派が旅客機を乗っ取り、ニューヨークの高層ビルなど数か所に突入した事件を何というか。",
+              a: "同時多発テロ事件", wrong: ["湾岸戦争", "イラク戦争", "真珠湾攻撃"] },
+            { q: "2022年、ロシアが侵攻した西どなりの国はどこか。",
+              a: "ウクライナ", wrong: ["ジョージア", "カザフスタン", "トルコ"] },
+            { q: "国際連合が行う平和維持活動の略称を、アルファベットで何というか。",
+              a: "PKO", wrong: ["NGO", "NPO", "ODA"] },
+            { q: "株価と地価が経済の実体をともなわないままに上昇して起こり、1980年代後半から1991年まで続いた不健全な好況を何というか。",
+              a: "バブル経済", wrong: ["高度経済成長", "特需景気", "石油危機"] },
+            { q: "2008年、アメリカの銀行の経営悪化から世界中に広がった不況を何というか。",
+              a: "世界金融危機（リーマン・ショック）", wrong: ["世界恐慌", "石油危機", "バブル崩壊"] },
+            { q: "国境をこえる経済活動が盛んになり、情報が一瞬で世界中を移動し、世界が一体化する動きが進んでいる。この動きを何というか。",
+              a: "グローバル化", wrong: ["情報化", "少子高齢化", "地域紛争"] },
+            { q: "二酸化炭素などの温室効果ガスが原因で、海面の上昇や農作物の不作などを引き起こしている地球環境問題を何というか。",
+              a: "地球温暖化", wrong: ["酸性雨", "オゾン層の破壊", "砂漠化"] },
+            { q: "①1995年、兵庫県南部で発生した大地震による災害を何というか。②2011年、東北地方の太平洋側を中心に発生した地震による大規模な災害を何というか。",
+              a: "①阪神・淡路大震災　②東日本大震災", wrong: ["①東日本大震災　②阪神・淡路大震災", "①関東大震災　②東日本大震災", "①阪神・淡路大震災　②熊本地震"] },
+            { q: "地域のためにボランティア活動を行う非営利組織の略称を、アルファベットで何というか。",
+              a: "NPO", wrong: ["NGO", "PKO", "ODA"] },
+            { q: "現代の日本は、総人口にしめる高齢者の割合が増え、年少者の割合が減っている。このような現象を何というか。",
+              a: "少子高齢化", wrong: ["過疎化", "都市化", "核家族化"] },
+            { q: "2015年の国連サミットで採択され、17の目標をかかげた「持続可能な開発目標」の略称を、アルファベットで何というか。",
+              a: "SDGs", wrong: ["ODA", "WTO", "UNESCO"] },
+            { q: "将来の環境をそこなわないように開発を続ける社会を何というか。",
+              a: "持続可能な社会", wrong: ["高度情報社会", "少子高齢社会", "大量消費社会"] }
+        ]
     }
 ];
 
@@ -2023,92 +2147,134 @@ function showEnglishMenu(sec) {
     );
 }
 
-/* 歴史メニュー：上に検索ボックス、その下に各回のボタン
-   検索すると、回の名前に合う回と、問題文・答えに合う問題が表示される */
+/* ---- 歴史（近現代）：①回の一覧 → ②回の画面（出題ボタン） → ③クイズ ---- */
+
+/* 検索ボックス。入力のたびに render(検索語) を呼ぶ（日本語入力・スマホのキーボードにも対応） */
+function makeSearchBox(placeholder, word, render) {
+    const input = el("input", {
+        class: "search-box", type: "text", autocomplete: "off", enterkeyhint: "search", placeholder
+    });
+    input.value = word;
+    let last = null;   // 直前に表示した検索語（同じなら描き直さない。ボタンを押した瞬間に消えるのを防ぐ）
+    const run = () => {
+        const keyword = input.value.trim();
+        if (keyword === last) return;
+        last = keyword;
+        render(keyword);
+    };
+    ["input", "keyup", "change", "compositionend", "search"].forEach(ev => input.addEventListener(ev, run));
+    run();
+    return input;
+}
+
+/* 問題文または答えに検索語を含む問題を探す */
+function findHits(lessons, keyword) {
+    const target = norm(keyword).s;
+    const hits = [];
+    lessons.forEach(lesson => lesson.questions.forEach((q, i) => {
+        if (norm(q.q).s.includes(target) || norm(q.a).s.includes(target)) hits.push({ lesson, no: i + 1, q });
+    }));
+    return hits;
+}
+
+/* 検索結果の表示（見出し・出題ボタン・問題と答え） */
+function hitNodes(sec, hits, keyword, showLesson, onBack) {
+    const nodes = [
+        el("div", { class: "hit-heading", text: `「${keyword}」を含む問題（${hits.length}問）` }),
+        el("button", {
+            class: "btn action-btn",
+            text: `この${hits.length}問を出題する`,
+            onclick: () => startSearchQuiz(sec, hits, keyword, onBack)
+        })
+    ];
+    hits.forEach(hit => {
+        const question = el("div");
+        question.appendChild(highlight(hit.q.q, keyword));
+        const answer = el("div", { class: "hit-answer" });
+        answer.append("答え：");
+        answer.appendChild(highlight(hit.q.a, keyword));
+        nodes.push(el("div", { class: "hit" }, [
+            el("div", { class: "hit-no", text: showLesson ? `第${hit.lesson.no}回　問${hit.no}` : `問${hit.no}` }),
+            question,
+            answer
+        ]));
+    });
+    return nodes;
+}
+
+const noResult = () => el("div", { class: "no-result", text: "見つかりませんでした" });
+
+/* ①回の一覧：上に検索ボックス、その下に「第〇回　タイトル」のボタン */
 function showHistoryMenu(sec, word = "") {
     setAccent(sec.c1);
     const listArea = el("div");
-    const search = el("input", {
-        class: "search-box", type: "text", autocomplete: "off", enterkeyhint: "search",
-        placeholder: "🔍 検索（例：1871年、廃藩置県、第1回）"
+    const lessonButton = lesson => el("button", {
+        class: "btn cat-btn",
+        text: `第${lesson.no}回　${lesson.title}`,
+        onclick: () => showHistoryLesson(sec, lesson, "", search.value.trim())
     });
-    search.value = word;
 
-    function lessonCard(lesson, keyword) {
-        const n = lesson.questions.length;
-        return el("div", { class: "lesson" }, [
-            el("div", { class: "lesson-title", text: `第${lesson.no}回　${lesson.title}` }),
-            el("button", {
-                class: "btn cat-btn", text: `📋 全問題を順番に（${n}問）`,
-                onclick: () => startHistory(sec, lesson, "all", keyword)
-            }),
-            el("button", {
-                class: "btn cat-btn", text: `🎲 ランダム ${Math.min(10, n)}問`,
-                onclick: () => startHistory(sec, lesson, "random", keyword)
-            })
-        ]);
-    }
-
-    let lastKeyword = null;   // 直前に表示した検索語（同じなら描き直さない）
-    function renderList() {
-        const keyword = search.value.trim();
-        // 入力欄からボタンへ移るときに change イベントが起き、ボタンが消えて押せなくなるのを防ぐ
-        if (keyword === lastKeyword) return;
-        lastKeyword = keyword;
+    const search = makeSearchBox("🔍 検索（例：1871年、廃藩置県、第1回）", word, keyword => {
         listArea.replaceChildren();
-
-        // 検索語が空なら、すべての回を表示
         if (!keyword) {
-            HISTORY.forEach(lesson => listArea.appendChild(lessonCard(lesson, "")));
+            HISTORY.forEach(lesson => listArea.appendChild(lessonButton(lesson)));
             return;
         }
-
         const target = norm(keyword).s;
         const lessonHits = HISTORY.filter(l => norm(`第${l.no}回 ${l.title}`).s.includes(target));
-        const questionHits = [];
-        HISTORY.forEach(lesson => lesson.questions.forEach((q, i) => {
-            if (norm(q.q).s.includes(target) || norm(q.a).s.includes(target)) {
-                questionHits.push({ lesson, no: i + 1, q });
-            }
-        }));
-
-        if (lessonHits.length === 0 && questionHits.length === 0) {
-            listArea.appendChild(el("div", { class: "no-result", text: "見つかりませんでした" }));
+        const hits = findHits(HISTORY, keyword);
+        if (lessonHits.length === 0 && hits.length === 0) {
+            listArea.appendChild(noResult());
             return;
         }
-
-        lessonHits.forEach(lesson => listArea.appendChild(lessonCard(lesson, keyword)));
-
-        if (questionHits.length > 0) {
-            listArea.appendChild(el("div", { class: "hit-heading", text: `「${keyword}」を含む問題（${questionHits.length}問）` }));
-            listArea.appendChild(el("button", {
-                class: "btn action-btn",
-                text: `この${questionHits.length}問を出題する`,
-                onclick: () => startSearchQuiz(sec, questionHits, keyword)
-            }));
-            questionHits.forEach(hit => {
-                const question = el("div");
-                question.appendChild(highlight(hit.q.q, keyword));
-                const answer = el("div", { class: "hit-answer" });
-                answer.append("答え：");
-                answer.appendChild(highlight(hit.q.a, keyword));
-                listArea.appendChild(el("div", { class: "hit" }, [
-                    el("div", { class: "hit-no", text: `第${hit.lesson.no}回 問${hit.no}` }),
-                    question,
-                    answer
-                ]));
-            });
+        lessonHits.forEach(lesson => listArea.appendChild(lessonButton(lesson)));
+        if (hits.length > 0) {
+            hitNodes(sec, hits, keyword, true, () => showHistoryMenu(sec, keyword))
+                .forEach(node => listArea.appendChild(node));
         }
-    }
+    });
 
-    // 日本語入力（変換中・確定後）でも、キーボードの種類が違っても反応するように複数のイベントを監視
-    ["input", "keyup", "change", "compositionend", "search"].forEach(ev => search.addEventListener(ev, renderList));
-    renderList();
     mount(
         backButton("← 最初の画面へ", showHome),
         el("h1", { text: sec.title }),
         search,
         listArea
+    );
+}
+
+/* ②回の画面：出題ボタン（全問題・ランダム10問）と、この回の中の検索ボックス
+   word: この回の検索語 / fromWord: 回の一覧での検索語（「← 戻る」で一覧に戻るときに引き継ぐ） */
+function showHistoryLesson(sec, lesson, word = "", fromWord = "") {
+    setAccent(sec.c1);
+    const n = lesson.questions.length;
+    const hitArea = el("div");
+    const backHere = () => showHistoryLesson(sec, lesson, search.value.trim(), fromWord);
+
+    const search = makeSearchBox("🔍 この回の中を検索（例：廃藩置県）", word, keyword => {
+        hitArea.replaceChildren();
+        if (!keyword) return;
+        const hits = findHits([lesson], keyword);
+        if (hits.length === 0) {
+            hitArea.appendChild(noResult());
+            return;
+        }
+        hitNodes(sec, hits, keyword, false, () => showHistoryLesson(sec, lesson, keyword, fromWord))
+            .forEach(node => hitArea.appendChild(node));
+    });
+
+    mount(
+        backButton("← 戻る", () => showHistoryMenu(sec, fromWord)),
+        el("h1", { text: `第${lesson.no}回　${lesson.title}` }),
+        el("button", {
+            class: "btn cat-btn", text: `📋 全問題を順番に（${n}問）`,
+            onclick: () => startHistory(sec, lesson, "all", backHere)
+        }),
+        el("button", {
+            class: "btn cat-btn", text: `🎲 ランダム ${Math.min(10, n)}問`,
+            onclick: () => startHistory(sec, lesson, "random", backHere)
+        }),
+        search,
+        hitArea
     );
 }
 
@@ -2281,20 +2447,20 @@ function startEnglish(sec, category) {
     runQuiz(opts);
 }
 
-function startHistory(sec, lesson, mode, keyword = "") {
+function startHistory(sec, lesson, mode, onBack) {
     const label = mode === "all" ? "全問題（順番どおり）" : "ランダム10問";
     runQuiz({
-        title: `第${lesson.no}回 ${label}`,
+        title: `第${lesson.no}回　${label}`,
         kind: "history",
         color: sec.c1,
         items: makeHistoryItems(lesson, mode),
-        onBack: () => showHistoryMenu(sec, keyword),
-        onRetry: () => startHistory(sec, lesson, mode, keyword)
+        onBack,
+        onRetry: () => startHistory(sec, lesson, mode, onBack)
     });
 }
 
 /* 検索結果の問題だけを出題する */
-function startSearchQuiz(sec, hits, keyword) {
+function startSearchQuiz(sec, hits, keyword, onBack) {
     runQuiz({
         title: `検索「${keyword}」の問題`,
         kind: "history",
@@ -2304,8 +2470,8 @@ function startSearchQuiz(sec, hits, keyword) {
             answer: h.q.a,
             choices: () => shuffle([h.q.a, ...h.q.wrong])
         })),
-        onBack: () => showHistoryMenu(sec, keyword),
-        onRetry: () => startSearchQuiz(sec, hits, keyword)
+        onBack,
+        onRetry: () => startSearchQuiz(sec, hits, keyword, onBack)
     });
 }
 
