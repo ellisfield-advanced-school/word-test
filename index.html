@@ -28,6 +28,7 @@ body {
 .brand { text-align: center; font-size: 19px; font-weight: bold; margin-bottom: 8px; letter-spacing: 1px; }
 h1 { font-size: 19px; text-align: center; margin: 4px 0 18px; }
 .home-title { font-size: 16px; }
+.version { text-align: center; font-size: 11px; color: #aaa; margin-top: 14px; }
 .center { text-align: center; }
 
 /* ========== ボタン ========== */
@@ -2090,6 +2091,9 @@ const SECTIONS = [
     { id: "history", title: "歴史（近現代）",     icon: "🏯", c1: "#cb2d3e", c2: "#ef473a", type: "history" }
 ];
 
+/* 最初の画面の下に表示する更新日（新しい版が読み込まれたか確認するため。更新のたびに書きかえる） */
+const APP_UPDATED = "2026/11/20 用語検索（辞書・ChatGPT）";
+
 /* =====================================================================
    2. 共通の道具
    ===================================================================== */
@@ -2280,25 +2284,8 @@ function speechText(word) {
 }
 
 /* =====================================================================
-   3b. 歴史用語を調べる（辞書サイト・ChatGPT・Gemini を別のタブで開く）
+   3b. 歴史用語を調べる（辞書サイト・ChatGPT を別のタブで開く）
    ===================================================================== */
-function copyToClipboard(text) {
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).catch(() => copyFallback(text));
-    } else {
-        copyFallback(text);
-    }
-}
-
-function copyFallback(text) {
-    const area = el("textarea", { style: "position:fixed;opacity:0" });
-    area.value = text;
-    document.body.appendChild(area);
-    area.select();
-    try { document.execCommand("copy"); } catch (e) { /* コピーできない端末では何もしない */ }
-    area.remove();
-}
-
 function termLookup() {
     const input = el("input", {
         class: "search-box", type: "text", autocomplete: "off", enterkeyhint: "search",
@@ -2326,15 +2313,6 @@ function termLookup() {
         el("button", {
             class: "btn", text: "ChatGPT",
             onclick: withTerm(term => openTab("https://chatgpt.com/?q=" + encodeURIComponent(question(term))))
-        }),
-        el("button", {
-            class: "btn", text: "Gemini",
-            // Gemini には質問文を自動で入れる方法がないため、コピーしてから開く
-            onclick: withTerm(term => {
-                copyToClipboard(question(term));
-                openTab("https://gemini.google.com/app");
-                note.textContent = "質問文をコピーしました。開いたGeminiの入力欄に貼り付けて送信してください。";
-            })
         })
     ];
 
@@ -2343,7 +2321,7 @@ function termLookup() {
         input,
         el("div", { class: "lookup-buttons" }, buttons),
         note,
-        el("div", { class: "lookup-help", text: "辞書（コトバンク）、ChatGPT、Gemini が別のタブで開きます。AIの説明は、教科書や先生の説明とあわせて確認しましょう。" })
+        el("div", { class: "lookup-help", text: "辞書（コトバンク）またはChatGPTが別のタブで開きます。AIの説明は、教科書や先生の説明とあわせて確認しましょう。" })
     ]);
 }
 
@@ -2433,7 +2411,11 @@ function showHome() {
         text: `${sec.icon}  ${sec.title}`,
         onclick: () => SCREENS[sec.type](sec)
     }));
-    mount(el("h1", { class: "home-title", text: "学習するコースを選んでね" }), ...list);
+    mount(
+        el("h1", { class: "home-title", text: "学習するコースを選んでね" }),
+        ...list,
+        el("div", { class: "version", text: `更新日 ${APP_UPDATED}` })
+    );
 }
 
 function showEnglishMenu(sec) {
