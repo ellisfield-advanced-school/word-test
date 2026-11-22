@@ -2715,7 +2715,7 @@ const SECTIONS = [
     { id: "order",   title: "中学英語 語句整序",  icon: "🧩", c1: "#d81b60", c2: "#f06292", type: "order" },
     {
         id: "edo", title: "歴史（江戸時代）", icon: "⛩️", c1: "#1a237e", c2: "#3949ab", type: "lessons",
-        lessons: EDO, dates: EDO_DATES, yearsByLesson: false,   // 「全範囲」の年代問題だけ
+        lessons: EDO, dates: EDO_DATES, yearsByLesson: true,    // 各回にも年代問題のボタンを出す
         searchExample: "ペリー、第9回", lookupExample: "大政奉還",
         lookupPrompt: term =>
             `日本の中学校の歴史で学ぶ「${term}」について、中学生にもわかるように、やさしい言葉で短く説明してください。` +
@@ -2742,7 +2742,7 @@ const SECTIONS = [
 ];
 
 /* 最初の画面の下に表示する更新日（新しい版が読み込まれたか確認するため。更新のたびに書きかえる） */
-const APP_UPDATED = "2026/11/22 歴史（江戸時代）追加";
+const APP_UPDATED = "2026/11/22 江戸時代 各回の年代問題";
 
 /* =====================================================================
    2. 共通の道具
