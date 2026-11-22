@@ -133,6 +133,8 @@ mark { background: #fff3a0; border-radius: 3px; padding: 0 1px; }
 .japanese { font-size: 28px; font-weight: bold; margin: 20px 0; text-align: center; line-height: 1.4; }
 .question-text { font-size: 18px; font-weight: bold; margin: 16px 0 20px; line-height: 1.7; text-align: left; }
 .choice-btn { font-size: 18px; }
+.figure { margin: 10px 0 4px; border: 1px solid #e1e8ed; border-radius: 10px; padding: 6px; background: #fff; }
+.figure svg { display: block; width: 100%; height: auto; }
 .lookup { margin-top: 22px; border: 1px solid #e1e8ed; border-radius: 10px; padding: 10px 12px; background: #fafbfc; }
 .lookup summary { font-weight: bold; font-size: 14px; cursor: pointer; color: #555; }
 .lookup .search-box { margin: 12px 0 10px; }
@@ -1212,6 +1214,30 @@ const ORDER = [
     }
 ];
 
+/* --- 1-3a. 図（SVG）。問題に fig: FIGS.○○ と書くと、問題文の上に表示される。画像ファイルを使わないので軽い --- */
+const FIGS = {
+    alliance: `<svg viewBox="0 0 360 250" role="img" aria-label="第一次世界大戦前の国際関係の図">
+<g stroke-width="2" fill="none">
+<line x1="90" y1="30" x2="270" y2="30" stroke="#2a6fb0"/>
+<line x1="270" y1="40" x2="200" y2="92" stroke="#d32f2f" stroke-dasharray="6 4"/>
+<line x1="85" y1="40" x2="150" y2="92" stroke="#2a6fb0"/>
+<line x1="150" y1="108" x2="85" y2="162" stroke="#2a6fb0"/>
+<line x1="55" y1="44" x2="55" y2="158" stroke="#2a6fb0"/>
+<line x1="305" y1="114" x2="262" y2="160" stroke="#777"/>
+<line x1="262" y1="182" x2="290" y2="206" stroke="#777"/>
+<line x1="318" y1="114" x2="318" y2="204" stroke="#777"/>
+</g>
+<g font-size="13" text-anchor="middle" dominant-baseline="central">
+<g fill="#e3f0fb" stroke="#2a6fb0"><rect x="22" y="16" width="66" height="28" rx="6"/><rect x="272" y="16" width="66" height="28" rx="6"/><rect x="134" y="92" width="66" height="28" rx="6"/><rect x="22" y="156" width="66" height="28" rx="6"/></g>
+<g fill="#eeeeee" stroke="#777"><rect x="285" y="90" width="66" height="28" rx="6"/><rect x="214" y="160" width="76" height="28" rx="6"/><rect x="285" y="206" width="66" height="28" rx="6"/></g>
+<g fill="#222" stroke="none"><text x="55" y="31">イギリス</text><text x="305" y="31">日本</text><text x="167" y="107">ロシア</text><text x="55" y="171">フランス</text><text x="318" y="105">ドイツ</text><text x="252" y="175">オーストリア</text><text x="318" y="221">イタリア</text></g>
+<g font-size="12" fill="#2a6fb0" stroke="none"><text x="180" y="19">日英同盟（1902年）</text><text x="95" y="222">三国協商（1907年）</text></g>
+<g font-size="12" fill="#555" stroke="none"><text x="215" y="222">三国同盟（1882年）</text></g>
+<g stroke="none"><rect x="186" y="50" width="112" height="24" rx="4" fill="#fff" stroke="#d32f2f"/><text x="242" y="62" fill="#d32f2f" font-weight="bold" font-size="13">？（1907年）</text></g>
+</g>
+</svg>`
+};
+
 /* --- 1-3. 歴史（近現代）の問題データ
         回を増やすときは HISTORY の配列に { no, title, questions } を追加するだけ。
         q: 問題文 / a: 正解 / wrong: 不正解の選択肢3つ --- */
@@ -1516,6 +1542,37 @@ const HISTORY = [
               a: "三・一独立運動", wrong: ["五・四運動", "義兵運動", "甲午農民戦争"] },
             { q: "インドで、非暴力・不服従の抵抗運動を指導したのはだれか。",
               a: "ガンディー", wrong: ["ネルー", "孫文", "ホー・チ・ミン"] }
+        ],
+        // 追加の問題：一問一答にない内容（まとめのページから作成）。回の画面に「追加の問題」ボタンが出る
+        extra: [
+            { q: "1907年に日本とロシアが結んだ協約を何というか。（図の「？」）",
+              a: "日露協約", wrong: ["日英同盟", "日独防共協定", "日ソ中立条約"], fig: FIGS.alliance },
+            { q: "民族自決の原則を提唱した、アメリカの大統領はだれか。",
+              a: "ウィルソン", wrong: ["ローズベルト", "リンカン", "ワシントン"] },
+            { q: "国際連盟の事務次長となった日本人はだれか。",
+              a: "新渡戸稲造", wrong: ["内村鑑三", "福沢諭吉", "北里柴三郎"] },
+            { q: "国際連盟で、日本はどのような立場になったか。",
+              a: "常任理事国", wrong: ["非常任理事国", "オブザーバー", "事務総長"] },
+            { q: "日本が1914年に第一次世界大戦に参戦した理由となった同盟を何というか。",
+              a: "日英同盟", wrong: ["日露協約", "三国同盟", "三国協商"] },
+            { q: "1917年に連合国側で第一次世界大戦に参戦した国はどこか。",
+              a: "アメリカ", wrong: ["日本", "オスマン帝国", "スペイン"] },
+            { q: "イタリアは三国同盟の一員だったが、大戦ではどちらの側に加わったか。",
+              a: "連合国側", wrong: ["同盟国側", "中立の立場", "枢軸国側"] },
+            { q: "1922年に成立した、社会主義の国の正式な名称を何というか。",
+              a: "ソビエト社会主義共和国連邦（ソ連）", wrong: ["ロシア帝国", "ロシア連邦", "中華ソビエト共和国"] },
+            { q: "ソ連で「五か年計画」という計画経済を行った指導者はだれか。",
+              a: "スターリン", wrong: ["レーニン", "トロツキー", "ゴルバチョフ"] },
+            { q: "ワシントン会議で確認された、中国に関する内容は何か。",
+              a: "中国の独立と領土保全", wrong: ["中国の分割", "満州の日本への割譲", "山東省の日本領有"] },
+            { q: "第一次世界大戦で総力戦に貢献した女性に、多くの国で認められた権利は何か。",
+              a: "選挙権（参政権）", wrong: ["兵役の免除", "財産の相続権", "結婚の自由"] },
+            { q: "二十一か条の要求の大部分を認めた、中華民国の大統領はだれか。",
+              a: "袁世凱", wrong: ["孫文", "蒋介石", "毛沢東"] },
+            { q: "二十一か条の要求で、日本は旅順・大連の租借期限と南満州鉄道の期限を、何年延長するよう求めたか。",
+              a: "99年", wrong: ["10年", "50年", "150年"] },
+            { q: "第一次世界大戦中、日本が山東省のドイツ租借地とともに占領した地域はどこか。",
+              a: "南洋諸島", wrong: ["台湾", "樺太", "遼東半島"] }
         ]
     },
     {
@@ -2742,7 +2799,7 @@ const SECTIONS = [
 ];
 
 /* 最初の画面の下に表示する更新日（新しい版が読み込まれたか確認するため。更新のたびに書きかえる） */
-const APP_UPDATED = "2026/11/22 江戸時代 各回の年代問題";
+const APP_UPDATED = "2026/11/22 近現代 第7回 追加の問題";
 
 /* =====================================================================
    2. 共通の道具
@@ -3104,9 +3161,11 @@ function makeSearchBox(placeholder, word, render) {
 function findHits(lessons, keyword) {
     const target = norm(keyword).s;
     const hits = [];
-    lessons.forEach(lesson => lesson.questions.forEach((q, i) => {
-        if (norm(q.q).s.includes(target) || norm(q.a).s.includes(target)) hits.push({ lesson, no: i + 1, q });
-    }));
+    const test = q => norm(q.q).s.includes(target) || norm(q.a).s.includes(target);
+    lessons.forEach(lesson => {
+        lesson.questions.forEach((q, i) => { if (test(q)) hits.push({ lesson, label: `問${i + 1}`, q }); });
+        (lesson.extra || []).forEach((q, i) => { if (test(q)) hits.push({ lesson, label: `追加問${i + 1}`, q }); });
+    });
     return hits;
 }
 
@@ -3127,7 +3186,7 @@ function hitNodes(sec, hits, keyword, showLesson, onBack) {
         answer.append("答え：");
         answer.appendChild(highlight(hit.q.a, keyword));
         nodes.push(el("div", { class: "hit" }, [
-            el("div", { class: "hit-no", text: showLesson ? `第${hit.lesson.no}回　問${hit.no}` : `問${hit.no}` }),
+            el("div", { class: "hit-no", text: showLesson ? `第${hit.lesson.no}回　${hit.label}` : hit.label }),
             question,
             answer
         ]));
@@ -3213,6 +3272,10 @@ function showHistoryLesson(sec, lesson, word = "", fromWord = "") {
             class: "btn cat-btn", text: `🎲 ランダム ${Math.min(10, n)}問`,
             onclick: () => startHistory(sec, lesson, "random", backHere)
         }),
+        lesson.extra ? el("button", {
+            class: "btn cat-btn", text: `➕ 追加の問題（${lesson.extra.length}問）`,
+            onclick: () => startExtra(sec, lesson, backHere)
+        }) : null,
         sec.yearsByLesson ? el("button", {
             class: "btn cat-btn", text: `🕰 年代問題（${yearQuizSize(sec.dates, lesson.no)}問）`,
             onclick: () => startYearQuiz(sec, lesson.no, backHere)
@@ -3405,6 +3468,25 @@ function startHistory(sec, lesson, mode, onBack) {
     });
 }
 
+/* 追加の問題を、書いてある順に出題する */
+function startExtra(sec, lesson, onBack) {
+    runQuiz({
+        title: `第${lesson.no}回　追加の問題`,
+        kind: "history",
+        lookupPrompt: sec.lookupPrompt,
+        lookupExample: sec.lookupExample,
+        color: sec.c1,
+        items: lesson.extra.map(q => ({
+            prompt: q.q,
+            answer: q.a,
+            fig: q.fig,
+            choices: () => shuffle([q.a, ...q.wrong])
+        })),
+        onBack,
+        onRetry: () => startExtra(sec, lesson, onBack)
+    });
+}
+
 /* 年代問題を出題する（lessonNo が null なら全範囲） */
 function startYearQuiz(sec, lessonNo, onBack) {
     runQuiz({
@@ -3430,6 +3512,7 @@ function startSearchQuiz(sec, hits, keyword, onBack) {
         items: hits.map(h => ({
             prompt: h.q.q,
             answer: h.q.a,
+            fig: h.q.fig,
             choices: () => shuffle([h.q.a, ...h.q.wrong])
         })),
         onBack,
@@ -3527,6 +3610,7 @@ function runQuiz(opts) {
                 el("div", { class: "progress", text: `第 ${state.index + 1} 問 / 全 ${total} 問` })
             ]),
             el("div", { class: "quiz-title", text: opts.title }),
+            item.fig ? el("div", { class: "figure", html: item.fig }) : null,
             questionBlock,
             soundBtn,
             soundBtn ? speechNote : null,
