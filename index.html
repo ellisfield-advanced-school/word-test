@@ -135,6 +135,10 @@ mark { background: #fff3a0; border-radius: 3px; padding: 0 1px; }
 .choice-btn { font-size: 18px; }
 .figure { margin: 10px 0 4px; border: 1px solid #e1e8ed; border-radius: 10px; padding: 6px; background: #fff; }
 .figure svg { display: block; width: 100%; height: auto; }
+.source { font-size: 14px; line-height: 1.7; text-align: left; }
+.source-title { font-weight: bold; margin-bottom: 4px; }
+.source ul { margin: 0; padding-left: 20px; }
+.source li { margin-bottom: 4px; }
 .lookup { margin-top: 22px; border: 1px solid #e1e8ed; border-radius: 10px; padding: 10px 12px; background: #fafbfc; }
 .lookup summary { font-weight: bold; font-size: 14px; cursor: pointer; color: #555; }
 .lookup .search-box { margin: 12px 0 10px; }
@@ -1235,7 +1239,9 @@ const FIGS = {
 <g font-size="12" fill="#555" stroke="none"><text x="215" y="222">三国同盟（1882年）</text></g>
 <g stroke="none"><rect x="186" y="50" width="112" height="24" rx="4" fill="#fff" stroke="#d32f2f"/><text x="242" y="62" fill="#d32f2f" font-weight="bold" font-size="13">？（1907年）</text></g>
 </g>
-</svg>`
+</svg>`,
+    // 資料：二十一か条の要求（部分要約）。条文の要点を、わかりやすく書き直したもの
+    demands: `<div class="source"><div class="source-title">資料　二十一か条の要求（部分要約）</div><ul><li>中国政府は、（①）が山東省に持っている一切の権益の処分について、日本と（①）との協定にまかせる。</li><li>日本の旅順・大連の租借の期限と、（②）の期限を、さらに延長する。</li><li>中国政府は、南満州・東部内蒙古における鉱山の採掘権を、日本国民にあたえる。</li></ul></div>`
 };
 
 /* --- 1-3. 歴史（近現代）の問題データ
@@ -1572,7 +1578,9 @@ const HISTORY = [
             { q: "二十一か条の要求で、日本は旅順・大連の租借期限と南満州鉄道の期限を、何年延長するよう求めたか。",
               a: "99年", wrong: ["10年", "50年", "150年"] },
             { q: "第一次世界大戦中、日本が山東省のドイツ租借地とともに占領した地域はどこか。",
-              a: "南洋諸島", wrong: ["台湾", "樺太", "遼東半島"] }
+              a: "南洋諸島", wrong: ["台湾", "樺太", "遼東半島"] },
+            { q: "資料は、二十一か条の要求の一部である。（①）（②）にあてはまる語句は何か。",
+              a: "①ドイツ　②南満州鉄道", wrong: ["①ロシア　②南満州鉄道", "①ドイツ　②東清鉄道", "①フランス　②南満州鉄道"], fig: FIGS.demands }
         ]
     },
     {
@@ -2799,7 +2807,7 @@ const SECTIONS = [
 ];
 
 /* 最初の画面の下に表示する更新日（新しい版が読み込まれたか確認するため。更新のたびに書きかえる） */
-const APP_UPDATED = "2026/11/22 近現代 第7回 追加の問題";
+const APP_UPDATED = "2026/11/22 追加の問題（資料つき）";
 
 /* =====================================================================
    2. 共通の道具
