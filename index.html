@@ -2260,16 +2260,14 @@ const DATES = [
     { y: 1922, e: "全国水平社の結成", l: [8] },
     { y: 1922, e: "日本共産党の結成", l: [8] },
     { y: 1922, e: "日本農民組合が結成される", l: [8] },
-    { y: 1923, e: "関東大震災が起こる", l: [8] },
-    { y: 1924, e: "加藤高明が連立内閣を組織する（第二次護憲運動の結果）", l: [8] },
     { y: 1923, e: "関東大震災", l: [8, 9] },
-    { y: 1925, e: "普通選挙法の成立", l: [8] },
+    { y: 1925, e: "普通選挙法の公布", l: [8] },
     { y: 1925, e: "治安維持法の制定", l: [8] },
     { y: 1925, e: "ラジオ放送の開始", l: [8] },
     { y: 1928, e: "普通選挙法による最初の選挙が行われる", l: [8] },
     { y: 1930, e: "北海道アイヌ協会が結成される", l: [8] },
     { y: 1922, e: "ムッソリーニが政権をにぎる", l: [9] },
-    { y: 1924, e: "加藤高明内閣の成立", l: [9] },
+    { y: 1924, e: "加藤高明内閣の成立", l: [8, 9] },
     { y: 1927, e: "金融恐慌", l: [9] },
     { y: 1927, e: "蒋介石が南京に国民政府をつくる", l: [9] },
     { y: 1929, e: "ニューヨークで株価が大暴落（世界恐慌）", l: [9] },
@@ -3399,11 +3397,11 @@ function makeHistoryItems(lesson, mode) {
    ①年→できごと：「〇〇年に起こったできごとを選びなさい」（同じ年のできごとが2つ以上あれば、2つ選ぶ）
    ②できごと→年：「〇〇は何年のできごとか」 */
 function yearToEvents(year, scope, all) {
-    const correct = shuffle(scope.filter(d => d.y === year)).slice(0, 2).map(d => d.e);
+    const correct = shuffle(scope.filter(d => d.y === year)).slice(0, 4).map(d => d.e);   // 同じ年のできごとは、すべて正解として出す（最大4つ）
     const other = d => d.y !== year;   // 同じ年のできごとは、まちがいの選択肢に入れない
     const wrongPool = [...new Set([...shuffle(scope.filter(other)), ...shuffle(all.filter(other))].map(d => d.e))]
         .filter(e => !correct.includes(e));
-    const wrong = wrongPool.slice(0, 4 - correct.length);
+    const wrong = wrongPool.slice(0, correct.length >= 3 ? 2 : 4 - correct.length);   // 正解が3つ以上なら、まちがいは2つ
     const base = {
         prompt: `${year}年に起こったできごとを、次から${correct.length}つ選びなさい。`,
         choices: () => shuffle([...correct, ...wrong])
@@ -3419,7 +3417,9 @@ function eventToYear(d, all) {
         shuffle([d.y - k, d.y + k]).forEach(v => { if (near.size < 3 && v <= 2026) near.add(v); });
     }
     const years = [d.y, ...near].sort((a, b) => a - b).map(v => `${v}年`);
-    return { prompt: `${d.e}は何年のできごとか。`, answer: `${d.y}年`, choices: () => years };
+    const main = d.e.replace(/（[^）]*）$/, "");
+    const joint = /[るうくぐすつぬぶむた]$/.test(main) ? "のは" : "は";   // 文末が動詞なら「の」を入れる（例：行われる＋のは）
+    return { prompt: `${d.e}${joint}何年のできごとか。`, answer: `${d.y}年`, choices: () => years };
 }
 
 /* lessonNo が null なら全範囲。①を約4割、②を約6割まぜて10問作る */
