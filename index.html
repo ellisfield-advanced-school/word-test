@@ -1237,9 +1237,10 @@ const FIGS = {
 <g fill="#e3f0fb" stroke="#2a6fb0"><rect x="22" y="16" width="66" height="28" rx="6"/><rect x="272" y="16" width="66" height="28" rx="6"/><rect x="134" y="92" width="66" height="28" rx="6"/><rect x="22" y="156" width="66" height="28" rx="6"/></g>
 <g fill="#eeeeee" stroke="#777"><rect x="285" y="90" width="66" height="28" rx="6"/><rect x="214" y="160" width="76" height="28" rx="6"/><rect x="285" y="206" width="66" height="28" rx="6"/></g>
 <g fill="#222" stroke="none"><text x="55" y="31">イギリス</text><text x="305" y="31">日本</text><text x="167" y="107">ロシア</text><text x="55" y="171">フランス</text><text x="318" y="105">ドイツ</text><text x="252" y="175">オーストリア</text><text x="318" y="221">イタリア</text></g>
-<g font-size="12" fill="#2a6fb0" stroke="none"><text x="180" y="19">日英同盟（1902年）</text><text x="95" y="222">三国協商（1907年）</text></g>
+<g stroke="none"><rect x="126" y="5" width="108" height="22" rx="4" fill="#fff" stroke="#d32f2f"/><text x="180" y="16" fill="#d32f2f" font-weight="bold" font-size="13">②（1902年）</text></g>
+<g font-size="12" fill="#2a6fb0" stroke="none"><text x="95" y="222">三国協商（1907年）</text></g>
 <g font-size="12" fill="#555" stroke="none"><text x="215" y="222">三国同盟（1882年）</text></g>
-<g stroke="none"><rect x="186" y="50" width="112" height="24" rx="4" fill="#fff" stroke="#d32f2f"/><text x="242" y="62" fill="#d32f2f" font-weight="bold" font-size="13">？（1907年）</text></g>
+<g stroke="none"><rect x="186" y="50" width="112" height="24" rx="4" fill="#fff" stroke="#d32f2f"/><text x="242" y="62" fill="#d32f2f" font-weight="bold" font-size="13">①（1907年）</text></g>
 </g>
 </svg>`,
     // 資料：二十一か条の要求（部分要約）。条文の要点を、わかりやすく書き直したもの
@@ -1726,8 +1727,10 @@ const HISTORY = [
         ],
         // 追加の問題：一問一答にない内容（まとめのページから作成）。回の画面に「追加の問題」ボタンが出る
         extra: [
-            { q: "1907年に日本とロシアが結んだ協約を何というか。（図の「？」）",
+            { q: "1907年に日本とロシアが結んだ協約を何というか。（図の①）",
               a: "日露協約", wrong: ["日英同盟", "日独防共協定", "日ソ中立条約"], fig: FIGS.alliance },
+            { q: "1902年に日本とイギリスが結んだ同盟を何というか。（図の②）",
+              a: "日英同盟", wrong: ["日露協約", "三国同盟", "三国協商"], fig: FIGS.alliance },
             { q: "民族自決の原則を提唱した、アメリカの大統領はだれか。",
               a: "ウィルソン", wrong: ["ローズベルト", "リンカン", "ワシントン"] },
             { q: "国際連盟の事務次長となった日本人はだれか。",
@@ -1869,6 +1872,37 @@ const HISTORY = [
               a: "国民政府", wrong: ["北京政府", "満州国", "中華人民共和国"] },
             { q: "1930年に海軍軍縮会議が行われた都市はどこか。",
               a: "ロンドン", wrong: ["ワシントン", "パリ", "ジュネーブ"] }
+        ],
+        // 追加の問題：一問一答にない内容（まとめのページから作成）
+        extra: [
+            { q: "1929年にアメリカの株価が大暴落したあと、銀行や企業はどのようになったか。",
+              a: "つぶれて失業者が急増した", wrong: ["利益が急に増えた", "外国に移転した", "政府に引きつがれた"] },
+            { q: "ニューディール政策で、政府が積極的におこした公共事業の例として正しいものはどれか。",
+              a: "ダムの建設", wrong: ["原生林や荒野の開拓", "軍艦の建造", "宮殿の建設"] },
+            { q: "ニューディール政策の結果、アメリカはどうなったか。",
+              a: "政府が国民の信頼を得て、資本主義が維持された", wrong: ["社会主義の国になった", "世界恐慌がすぐに終わり、他国も救われた", "植民地をすべて失った"] },
+            { q: "世界恐慌のなか、植民地が少なく、領土拡大を目指した国々はどこか。",
+              a: "イタリア・ドイツ・日本", wrong: ["イギリス・フランス・アメリカ", "ソ連・アメリカ・イギリス", "フランス・ドイツ・ソ連"] },
+            { q: "各国が自国第一の対策を採ったため、ゆらいだものは何か。",
+              a: "国際協調", wrong: ["植民地支配", "金本位制", "日英同盟"] },
+            { q: "ドイツで、重い負担となっていたものは何か。",
+              a: "ベルサイユ条約での賠償金", wrong: ["日露戦争の賠償金", "ロシアへの借金", "植民地の維持費"] },
+            { q: "ヒトラーが率いたナチスの正式な名称は何か。",
+              a: "国民社会主義ドイツ労働者党", wrong: ["ドイツ社会民主党", "ドイツ共産党", "ドイツ自由民主党"] },
+            { q: "公共事業と軍需産業によって回復したものは何か。",
+              a: "経済", wrong: ["植民地", "人口", "文化"] },
+            { q: "ナチスが、国民を統制するために使ったものは何か。",
+              a: "秘密警察", wrong: ["労働組合", "新聞の自由化", "地方自治"] },
+            { q: "イタリアで、経済が行きづまったあと、ムッソリーニが侵略・併合した国はどこか。",
+              a: "エチオピア", wrong: ["エジプト", "スペイン", "アルバニア"] },
+            { q: "昭和恐慌のなかで、大凶作になり、飢饉（ききん）が起こった地域はどこか。",
+              a: "東北地方と北海道", wrong: ["九州地方と四国", "関東地方と中部地方", "近畿地方と中国地方"] },
+            { q: "昭和恐慌の不況のなかで、国民の不信が高まったのは、どのようなものか。",
+              a: "財閥や汚職を行う政党", wrong: ["天皇や皇族", "軍隊や警察", "外国の企業"] },
+            { q: "国民政府が1927年に南京に建てられたあと、日本軍が試みて失敗したことは何か。",
+              a: "満州の直接支配", wrong: ["北京の占領", "朝鮮の独立承認", "台湾の返還"] },
+            { q: "浜口雄幸内閣が、1930年に国民の負担を減らそうとして結んだ条約は何か。",
+              a: "ロンドン海軍軍縮条約", wrong: ["ワシントン海軍軍縮条約", "日英同盟", "日独伊三国同盟"] }
         ]
     },
     {
@@ -2262,7 +2296,7 @@ const DATES = [
     { y: 1925, e: "普通選挙法の公布", l: [8] },
     { y: 1925, e: "治安維持法の制定", l: [8] },
     { y: 1925, e: "ラジオ放送の開始", l: [8] },
-    { y: 1928, e: "普通選挙法による最初の選挙が行われる", l: [8] },
+    { y: 1928, e: "満25歳以上の男性による普通選挙が行われる", l: [8, 9] },
     { y: 1930, e: "北海道アイヌ協会が結成される", l: [8] },
     { y: 1922, e: "ムッソリーニが政権をにぎる", l: [9] },
     { y: 1924, e: "加藤高明内閣の成立", l: [8, 9] },
@@ -2273,6 +2307,7 @@ const DATES = [
     { y: 1930, e: "ロンドン海軍軍縮会議", l: [9] },
     { y: 1933, e: "ニューディール政策の開始", l: [9] },
     { y: 1933, e: "ヒトラーが政権をにぎる", l: [9] },
+    { y: 1935, e: "イタリアがエチオピアに侵攻する", l: [9] },
     { y: 1931, e: "柳条湖事件", l: [10] },
     { y: 1931, e: "満州事変の開始", l: [10] },
     { y: 1932, e: "満州国の建国", l: [10] },
@@ -3116,6 +3151,8 @@ const SECTIONS = [
 
 /* 最初の画面の下に表示する更新日（新しい版が読み込まれたか確認するため。更新のたびに書きかえる） */
 const APP_UPDATES = [
+    "2026/11/27 近現代 第9回に追加の問題（14問）と年代",
+    "2026/11/27 追加の問題に「ランダム10問」のボタンを追加",
     "2026/11/26 近現代 第8回に追加の問題（13問）と年代",
     "2026/11/26 近現代 第6回に追加の問題（13問）と年代",
     "2026/11/26 近現代 第5回に追加の問題（8問）と年代",
@@ -3609,7 +3646,11 @@ function showHistoryLesson(sec, lesson, word = "", fromWord = "") {
         }),
         lesson.extra ? el("button", {
             class: "btn cat-btn", text: `➕ 追加の問題（${lesson.extra.length}問）`,
-            onclick: () => startExtra(sec, lesson, backHere)
+            onclick: () => startExtra(sec, lesson, backHere, "all")
+        }) : null,
+        lesson.extra ? el("button", {
+            class: "btn cat-btn", text: `🎲 追加の問題 ランダム ${Math.min(10, lesson.extra.length)}問`,
+            onclick: () => startExtra(sec, lesson, backHere, "random")
         }) : null,
         sec.yearsByLesson ? el("button", {
             class: "btn cat-btn", text: `🕰 年代問題（${yearQuizSize(sec.dates, lesson.no)}問）`,
@@ -3803,22 +3844,23 @@ function startHistory(sec, lesson, mode, onBack) {
     });
 }
 
-/* 追加の問題を、書いてある順に出題する */
-function startExtra(sec, lesson, onBack) {
+/* 追加の問題を出題する（mode: "all"＝書いてある順 / "random"＝ランダム10問） */
+function startExtra(sec, lesson, onBack, mode = "all") {
+    const source = mode === "random" ? shuffle(lesson.extra).slice(0, 10) : lesson.extra;
     runQuiz({
-        title: `第${lesson.no}回　追加の問題`,
+        title: mode === "random" ? `第${lesson.no}回　追加の問題 ランダム${Math.min(10, lesson.extra.length)}問` : `第${lesson.no}回　追加の問題`,
         kind: "history",
         lookupPrompt: sec.lookupPrompt,
         lookupExample: sec.lookupExample,
         color: sec.c1,
-        items: lesson.extra.map(q => ({
+        items: source.map(q => ({
             prompt: q.q,
             answer: q.a,
             fig: q.fig,
             choices: () => shuffle([q.a, ...q.wrong])
         })),
         onBack,
-        onRetry: () => startExtra(sec, lesson, onBack)
+        onRetry: () => startExtra(sec, lesson, onBack, mode)
     });
 }
 
